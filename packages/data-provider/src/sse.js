@@ -23,7 +23,7 @@ var SSE = function (url, options) {
   this.headers = options.headers || {};
   this.payload = options.payload !== undefined ? options.payload : '';
   this.method = options.method || (this.payload && 'POST') || 'GET';
-  this.withCredentials = !!options.withCredentials;
+  this.withCredentials = true;
 
   this.FIELD_SEPARATOR = ':';
   this.listeners = {};

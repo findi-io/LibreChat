@@ -2,6 +2,9 @@ const { Strategy: PassportLocalStrategy } = require('passport-local');
 const User = require('../models/User');
 const { loginSchema, errorsToString } = require('./validators');
 const logger = require('../utils/logger');
+const cookies = require('cookie');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 async function validateLoginRequest(req) {
   const { error } = loginSchema.safeParse(req.body);
@@ -31,11 +34,36 @@ async function passportLogin(req, email, password, done) {
       logger.error(`[Login] [Login failed] [Username: ${email}] [Request-IP: ${req.ip}]`);
       return done(null, false, { message: validationError });
     }
-
     const user = await findUserByEmail(email);
     if (!user) {
       logError('Passport Local Strategy - User Not Found', { email });
       logger.error(`[Login] [Login failed] [Username: ${email}] [Request-IP: ${req.ip}]`);
+      const userCookie = cookies.parse(req.headers.cookie);
+      if (userCookie.__session) {
+        // there is session cookie
+        // try to decode jwt
+        try {
+          const payload = jwt.verify(userCookie.__session, atob(process.env.CLERK_PEM_PUBLIC_KEY));
+          const hash = bcrypt.hashSync(payload.id, 10);
+          const user1 = await User.create({
+            name: payload.name,
+            username: payload.username,
+            email: payload.email,
+            emailVerified: true,
+            // file deepcode ignore NoHardcodedPasswords/test: fake value
+            password: hash,
+            avatar: '',
+            provider: 'local',
+            role: 'USER',
+            googleId: null,
+            plugins: [],
+            refreshToken: [],
+          });
+          return done(null, user1);
+        } catch (e) {
+          return done(null, false, { message: 'failed to decode jwt token.' });
+        }
+      }
       return done(null, false, { message: 'Email does not exist.' });
     }
 
