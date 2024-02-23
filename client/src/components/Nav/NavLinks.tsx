@@ -15,12 +15,12 @@ import NavLink from './NavLink';
 import Logout from './Logout';
 import { cn } from '~/utils/';
 import store from '~/store';
-import { OrganizationSwitcher, SignedIn } from '@clerk/clerk-react';
+import { OrganizationSwitcher, SignOutButton, SignedIn } from '@clerk/clerk-react';
 
 function NavLinks() {
   const localize = useLocalize();
   const location = useLocation();
-  const { user, isAuthenticated } = useAuthContext();
+  const { user, isAuthenticated, logout } = useAuthContext();
   const { data: startupConfig } = useGetStartupConfig();
   const balanceQuery = useGetUserBalance({
     enabled: !!isAuthenticated && startupConfig?.checkBalance,
@@ -28,7 +28,6 @@ function NavLinks() {
   const [showExports, setShowExports] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showFiles, setShowFiles] = useRecoilState(store.showFiles);
-  const { logout } = useAuthContext();
   let conversation;
   const activeConvo = useRecoilValue(store.conversationByIndex(0));
   const globalConvo = useRecoilValue(store.conversation) ?? ({} as TConversation);
@@ -151,7 +150,7 @@ function NavLinks() {
                   </Menu.Item>
                 </SignedIn>
                 <Menu.Item as="div">
-                  <Logout />
+                  <SignOutButton signOutCallback={() => logout()} />
                 </Menu.Item>
               </Menu.Items>
             </Transition>
