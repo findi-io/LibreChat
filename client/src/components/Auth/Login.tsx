@@ -2,14 +2,16 @@ import { useAuthContext } from '~/hooks/AuthContext';
 import { SignIn, useAuth, useUser } from '@clerk/clerk-react';
 
 function Login() {
-  const { userId } = useAuth();
+  const { userId, orgId } = useAuth();
   const { user } = useUser();
   const { login } = useAuthContext();
-  if (userId && user && user.primaryEmailAddress) {
+  const id = orgId ? orgId : userId;
+  if (id) {
     try {
-      login({ email: user.primaryEmailAddress.emailAddress, password: userId });
+      login({ email: id, password: id });
     } catch (e) {
       // handle error
+      console.log(e);
     }
     return null;
   }
