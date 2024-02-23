@@ -1,20 +1,8 @@
 const express = require('express');
-const {
-  resetPasswordRequestController,
-  resetPasswordController,
-  refreshController,
-  registrationController,
-} = require('../controllers/AuthController');
+const { refreshController } = require('../controllers/AuthController');
 const { loginController } = require('../controllers/auth/LoginController');
 const { logoutController } = require('../controllers/auth/LogoutController');
-const {
-  checkBan,
-  loginLimiter,
-  registerLimiter,
-  requireJwtAuth,
-  requireLocalAuth,
-  validateRegistration,
-} = require('../middleware');
+const { checkBan, loginLimiter, requireJwtAuth, requireLocalAuth } = require('../middleware');
 
 const router = express.Router();
 
@@ -22,8 +10,8 @@ const router = express.Router();
 router.post('/logout', requireJwtAuth, logoutController);
 router.post('/login', loginLimiter, checkBan, requireLocalAuth, loginController);
 router.post('/refresh', refreshController);
-router.post('/register', registerLimiter, checkBan, validateRegistration, registrationController);
-router.post('/requestPasswordReset', resetPasswordRequestController);
-router.post('/resetPassword', resetPasswordController);
+//router.post('/register', registerLimiter, checkBan, validateRegistration, registrationController);
+//router.post('/requestPasswordReset', resetPasswordRequestController);
+//router.post('/resetPassword', resetPasswordController);
 
 module.exports = router;

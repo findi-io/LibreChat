@@ -15,6 +15,7 @@ import NavLink from './NavLink';
 import Logout from './Logout';
 import { cn } from '~/utils/';
 import store from '~/store';
+import { OrganizationSwitcher, SignedIn } from '@clerk/clerk-react';
 
 function NavLinks() {
   const localize = useLocalize();
@@ -27,7 +28,7 @@ function NavLinks() {
   const [showExports, setShowExports] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showFiles, setShowFiles] = useRecoilState(store.showFiles);
-
+  const { logout } = useAuthContext();
   let conversation;
   const activeConvo = useRecoilValue(store.conversationByIndex(0));
   const globalConvo = useRecoilValue(store.conversation) ?? ({} as TConversation);
@@ -135,6 +136,20 @@ function NavLinks() {
                   />
                 </Menu.Item>
                 <div className="my-1 h-px bg-white/20" role="none" />
+                <SignedIn>
+                  <Menu.Item as="div">
+                    <OrganizationSwitcher
+                      afterSelectPersonalUrl={(user) => {
+                        logout();
+                        return 'ok';
+                      }}
+                      afterSelectOrganizationUrl={(user) => {
+                        logout();
+                        return 'ok';
+                      }}
+                    />
+                  </Menu.Item>
+                </SignedIn>
                 <Menu.Item as="div">
                   <Logout />
                 </Menu.Item>

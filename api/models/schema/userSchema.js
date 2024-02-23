@@ -14,7 +14,6 @@ const userSchema = mongoose.Schema(
     },
     username: {
       type: String,
-      lowercase: true,
       default: '',
     },
     email: {

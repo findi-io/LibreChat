@@ -94,7 +94,7 @@ const AuthContextProvider = ({
       onError: (error: TResError | unknown) => {
         const resError = error as TResError;
         doSetError(resError.message);
-        navigate('/login', { replace: true });
+        navigate('/error', { replace: true });
       },
     });
   };
@@ -122,7 +122,7 @@ const AuthContextProvider = ({
         if (authConfig?.test) {
           return;
         }
-        navigate('/login');
+        navigate('/error');
       },
     });
   }, []);
@@ -132,7 +132,7 @@ const AuthContextProvider = ({
       setUser(userQuery.data);
     } else if (userQuery.isError) {
       doSetError((userQuery?.error as Error).message);
-      navigate('/login', { replace: true });
+      navigate('/error', { replace: true });
     }
     if (error && isAuthenticated) {
       doSetError(undefined);
