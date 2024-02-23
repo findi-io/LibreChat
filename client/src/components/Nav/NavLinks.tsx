@@ -9,6 +9,7 @@ import FilesView from '~/components/Chat/Input/Files/FilesView';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { ExportModal } from './ExportConversation';
 import { LinkIcon, GearIcon } from '~/components';
+import { LogOutIcon } from '../svg';
 import { useLocalize } from '~/hooks';
 import Settings from './Settings';
 import NavLink from './NavLink';
@@ -150,7 +151,10 @@ function NavLinks() {
                   </Menu.Item>
                 </SignedIn>
                 <Menu.Item as="div">
-                  <SignOutButton signOutCallback={() => logout()} />
+                  <SignOutButton signOutCallback={() => logout()}>
+                    <LogOutIcon />
+                    {localize('com_nav_log_out')}
+                  </SignOutButton>
                 </Menu.Item>
               </Menu.Items>
             </Transition>
