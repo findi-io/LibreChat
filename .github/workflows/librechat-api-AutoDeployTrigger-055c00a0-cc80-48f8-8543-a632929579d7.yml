@@ -36,9 +36,7 @@ jobs:
           containerAppName: librechat-api
           resourceGroup: chatlog
           imageToBuild: handler.azurecr.io/librechat-api:${{ github.sha }}
-          environmentVariables:
-            VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
-            CLERK_PEM_PUBLIC_KEY: ${{ secrets.CLERK_PEM_PUBLIC_KEY }}
+          environmentVariables: "VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY } CLERK_PEM_PUBLIC_KEY=${{ secrets.CLERK_PEM_PUBLIC_KEY }}"
 
      
 
