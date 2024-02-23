@@ -3,7 +3,8 @@ FROM node:18-alpine AS node
 
 COPY . /app
 WORKDIR /app
-
+ARG VITE_CLERK_PUBLISHABLE_KEY
+ARG CLERK_PEM_PUBLIC_KEY
 # Allow mounting of these files, which have no default
 # values.
 RUN touch .env
