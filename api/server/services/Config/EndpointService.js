@@ -10,9 +10,7 @@ const {
   PLUGINS_USE_AZURE,
   GOOGLE_KEY: googleKey,
 } = process.env ?? {};
-console.log('-----------------');
-console.log(process.env);
-console.log('-----------------');
+
 const useAzurePlugins = !!PLUGINS_USE_AZURE;
 
 const userProvidedOpenAI = useAzurePlugins
