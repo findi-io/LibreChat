@@ -5,6 +5,7 @@ const logger = require('../utils/logger');
 const cookies = require('cookie');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const Transaction = require('~/models/Transaction');
 
 async function validateLoginRequest(req) {
   const { error } = loginSchema.safeParse(req.body);
@@ -69,6 +70,19 @@ async function passportLogin(req, email, password, done) {
             plugins: [],
             refreshToken: [],
           });
+          if (id.startsWith('user_')) {
+            try {
+              await Transaction.create({
+                user: user._id,
+                tokenType: 'credits',
+                context: 'admin',
+                rawAmount: 1000 * 1000,
+              });
+            } catch (error) {
+              console.red('Error: ' + error.message);
+              console.error(error);
+            }
+          }
         }
         const isMatch = await comparePassword(user, password);
         if (!isMatch) {
