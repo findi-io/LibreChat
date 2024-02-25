@@ -26,7 +26,7 @@ const usernameSchema = z
   });
 
 const loginSchema = z.object({
-  email: z.string(),
+  email: z.string().email(),
   password: z
     .string()
     .min(8)

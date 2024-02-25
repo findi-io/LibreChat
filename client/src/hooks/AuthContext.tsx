@@ -20,6 +20,7 @@ import { useLogoutUserMutation } from '~/data-provider';
 import useTimeout from './useTimeout';
 import store from '~/store';
 import { ClerkProvider } from '@clerk/clerk-react';
+import { parse } from 'cookie';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -94,37 +95,16 @@ const AuthContextProvider = ({
       onError: (error: TResError | unknown) => {
         const resError = error as TResError;
         doSetError(resError.message);
-        navigate('/error', { replace: true });
+        navigate('/login', { replace: true });
       },
     });
   };
 
   const silentRefresh = useCallback(() => {
-    if (authConfig?.test) {
-      console.log('Test mode. Skipping silent refresh.');
-      return;
+    const cookies = parse(document.cookie);
+    if (cookies.__session) {
+      setToken(cookies.__session);
     }
-    refreshToken.mutate(undefined, {
-      onSuccess: (data: TLoginResponse) => {
-        const { user, token } = data;
-        if (token) {
-          setUserContext({ token, isAuthenticated: true, user });
-        } else {
-          console.log('Token is not present. User is not authenticated.');
-          if (authConfig?.test) {
-            return;
-          }
-          navigate('/login');
-        }
-      },
-      onError: (error) => {
-        console.log('refreshToken mutation error:', error);
-        if (authConfig?.test) {
-          return;
-        }
-        navigate('/error');
-      },
-    });
   }, []);
 
   useEffect(() => {
@@ -132,7 +112,7 @@ const AuthContextProvider = ({
       setUser(userQuery.data);
     } else if (userQuery.isError) {
       doSetError((userQuery?.error as Error).message);
-      navigate('/error', { replace: true });
+      navigate('/login', { replace: true });
     }
     if (error && isAuthenticated) {
       doSetError(undefined);

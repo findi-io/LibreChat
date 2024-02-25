@@ -7,11 +7,15 @@ const jwtLogin = async () =>
   new JwtStrategy(
     {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET,
+      secretOrKey: atob(process.env.CLERK_PEM_PUBLIC_KEY),
     },
     async (payload, done) => {
+      let id = payload.id;
+      if (payload.orgId) {
+        id = payload.orgId;
+      }
       try {
-        const user = await User.findById(payload?.id);
+        const user = await User.findOne({ username: id });
         if (user) {
           done(null, user);
         } else {
