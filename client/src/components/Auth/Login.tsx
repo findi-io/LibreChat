@@ -1,4 +1,4 @@
-import { SignIn, useAuth } from '@clerk/clerk-react';
+import { RedirectToSignIn, useAuth } from '@clerk/clerk-react';
 import { useAuthContext } from '~/hooks/AuthContext';
 
 function Login() {
@@ -8,6 +8,6 @@ function Login() {
   if (userId) {
     login({ email: 'hello@test.com', password: 'world' });
   }
-  return <SignIn />;
+  return <RedirectToSignIn afterSignInUrl={'/c/new'} />;
 }
 export default Login;
