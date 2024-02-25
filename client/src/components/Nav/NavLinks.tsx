@@ -7,21 +7,20 @@ import { useGetUserBalance, useGetStartupConfig } from 'librechat-data-provider/
 import type { TConversation } from 'librechat-data-provider';
 import FilesView from '~/components/Chat/Input/Files/FilesView';
 import { useAuthContext } from '~/hooks/AuthContext';
+import useAvatar from '~/hooks/Messages/useAvatar';
 import { ExportModal } from './ExportConversation';
 import { LinkIcon, GearIcon } from '~/components';
-import { LogOutIcon } from '../svg';
 import { useLocalize } from '~/hooks';
 import Settings from './Settings';
 import NavLink from './NavLink';
 import Logout from './Logout';
 import { cn } from '~/utils/';
 import store from '~/store';
-import { OrganizationSwitcher, SignOutButton, SignedIn } from '@clerk/clerk-react';
 
 function NavLinks() {
   const localize = useLocalize();
   const location = useLocation();
-  const { user, isAuthenticated, logout } = useAuthContext();
+  const { user, isAuthenticated } = useAuthContext();
   const { data: startupConfig } = useGetStartupConfig();
   const balanceQuery = useGetUserBalance({
     enabled: !!isAuthenticated && startupConfig?.checkBalance,
@@ -29,9 +28,13 @@ function NavLinks() {
   const [showExports, setShowExports] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showFiles, setShowFiles] = useRecoilState(store.showFiles);
-  let conversation;
+
   const activeConvo = useRecoilValue(store.conversationByIndex(0));
   const globalConvo = useRecoilValue(store.conversation) ?? ({} as TConversation);
+
+  const avatarSrc = useAvatar(user);
+
+  let conversation: TConversation | null | undefined;
   if (location.state?.from?.pathname.includes('/chat')) {
     conversation = globalConvo;
   } else {
@@ -69,16 +72,7 @@ function NavLinks() {
             >
               <div className="-ml-0.9 -mt-0.8 h-8 w-7 flex-shrink-0">
                 <div className="relative flex">
-                  <img
-                    className="rounded-full"
-                    src={
-                      user?.avatar ||
-                      `https://api.dicebear.com/6.x/initials/svg?seed=${
-                        user?.name || 'User'
-                      }&fontFamily=Verdana&fontSize=36`
-                    }
-                    alt=""
-                  />
+                  <img className="rounded-full" src={user?.avatar || avatarSrc} alt="" />
                 </div>
               </div>
               <div
@@ -136,27 +130,8 @@ function NavLinks() {
                   />
                 </Menu.Item>
                 <div className="my-1 h-px bg-white/20" role="none" />
-                <SignedIn>
-                  <Menu.Item as="div">
-                    <OrganizationSwitcher
-                      afterSelectPersonalUrl={(user) => {
-                        logout();
-                        return 'ok';
-                      }}
-                      afterSelectOrganizationUrl={(user) => {
-                        logout();
-                        return 'ok';
-                      }}
-                    />
-                  </Menu.Item>
-                </SignedIn>
                 <Menu.Item as="div">
-                  <SignOutButton signOutCallback={() => logout()}>
-                    <button className="flex w-full cursor-pointer items-center gap-3 px-3 py-3 text-sm text-white transition-colors duration-200 hover:bg-gray-700">
-                      <LogOutIcon />
-                      {localize('com_nav_log_out')}
-                    </button>
-                  </SignOutButton>
+                  <Logout />
                 </Menu.Item>
               </Menu.Items>
             </Transition>
