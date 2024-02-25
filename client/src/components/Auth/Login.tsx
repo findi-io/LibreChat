@@ -1,11 +1,12 @@
-import { SignIn, useAuth, useUser } from '@clerk/clerk-react';
-import { useNavigate } from 'react-router-dom';
+import { SignIn, useAuth } from '@clerk/clerk-react';
+import { useAuthContext } from '~/hooks/AuthContext';
 
 function Login() {
   const { userId } = useAuth();
-  const navigate = useNavigate();
+  const { login } = useAuthContext();
+  console.log(userId);
   if (userId) {
-    navigate('/', { replace: true });
+    login({ email: 'hello@test.com', password: 'world' });
   }
   return <SignIn />;
 }

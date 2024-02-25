@@ -6,6 +6,7 @@ const presets = require('./presets');
 const prompts = require('./prompts');
 const search = require('./search');
 const tokenizer = require('./tokenizer');
+const auth = require('./auth');
 const keys = require('./keys');
 const oauth = require('./oauth');
 const endpoints = require('./endpoints');
@@ -25,6 +26,7 @@ module.exports = {
   convos,
   presets,
   prompts,
+  auth,
   keys,
   oauth,
   user,

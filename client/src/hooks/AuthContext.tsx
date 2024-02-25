@@ -9,18 +9,13 @@ import {
 } from 'react';
 import { useRecoilState } from 'recoil';
 import { TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
-import {
-  useGetUserQuery,
-  useLoginUserMutation,
-  useRefreshTokenMutation,
-} from 'librechat-data-provider/react-query';
+import { useGetUserQuery, useLoginUserMutation } from 'librechat-data-provider/react-query';
 import { useNavigate } from 'react-router-dom';
 import { TAuthConfig, TUserContext, TAuthContext, TResError } from '~/common';
 import { useLogoutUserMutation } from '~/data-provider';
 import useTimeout from './useTimeout';
 import store from '~/store';
 import { ClerkProvider } from '@clerk/clerk-react';
-import { parse } from 'cookie';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -29,13 +24,7 @@ if (!PUBLISHABLE_KEY) {
 }
 const AuthContext = createContext<TAuthContext | undefined>(undefined);
 
-const AuthContextProvider = ({
-  authConfig,
-  children,
-}: {
-  authConfig?: TAuthConfig;
-  children: ReactNode;
-}) => {
+const AuthContextProvider = ({ children }: { authConfig?: TAuthConfig; children: ReactNode }) => {
   const [user, setUser] = useRecoilState(store.user);
   const [token, setToken] = useState<string | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -84,7 +73,6 @@ const AuthContextProvider = ({
 
   const logout = useCallback(() => logoutUser.mutate(undefined), [logoutUser]);
   const userQuery = useGetUserQuery({ enabled: !!token });
-  const refreshToken = useRefreshTokenMutation();
 
   const login = (data: TLoginUser) => {
     loginUser.mutate(data, {
@@ -95,24 +83,17 @@ const AuthContextProvider = ({
       onError: (error: TResError | unknown) => {
         const resError = error as TResError;
         doSetError(resError.message);
-        navigate('/login', { replace: true });
+        navigate('/error', { replace: true });
       },
     });
   };
-
-  const silentRefresh = useCallback(() => {
-    const cookies = parse(document.cookie);
-    if (cookies.__session) {
-      setToken(cookies.__session);
-    }
-  }, []);
 
   useEffect(() => {
     if (userQuery.data) {
       setUser(userQuery.data);
     } else if (userQuery.isError) {
       doSetError((userQuery?.error as Error).message);
-      navigate('/login', { replace: true });
+      navigate('/error', { replace: true });
     }
     if (error && isAuthenticated) {
       doSetError(undefined);
