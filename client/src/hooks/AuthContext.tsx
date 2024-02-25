@@ -98,9 +98,6 @@ const AuthContextProvider = ({ children }: { authConfig?: TAuthConfig; children:
     if (error && isAuthenticated) {
       doSetError(undefined);
     }
-    if (!token || !isAuthenticated) {
-      silentRefresh();
-    }
   }, [
     token,
     isAuthenticated,
