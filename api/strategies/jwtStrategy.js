@@ -1,6 +1,8 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const { logger } = require('~/config');
 const User = require('~/models/User');
+const cookies = require('cookie');
+const jwt = require('jsonwebtoken');
 
 // JWT strategy
 const jwtLogin = async () =>
@@ -8,11 +10,21 @@ const jwtLogin = async () =>
     {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.JWT_SECRET,
+      passReqToCallback: true,
     },
-    async (payload, done) => {
+    async (req, payload, done) => {
       try {
         const user = await User.findById(payload?.id);
         if (user) {
+          const userCookie = cookies.parse(req.headers.cookie);
+          if (userCookie.__session) {
+            // there is session cookie
+            const payload = jwt.verify(
+              userCookie.__session,
+              atob(process.env.CLERK_PEM_PUBLIC_KEY),
+            );
+            user.sender = payload.name;
+          }
           done(null, user);
         } else {
           logger.warn('[jwtLogin] JwtStrategy => no user found: ' + payload?.id);

@@ -16,17 +16,6 @@ async function findUserByEmail(email) {
   return User.findOne({ username: email.trim() });
 }
 
-async function comparePassword(user, password) {
-  return new Promise((resolve, reject) => {
-    user.comparePassword(password, function (err, isMatch) {
-      if (err) {
-        return reject(err);
-      }
-      resolve(isMatch);
-    });
-  });
-}
-
 async function passportLogin(req, email, password, done) {
   try {
     const validationError = await validateLoginRequest(req);
@@ -83,12 +72,6 @@ async function passportLogin(req, email, password, done) {
               console.error(error);
             }
           }
-        }
-        const isMatch = await comparePassword(user, password);
-        if (!isMatch) {
-          logError('Passport Local Strategy - Password does not match', { isMatch });
-          logger.error(`[Login] [Login failed] [Username: ${email}] [Request-IP: ${req.ip}]`);
-          return done(null, false, { message: 'Incorrect password.' });
         }
 
         logger.info(`[Login] [Login successful] [Username: ${email}] [Request-IP: ${req.ip}]`);

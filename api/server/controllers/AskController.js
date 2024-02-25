@@ -137,7 +137,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
 
       await saveMessage({ ...response, user });
     }
-
+    userMessage.sender = req.user.sender;
     await saveMessage(userMessage);
 
     if (addTitle && parentMessageId === Constants.NO_PARENT && newConvo) {
