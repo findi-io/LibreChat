@@ -1,29 +1,17 @@
-const { Strategy: JwtStrategy } = require('passport-jwt');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const { logger } = require('~/config');
 const User = require('~/models/User');
-const cookies = require('cookie');
 
 // JWT strategy
 const jwtLogin = async () =>
   new JwtStrategy(
     {
-      jwtFromRequest: (req) => {
-        const userCookie = cookies.parse(req.headers.cookie);
-        if (userCookie.__session) {
-          return userCookie.__session;
-        }
-        return null;
-      },
-      secretOrKey: atob(process.env.CLERK_PEM_PUBLIC_KEY),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.JWT_SECRET,
     },
     async (payload, done) => {
-      console.log(payload);
-      let id = payload.id;
-      if (payload.orgId) {
-        id = payload.orgId;
-      }
       try {
-        const user = await User.findOne({ username: id });
+        const user = await User.findById(payload?.id);
         if (user) {
           done(null, user);
         } else {

@@ -23,7 +23,7 @@ var SSE = function (url, options) {
   this.headers = options.headers || {};
   this.payload = options.payload !== undefined ? options.payload : '';
   this.method = options.method || (this.payload && 'POST') || 'GET';
-  this.withCredentials = !!options.withCredentials;
+  this.withCredentials = true;
 
   this.FIELD_SEPARATOR = ':';
   this.listeners = {};
@@ -110,7 +110,22 @@ var SSE = function (url, options) {
       return;
     }
 
-    if (this.xhr.status !== 200) {
+    if (this.xhr.status === 401 && !this._retry) {
+      this._retry = true;
+      try {
+        const refreshResponse = await request.refreshToken();
+        this.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${refreshResponse.token}`,
+        };
+        setTokenHeader(refreshResponse.token);
+        window.dispatchEvent(new CustomEvent('tokenUpdated', { detail: refreshResponse.token }));
+        this.stream();
+      } catch (err) {
+        this._onStreamFailure(e);
+        return;
+      }
+    } else if (this.xhr.status !== 200) {
       this._onStreamFailure(e);
       return;
     }

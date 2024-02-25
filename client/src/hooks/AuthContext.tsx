@@ -9,7 +9,11 @@ import {
 } from 'react';
 import { useRecoilState } from 'recoil';
 import { TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
-import { useGetUserQuery, useLoginUserMutation } from 'librechat-data-provider/react-query';
+import {
+  useGetUserQuery,
+  useLoginUserMutation,
+  useRefreshTokenMutation,
+} from 'librechat-data-provider/react-query';
 import { useNavigate } from 'react-router-dom';
 import { TAuthConfig, TUserContext, TAuthContext, TResError } from '~/common';
 import { useLogoutUserMutation } from '~/data-provider';
@@ -24,7 +28,13 @@ if (!PUBLISHABLE_KEY) {
 }
 const AuthContext = createContext<TAuthContext | undefined>(undefined);
 
-const AuthContextProvider = ({ children }: { authConfig?: TAuthConfig; children: ReactNode }) => {
+const AuthContextProvider = ({
+  authConfig,
+  children,
+}: {
+  authConfig?: TAuthConfig;
+  children: ReactNode;
+}) => {
   const [user, setUser] = useRecoilState(store.user);
   const [token, setToken] = useState<string | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -73,6 +83,7 @@ const AuthContextProvider = ({ children }: { authConfig?: TAuthConfig; children:
 
   const logout = useCallback(() => logoutUser.mutate(undefined), [logoutUser]);
   const userQuery = useGetUserQuery({ enabled: !!token });
+  const refreshToken = useRefreshTokenMutation();
 
   const login = (data: TLoginUser) => {
     loginUser.mutate(data, {
@@ -88,6 +99,34 @@ const AuthContextProvider = ({ children }: { authConfig?: TAuthConfig; children:
     });
   };
 
+  const silentRefresh = useCallback(() => {
+    if (authConfig?.test) {
+      console.log('Test mode. Skipping silent refresh.');
+      return;
+    }
+    refreshToken.mutate(undefined, {
+      onSuccess: (data: TLoginResponse) => {
+        const { user, token } = data;
+        if (token) {
+          setUserContext({ token, isAuthenticated: true, user });
+        } else {
+          console.log('Token is not present. User is not authenticated.');
+          if (authConfig?.test) {
+            return;
+          }
+          navigate('/login');
+        }
+      },
+      onError: (error) => {
+        console.log('refreshToken mutation error:', error);
+        if (authConfig?.test) {
+          return;
+        }
+        navigate('/error');
+      },
+    });
+  }, []);
+
   useEffect(() => {
     if (userQuery.data) {
       setUser(userQuery.data);
@@ -97,6 +136,9 @@ const AuthContextProvider = ({ children }: { authConfig?: TAuthConfig; children:
     }
     if (error && isAuthenticated) {
       doSetError(undefined);
+    }
+    if (!token || !isAuthenticated) {
+      silentRefresh();
     }
   }, [
     token,
