@@ -27,10 +27,6 @@ class Demo extends Tool {
       appDataSource: this.datasource,
     });
 
-    console.log('-----------input-----------');
-    console.log(input);
-    console.log(await db.getTableInfo());
-    console.log('------------input----------');
     const prompt =
       PromptTemplate.fromTemplate(`Based on the table schema below, write a SQL query works for SQLite that would answer the user's question:
       {schema}
