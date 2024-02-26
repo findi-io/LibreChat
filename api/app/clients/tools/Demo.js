@@ -16,7 +16,7 @@ class Demo extends Tool {
   description_for_model = 'Use the \'demo\' tool to search data from sql database';
   datasource = new DataSource({
     type: 'sqlite',
-    database: '/Users/jason/Downloads/Chinook_Sqlite.sqlite',
+    database: './Chinook_Sqlite.sqlite',
     entities: [],
   });
 
