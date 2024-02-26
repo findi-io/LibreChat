@@ -16,8 +16,16 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
   userMessage.sender = req.user.sender;
   logger.debug('[AskController]', { text, conversationId, ...endpointOption });
   if (text.startsWith('@')) {
-    await saveMessage(userMessage);
+    sendMessage(res, {
+      title: await getConvoTitle(user, conversationId),
+      final: true,
+      sender: req.user.sender,
+      conversation: await getConvo(user, conversationId),
+      requestMessage: userMessage,
+      responseMessage: null,
+    });
     res.end();
+    await saveMessage(userMessage);
     return;
   }
   let metadata;
