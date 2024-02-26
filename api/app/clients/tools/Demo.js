@@ -15,9 +15,13 @@ class Demo extends Tool {
   description = 'Use the \'demo\' tool to search data from sql database';
   description_for_model = 'Use the \'demo\' tool to search data from sql database';
   datasource = new DataSource({
-    type: 'sqlite',
-    database: './Chinook_Sqlite.sqlite',
-    entities: [],
+    type: 'postgres',
+    host: 'ep-billowing-night-a4ozbph0.us-east-1.aws.neon.tech',
+    port: 5432,
+    username: 'default',
+    password: 'zsSZ6BNGh8Lg',
+    database: 'verceldb',
+    ssl: 'true',
   });
 
   llm = new ChatOpenAI({ temperature: 0 });
@@ -26,7 +30,6 @@ class Demo extends Tool {
     const db = await SqlDatabase.fromDataSourceParams({
       appDataSource: this.datasource,
     });
-
     const prompt =
       PromptTemplate.fromTemplate(`Based on the table schema below, write a SQL query works for SQLite that would answer the user's question:
       {schema}
