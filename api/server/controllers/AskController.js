@@ -13,22 +13,8 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
     parentMessageId = null,
     overrideParentMessageId = null,
   } = req.body;
-  userMessage.sender = req.user.sender;
   logger.debug('[AskController]', { text, conversationId, ...endpointOption });
-  if (text.startsWith('@')) {
-    logger.info('sending message with @ ');
-    sendMessage(res, {
-      title: await getConvoTitle(user, conversationId),
-      final: true,
-      sender: req.user.sender,
-      conversation: await getConvo(user, conversationId),
-      requestMessage: userMessage,
-      responseMessage: userMessage,
-    });
-    res.end();
-    await saveMessage(userMessage);
-    return;
-  }
+
   let metadata;
   let userMessage;
   let promptTokens;
@@ -63,6 +49,21 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
 
   let getText;
 
+  userMessage.sender = req.user.sender;
+  if (text.startsWith('@')) {
+    logger.info('sending message with @ ');
+    sendMessage(res, {
+      title: await getConvoTitle(user, conversationId),
+      final: true,
+      sender: req.user.sender,
+      conversation: await getConvo(user, conversationId),
+      requestMessage: userMessage,
+      responseMessage: userMessage,
+    });
+    res.end();
+    await saveMessage(userMessage);
+    return;
+  }
   try {
     const { client } = await initializeClient({ req, res, endpointOption });
 
