@@ -100,6 +100,7 @@
     ]
   },
   "dependencies": {
-    "@clerk/clerk-react": "^4.30.5"
+    "@clerk/clerk-react": "^4.30.5",
+    "@clerk/themes": "^1.7.9"
   }
 }

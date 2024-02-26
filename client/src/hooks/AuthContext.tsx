@@ -8,6 +8,7 @@ import {
   useContext,
 } from 'react';
 import { useRecoilState } from 'recoil';
+import { dark, neobrutalism } from '@clerk/themes';
 import { TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
 import {
   useGetUserQuery,
@@ -185,7 +186,14 @@ const AuthContextProvider = ({
 
   return (
     <AuthContext.Provider value={memoedValue}>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>{children}</ClerkProvider>
+      <ClerkProvider
+        publishableKey={PUBLISHABLE_KEY}
+        appearance={{
+          baseTheme: [neobrutalism, dark],
+        }}
+      >
+        {children}
+      </ClerkProvider>
     </AuthContext.Provider>
   );
 };
