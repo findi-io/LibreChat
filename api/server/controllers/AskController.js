@@ -13,9 +13,13 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
     parentMessageId = null,
     overrideParentMessageId = null,
   } = req.body;
-
+  userMessage.sender = req.user.sender;
   logger.debug('[AskController]', { text, conversationId, ...endpointOption });
-
+  if (text.startsWith('@')) {
+    await saveMessage(userMessage);
+    res.end();
+    return;
+  }
   let metadata;
   let userMessage;
   let promptTokens;
@@ -139,7 +143,6 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
 
       await saveMessage({ ...response, user });
     }
-    userMessage.sender = req.user.sender;
     await saveMessage(userMessage);
 
     if (addTitle && parentMessageId === Constants.NO_PARENT && newConvo) {
