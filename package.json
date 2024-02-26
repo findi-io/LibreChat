@@ -101,6 +101,8 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^4.30.5",
-    "@clerk/themes": "^1.7.9"
+    "@clerk/themes": "^1.7.9",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.20"
   }
 }
