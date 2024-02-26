@@ -4,7 +4,7 @@ const { DataSource } = require('typeorm');
 const { SqlDatabase } = require('langchain/sql_db');
 const { ChatOpenAI } = require('@langchain/openai');
 const { PromptTemplate } = require('@langchain/core/prompts');
-const { RunnableSequence } = require('@langchain/core/runnables');
+const { RunnablePassthrough, RunnableSequence } = require('@langchain/core/runnables');
 const { StringOutputParser } = require('@langchain/core/output_parsers');
 
 class Demo extends Tool {
@@ -16,38 +16,67 @@ class Demo extends Tool {
   description_for_model = 'Use the \'demo\' tool to search data from sql database';
   datasource = new DataSource({
     type: 'sqlite',
-    database: 'Chinook.sqlite',
+    database: '/Users/jason/Downloads/Chinook_Sqlite.sqlite',
+    entities: [],
   });
-  llm = new ChatOpenAI();
+
+  llm = new ChatOpenAI({ temperature: 0 });
   async _call(input) {
-    console.log(input);
     logger.warn('call tool');
     const db = await SqlDatabase.fromDataSourceParams({
       appDataSource: this.datasource,
     });
+
     const prompt =
-      PromptTemplate.fromTemplate(`Based on the provided SQL table schema below, write a SQL query that would answer the user's question.
-    ------------
-    SCHEMA: {schema}
-    ------------
-    QUESTION: {question}
-    ------------
-    SQL QUERY:`);
-    const sqlQueryChain = RunnableSequence.from([
-      {
+      PromptTemplate.fromTemplate(`Based on the table schema below, write a SQL query works for SQLite that would answer the user's question:
+      {schema}
+      
+      Question: {question}
+      SQL Query:`);
+    const sqlQueryGeneratorChain = RunnableSequence.from([
+      RunnablePassthrough.assign({
         schema: async () => db.getTableInfo(),
-        question: (input) => input.question,
-      },
+      }),
       prompt,
       this.llm.bind({ stop: ['\nSQLResult:'] }),
       new StringOutputParser(),
     ]);
 
-    const res = await sqlQueryChain.invoke({
+    /*
+        {
+          result: "SELECT COUNT(EmployeeId) AS TotalEmployees FROM Employee"
+        }
+      */
+
+    const finalResponsePrompt =
+      PromptTemplate.fromTemplate(`Based on the table schema below, question, sql query, and sql response, write a natural language response:
+      {schema}
+      
+      Question: {question}
+      SQL Query: {query}
+      SQL Response: {response}`);
+
+    const fullChain = RunnableSequence.from([
+      RunnablePassthrough.assign({
+        query: sqlQueryGeneratorChain,
+      }),
+      {
+        schema: async () => db.getTableInfo(),
+        question: (input) => input.question,
+        query: (input) => input.query,
+        response: (input) => db.run(input.query),
+      },
+      finalResponsePrompt,
+      this.llm,
+    ]);
+
+    const finalResponse = await fullChain.invoke({
       question: input,
     });
-    console.log({ res });
-    return res;
+
+    finalResponse.name = 'demo';
+    finalResponse.includes = () => {};
+    return finalResponse;
   }
 }
 
