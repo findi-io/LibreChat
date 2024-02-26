@@ -17,7 +17,6 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
   logger.debug('[AskController]', { text, conversationId, ...endpointOption });
 
   let metadata;
-  let atSomebody = false;
   let userMessage;
   let promptTokens;
   let userMessageId;
@@ -33,9 +32,6 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
   const user = req.user.id;
 
   const addMetadata = (data) => (metadata = data);
-  if (text.startsWith('@')) {
-    atSomebody = true;
-  }
 
   const getReqData = (data = {}) => {
     for (let key in data) {
@@ -112,10 +108,9 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
         parentMessageId: overrideParentMessageId || userMessageId,
       }),
     };
-    let response = {};
-    if (!atSomebody) {
-      response = await client.sendMessage(text, messageOptions);
-    }
+
+    let response = await client.sendMessage(text, messageOptions);
+
     if (overrideParentMessageId) {
       response.parentMessageId = overrideParentMessageId;
     }
@@ -131,7 +126,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
       delete userMessage.image_urls;
     }
 
-    if (!abortController.signal.aborted && !atSomebody) {
+    if (!abortController.signal.aborted) {
       sendMessage(res, {
         title: await getConvoTitle(user, conversationId),
         final: true,
