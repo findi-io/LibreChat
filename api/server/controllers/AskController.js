@@ -13,9 +13,11 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
     parentMessageId = null,
     overrideParentMessageId = null,
   } = req.body;
+
   logger.debug('[AskController]', { text, conversationId, ...endpointOption });
 
   let metadata;
+  let atSomebody = false;
   let userMessage;
   let promptTokens;
   let userMessageId;
@@ -31,6 +33,9 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
   const user = req.user.id;
 
   const addMetadata = (data) => (metadata = data);
+  if (text.startsWith('@')) {
+    atSomebody = true;
+  }
 
   const getReqData = (data = {}) => {
     for (let key in data) {
@@ -49,21 +54,6 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
 
   let getText;
 
-  userMessage.sender = req.user.sender;
-  if (text.startsWith('@')) {
-    logger.info('sending message with @ ');
-    sendMessage(res, {
-      title: await getConvoTitle(user, conversationId),
-      final: true,
-      sender: req.user.sender,
-      conversation: await getConvo(user, conversationId),
-      requestMessage: userMessage,
-      responseMessage: userMessage,
-    });
-    res.end();
-    await saveMessage(userMessage);
-    return;
-  }
   try {
     const { client } = await initializeClient({ req, res, endpointOption });
 
@@ -122,9 +112,10 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
         parentMessageId: overrideParentMessageId || userMessageId,
       }),
     };
-
-    let response = await client.sendMessage(text, messageOptions);
-
+    let response = {};
+    if (!atSomebody) {
+      response = await client.sendMessage(text, messageOptions);
+    }
     if (overrideParentMessageId) {
       response.parentMessageId = overrideParentMessageId;
     }
@@ -140,7 +131,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
       delete userMessage.image_urls;
     }
 
-    if (!abortController.signal.aborted) {
+    if (!abortController.signal.aborted && !atSomebody) {
       sendMessage(res, {
         title: await getConvoTitle(user, conversationId),
         final: true,
@@ -153,6 +144,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
 
       await saveMessage({ ...response, user });
     }
+    userMessage.sender = req.user.sender;
     await saveMessage(userMessage);
 
     if (addTitle && parentMessageId === Constants.NO_PARENT && newConvo) {
