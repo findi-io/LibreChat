@@ -130,6 +130,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
       sendMessage(res, {
         title: await getConvoTitle(user, conversationId),
         final: true,
+        sender: req.user.sender,
         conversation: await getConvo(user, conversationId),
         requestMessage: userMessage,
         responseMessage: response,
