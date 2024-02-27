@@ -20,28 +20,27 @@ class Demo extends Tool {
     entities: [],
   });
 
-  llm = new ChatOpenAI({ temperature: 0 });
+  llm = new ChatOpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo-16k' });
   async _call(input) {
     logger.warn('call tool');
     const db = await SqlDatabase.fromDataSourceParams({
       appDataSource: this.datasource,
     });
-
+    const schema = await db.getTableInfo();
     const prompt =
-      PromptTemplate.fromTemplate(`Based on the table schema below, write a SQL query works for SQLite that would answer the user's question:
+      PromptTemplate.fromTemplate(`Based on the table schema below, write a SQL query that would answer the user's question:
       {schema}
-      
+
       Question: {question}
       SQL Query:`);
     const sqlQueryGeneratorChain = RunnableSequence.from([
       RunnablePassthrough.assign({
-        schema: async () => db.getTableInfo(),
+        schema: async () => schema,
       }),
       prompt,
       this.llm.bind({ stop: ['\nSQLResult:'] }),
       new StringOutputParser(),
     ]);
-
     /*
         {
           result: "SELECT COUNT(EmployeeId) AS TotalEmployees FROM Employee"
@@ -61,9 +60,14 @@ class Demo extends Tool {
         query: sqlQueryGeneratorChain,
       }),
       {
-        schema: async () => db.getTableInfo(),
-        question: (input) => input.question,
-        query: (input) => input.query,
+        schema: () => schema,
+        question: () => input,
+        query: (input) => {
+          console.log('---------------');
+          console.log(input);
+          console.log('--------------');
+          return input.query;
+        },
         response: (input) => db.run(input.query),
       },
       finalResponsePrompt,
