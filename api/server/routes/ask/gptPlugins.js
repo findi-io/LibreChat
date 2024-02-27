@@ -149,6 +149,7 @@ router.post(
     };
 
     const onChainEnd = () => {
+      userMessage.sender = req.user.sender;
       saveMessage({ ...userMessage, user });
       sendIntermediateMessage(res, { plugins });
     };
