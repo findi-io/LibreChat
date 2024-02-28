@@ -11,7 +11,7 @@ const {
   Text,
 } = require('@react-email/components');
 
-export const MagicLinkEmail = ({ firstName = '', actionUrl, mailType, siteName }) => (
+const MagicLinkEmail = ({ firstName = '', actionUrl, mailType, siteName }) => (
   <Html>
     <Head />
     <Preview>The sales intelligence platform that helps you uncover qualified leads.</Preview>
@@ -49,4 +49,6 @@ export const MagicLinkEmail = ({ firstName = '', actionUrl, mailType, siteName }
   </Html>
 );
 
-export default MagicLinkEmail;
+module.exports = {
+  MagicLinkEmail,
+};
