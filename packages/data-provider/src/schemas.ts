@@ -441,7 +441,7 @@ export const gptPluginsSchema = tConversationSchema
     model: obj.model ?? 'gpt-3.5-turbo',
     chatGptLabel: obj.chatGptLabel ?? null,
     promptPrefix: obj.promptPrefix ?? null,
-    temperature: obj.temperature ?? 0.8,
+    temperature: obj.temperature ?? 0,
     top_p: obj.top_p ?? 1,
     presence_penalty: obj.presence_penalty ?? 0,
     frequency_penalty: obj.frequency_penalty ?? 0,
@@ -457,7 +457,7 @@ export const gptPluginsSchema = tConversationSchema
     model: 'gpt-3.5-turbo',
     chatGptLabel: null,
     promptPrefix: null,
-    temperature: 0.8,
+    temperature: 0,
     top_p: 1,
     presence_penalty: 0,
     frequency_penalty: 0,
@@ -618,7 +618,7 @@ export const compactPluginsSchema = tConversationSchema
     if (newObj.promptPrefix === null) {
       delete newObj.promptPrefix;
     }
-    if (newObj.temperature === 0.8) {
+    if (newObj.temperature === 0) {
       delete newObj.temperature;
     }
     if (newObj.top_p === 1) {
