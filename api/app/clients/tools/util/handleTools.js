@@ -13,6 +13,7 @@ const {
   WolframAlphaAPI,
   OpenAICreateImage,
   Demo,
+  Email,
   Chart,
   StableDiffusionAPI,
   // Structured Tools
@@ -163,6 +164,7 @@ const loadTools = async ({
     calculator: Calculator,
     google: GoogleSearchAPI,
     demo: Demo,
+    email: Email,
     chart: Chart,
     wolfram: functions ? StructuredWolfram : WolframAlphaAPI,
     'dall-e': OpenAICreateImage,
