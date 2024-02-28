@@ -1,8 +1,6 @@
 const { Tool } = require('langchain/tools');
 const { logger } = require('~/config');
-const { Resend } = require('resend');
-
-const { MagicLinkEmail } = require('~/email/magic-email-link');
+const { sendEmail } = require('~/server/utils');
 
 class Email extends Tool {
   constructor(fields = {}) {
@@ -12,7 +10,6 @@ class Email extends Tool {
     this.senderEmail = fields.senderEmail;
     this.sender = fields.sender;
     this.conversationId = fields.conversationId;
-    this.resend = new Resend(fields.apiKey);
     console.log(fields);
   }
   name = 'email';
@@ -22,26 +19,26 @@ class Email extends Tool {
   async _call(input) {
     logger.warn('call tool ' + input);
     try {
-      await this.resend.emails.send({
-        from: 'Chatlog App <onboarding@chatlog.ai>',
-        to: `${this.sender}<${this.senderEmail}>`,
-        subject: `your chat conversation ${this.conversationId}`,
-        react: MagicLinkEmail({
-          firstName: this.sender,
-          actionUrl: `https://chat.chatlog.ai/c/${this.conversationId}`,
-          mailType: 'login',
-          siteName: 'Chatlog App',
-        }),
-        // Set this to prevent Gmail from threading emails.
-        // More info: https://resend.com/changelog/custom-email-headers
-        headers: {
-          'X-Entity-Ref-ID': new Date().getTime() + '',
-        },
-      });
+      const emailEnabled =
+        (!!process.env.EMAIL_SERVICE || !!process.env.EMAIL_HOST) &&
+        !!process.env.EMAIL_USERNAME &&
+        !!process.env.EMAIL_PASSWORD &&
+        !!process.env.EMAIL_FROM;
 
+      if (emailEnabled) {
+        sendEmail(
+          this.senderEmail,
+          'Password Reset Request',
+          {
+            name: this.sender,
+            link: `https://chat.chatlog.ai/c/${this.conversationId}`,
+          },
+          'requestPasswordReset.handlebars',
+        );
+      }
       // console.log(result)
     } catch (error) {
-      throw new Error('Failed to send verification email.');
+      logger.error('Failed to send email.');
     }
     return 'email sent out';
   }
