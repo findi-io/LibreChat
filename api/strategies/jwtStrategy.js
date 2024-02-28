@@ -24,6 +24,7 @@ const jwtLogin = async () =>
               atob(process.env.CLERK_PEM_PUBLIC_KEY),
             );
             user.sender = payload.name;
+            user.senderEmail = payload.email;
           }
           done(null, user);
         } else {

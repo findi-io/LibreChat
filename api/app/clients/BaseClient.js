@@ -75,6 +75,7 @@ class BaseClient {
     const user = opts.user ?? null;
     this.user = user;
     const sender = opts.sender;
+    const senderEmail = opts.senderEmail;
     const saveOptions = this.getSaveOptions();
     this.abortController = opts.abortController ?? new AbortController();
     const conversationId = opts.conversationId ?? crypto.randomUUID();
@@ -96,6 +97,7 @@ class BaseClient {
       user,
       head,
       sender,
+      senderEmail,
       conversationId,
       parentMessageId,
       userMessageId,
@@ -120,6 +122,7 @@ class BaseClient {
       user,
       head,
       sender,
+      senderEmail,
       conversationId,
       parentMessageId,
       userMessageId,
@@ -152,7 +155,9 @@ class BaseClient {
     return {
       ...opts,
       user,
+      senderEmail,
       head,
+      sender,
       conversationId,
       responseMessageId,
       saveOptions,

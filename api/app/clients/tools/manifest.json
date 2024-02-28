@@ -130,10 +130,10 @@
     "authConfig": []
   },
   {
-    "name": "Demo",
+    "name": "Database",
     "pluginKey": "demo",
-    "description": "a simple demo to query Chinook database",
-    "icon": "/images/demo.png",
+    "description": "a simple demo to query northwind database",
+    "icon": "https://www.chatlog.ai/images/database.png",
     "isAuthRequired": "false",
     "authConfig": []
   },
@@ -141,7 +141,15 @@
     "name": "Chart",
     "pluginKey": "chart",
     "description": "a simple demo to generate chart image",
-    "icon": "/images/demo.png",
+    "icon": "https://www.chatlog.ai/images/chart.png",
+    "isAuthRequired": "false",
+    "authConfig": []
+  },
+  {
+    "name": "Email",
+    "pluginKey": "email",
+    "description": "quickly summarize the messages, and send by email",
+    "icon": "https://www.chatlog.ai/images/email.png",
     "isAuthRequired": "false",
     "authConfig": []
   },
