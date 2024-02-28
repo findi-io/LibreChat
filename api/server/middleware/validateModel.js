@@ -34,8 +34,7 @@ const validateModel = async (req, res, next) => {
 
   let validModel = !!availableModels.find((availableModel) => availableModel === model);
   if (endpoint === EModelEndpoint.gptPlugins) {
-    if (req.body.agentOptions)
-    {validModel = validModel && availableModels.includes(req.body.agentOptions?.model);}
+    validModel = validModel && availableModels.includes(req.body.agentOptions?.model);
   }
 
   if (validModel) {
