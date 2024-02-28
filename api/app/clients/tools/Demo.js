@@ -24,7 +24,7 @@ class Demo extends Tool {
     ssl: true,
   });
 
-  llm = new ChatOpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo-16k' });
+  llm = new ChatOpenAI({ temperature: 0, modelName: 'gpt-4-turbo-preview' });
   async _call(input) {
     logger.warn('call tool');
     const db = await SqlDatabase.fromDataSourceParams({

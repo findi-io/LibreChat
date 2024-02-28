@@ -14,7 +14,6 @@ import { LogOutIcon } from '../svg';
 import { useLocalize } from '~/hooks';
 import Settings from './Settings';
 import NavLink from './NavLink';
-import Logout from './Logout';
 import { cn } from '~/utils/';
 import store from '~/store';
 import { OrganizationSwitcher, SignOutButton, SignedIn } from '@clerk/clerk-react';

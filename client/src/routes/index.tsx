@@ -5,6 +5,7 @@ import ChatRoute from './ChatRoute';
 import Search from './Search';
 import {
   Login,
+  Error,
   Registration,
   RequestPasswordReset,
   ResetPassword,
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'error',
+        element: <Error />,
       },
       {
         path: '/',
