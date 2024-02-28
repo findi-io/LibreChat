@@ -9,7 +9,7 @@ class Email extends Tool {
     this.userId = fields.userId;
     this.senderEmail = fields.senderEmail;
     this.sender = fields.sender;
-    this.messsages = fields.messages;
+    this.messages = fields.messages;
     this.conversationId = fields.conversationId;
   }
   name = 'email';
@@ -31,6 +31,8 @@ class Email extends Tool {
           `Your chat conversation ${this.conversationId}`,
           {
             name: this.sender,
+            hello: 'world',
+            conversationId: this.conversationId,
             messages: this.messages,
             link: `https://chat.chatlog.ai/c/${this.conversationId}`,
           },
