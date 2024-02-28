@@ -1,4 +1,4 @@
-import {
+const {
   Body,
   Button,
   Container,
@@ -9,7 +9,7 @@ import {
   Section,
   Tailwind,
   Text,
-} from '@react-email/components';
+} = require('@react-email/components');
 
 export const MagicLinkEmail = ({ firstName = '', actionUrl, mailType, siteName }) => (
   <Html>
