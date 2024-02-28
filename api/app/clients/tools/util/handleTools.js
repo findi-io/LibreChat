@@ -13,7 +13,6 @@ const {
   WolframAlphaAPI,
   OpenAICreateImage,
   Demo,
-  Email,
   Chart,
   StableDiffusionAPI,
   // Structured Tools
@@ -145,14 +144,13 @@ const loadToolWithAuth = (userId, authFields, ToolConstructor, options = {}) => 
         authValues[result.authField] = result.authValue;
       }
     }
+
     return new ToolConstructor({ ...options, ...authValues, userId });
   };
 };
 
 const loadTools = async ({
   user,
-  sender,
-  senderEmail,
   model,
   functions = null,
   returnMap = false,
@@ -165,7 +163,6 @@ const loadTools = async ({
     calculator: Calculator,
     google: GoogleSearchAPI,
     demo: Demo,
-    email: Email,
     chart: Chart,
     wolfram: functions ? StructuredWolfram : WolframAlphaAPI,
     'dall-e': OpenAICreateImage,
@@ -253,13 +250,6 @@ const loadTools = async ({
     chart: imageGenOptions,
     'dall-e': imageGenOptions,
     'stable-diffusion': imageGenOptions,
-    email: {
-      messages: options.memory.chatHistory.messages,
-      conversationId: options.conversationId,
-      sender,
-      senderEmail,
-      apiKey: process.env.RESEND_API_KEY,
-    },
   };
 
   const toolAuthFields = {};
