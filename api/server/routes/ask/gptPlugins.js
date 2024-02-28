@@ -172,6 +172,8 @@ router.post(
 
       let response = await client.sendMessage(text, {
         user,
+        sender: req.user.sender,
+        senderEmail: req.user.senderEmail,
         conversationId,
         parentMessageId,
         overrideParentMessageId,
