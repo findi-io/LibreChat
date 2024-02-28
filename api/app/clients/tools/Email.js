@@ -9,8 +9,8 @@ class Email extends Tool {
     this.userId = fields.userId;
     this.senderEmail = fields.senderEmail;
     this.sender = fields.sender;
+    this.messsages = fields.messages;
     this.conversationId = fields.conversationId;
-    console.log(fields);
   }
   name = 'email';
   description = 'send the conversation by email';
@@ -28,12 +28,13 @@ class Email extends Tool {
       if (emailEnabled) {
         sendEmail(
           this.senderEmail,
-          'Password Reset Request',
+          `Your chat conversation ${this.conversationId}`,
           {
             name: this.sender,
+            messages: this.messages,
             link: `https://chat.chatlog.ai/c/${this.conversationId}`,
           },
-          'requestPasswordReset.handlebars',
+          'email.handlebars',
         );
       }
       // console.log(result)
