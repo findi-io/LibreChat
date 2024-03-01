@@ -20,17 +20,8 @@ const endpointComponents = {
   [EModelEndpoint.custom]: CustomConfig,
   [EModelEndpoint.azureOpenAI]: OpenAIConfig,
   [EModelEndpoint.gptPlugins]: OpenAIConfig,
-  [EModelEndpoint.assistants]: OpenAIConfig,
   default: OtherConfig,
 };
-
-const formSet: Set<string> = new Set([
-  EModelEndpoint.openAI,
-  EModelEndpoint.custom,
-  EModelEndpoint.azureOpenAI,
-  EModelEndpoint.gptPlugins,
-  EModelEndpoint.assistants,
-]);
 
 const EXPIRY = {
   THIRTY_MINUTES: { display: 'in 30 minutes', value: 30 * 60 * 1000 },
@@ -56,10 +47,6 @@ const SetKeyDialog = ({
     defaultValues: {
       apiKey: '',
       baseURL: '',
-      azureOpenAIApiKey: '',
-      azureOpenAIApiInstanceName: '',
-      azureOpenAIApiDeploymentName: '',
-      azureOpenAIApiVersion: '',
       // TODO: allow endpoint definitions from user
       // name: '',
       // TODO: add custom endpoint models defined by user
@@ -89,26 +76,10 @@ const SetKeyDialog = ({
       onOpenChange(false);
     };
 
-    if (formSet.has(endpoint) || formSet.has(endpointType ?? '')) {
+    if (endpoint === EModelEndpoint.custom || endpointType === EModelEndpoint.custom) {
       // TODO: handle other user provided options besides baseURL and apiKey
       methods.handleSubmit((data) => {
-        const isAzure = endpoint === EModelEndpoint.azureOpenAI;
-        const isOpenAIBase =
-          isAzure ||
-          endpoint === EModelEndpoint.openAI ||
-          endpoint === EModelEndpoint.gptPlugins ||
-          endpoint === EModelEndpoint.assistants;
-        if (isAzure) {
-          data.apiKey = 'n/a';
-        }
-
         const emptyValues = Object.keys(data).filter((key) => {
-          if (!isAzure && key.startsWith('azure')) {
-            return false;
-          }
-          if (isOpenAIBase && key === 'baseURL') {
-            return false;
-          }
           if (key === 'baseURL' && !userProvideURL) {
             return false;
           }
@@ -121,22 +92,10 @@ const SetKeyDialog = ({
             status: 'error',
           });
           onOpenChange(true);
-          return;
+        } else {
+          saveKey(JSON.stringify(data));
+          methods.reset();
         }
-
-        const { apiKey, baseURL, ...azureOptions } = data;
-        const userProvidedData = { apiKey, baseURL };
-        if (isAzure) {
-          userProvidedData.apiKey = JSON.stringify({
-            azureOpenAIApiKey: azureOptions.azureOpenAIApiKey,
-            azureOpenAIApiInstanceName: azureOptions.azureOpenAIApiInstanceName,
-            azureOpenAIApiDeploymentName: azureOptions.azureOpenAIApiDeploymentName,
-            azureOpenAIApiVersion: azureOptions.azureOpenAIApiVersion,
-          });
-        }
-
-        saveKey(JSON.stringify(userProvidedData));
-        methods.reset();
       })();
       return;
     }

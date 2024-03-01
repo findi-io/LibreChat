@@ -55,18 +55,16 @@ function createLLM({
   }
 
   if (azure && configOptions.basePath) {
-    const azureURL = constructAzureURL({
+    configOptions.basePath = constructAzureURL({
       baseURL: configOptions.basePath,
       azure: azureOptions,
     });
-    azureOptions.azureOpenAIBasePath = azureURL.split(
-      `/${azureOptions.azureOpenAIApiDeploymentName}`,
-    )[0];
   }
 
   return new ChatOpenAI(
     {
       streaming,
+      verbose: true,
       credentials,
       configuration,
       ...azureOptions,

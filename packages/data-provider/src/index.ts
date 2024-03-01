@@ -1,5 +1,4 @@
 /* config */
-export * from './azure';
 export * from './config';
 export * from './file-config';
 /* schema helpers  */

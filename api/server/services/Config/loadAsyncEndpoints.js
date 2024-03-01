@@ -1,16 +1,12 @@
-const { EModelEndpoint } = require('librechat-data-provider');
-const { addOpenAPISpecs } = require('~/app/clients/tools/util/addOpenAPISpecs');
 const { availableTools } = require('~/app/clients/tools');
-const { isUserProvided } = require('~/server/utils');
-const { config } = require('./EndpointService');
-
-const { openAIApiKey, azureOpenAIApiKey, useAzurePlugins, userProvidedOpenAI, googleKey } = config;
+const { addOpenAPISpecs } = require('~/app/clients/tools/util/addOpenAPISpecs');
+const { openAIApiKey, azureOpenAIApiKey, useAzurePlugins, userProvidedOpenAI, googleKey } =
+  require('./EndpointService').config;
 
 /**
  * Load async endpoints and return a configuration object
- * @param {Express.Request} req - The request object
  */
-async function loadAsyncEndpoints(req) {
+async function loadAsyncEndpoints() {
   let i = 0;
   let serviceKey, googleUserProvides;
   try {
@@ -21,7 +17,7 @@ async function loadAsyncEndpoints(req) {
     }
   }
 
-  if (isUserProvided(googleKey)) {
+  if (googleKey === 'user_provided') {
     googleUserProvides = true;
     if (i <= 1) {
       i++;
@@ -39,18 +35,13 @@ async function loadAsyncEndpoints(req) {
 
   const google = serviceKey || googleKey ? { userProvide: googleUserProvides } : false;
 
-  const useAzure = req.app.locals[EModelEndpoint.azureOpenAI]?.plugins;
   const gptPlugins =
-    useAzure || openAIApiKey || azureOpenAIApiKey
+    openAIApiKey || azureOpenAIApiKey
       ? {
         plugins,
         availableAgents: ['classic', 'functions'],
-        userProvide: useAzure ? false : userProvidedOpenAI,
-        userProvideURL: useAzure
-          ? false
-          : config[EModelEndpoint.openAI]?.userProvideURL ||
-              config[EModelEndpoint.azureOpenAI]?.userProvideURL,
-        azure: useAzurePlugins || useAzure,
+        userProvide: userProvidedOpenAI,
+        azure: useAzurePlugins,
       }
       : false;
 

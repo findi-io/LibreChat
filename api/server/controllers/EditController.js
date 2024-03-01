@@ -90,20 +90,6 @@ const EditController = async (req, res, next, initializeClient) => {
 
   const { abortController, onStart } = createAbortController(req, res, getAbortData);
 
-  res.on('close', () => {
-    logger.debug('[EditController] Request closed');
-    if (!abortController) {
-      return;
-    } else if (abortController.signal.aborted) {
-      return;
-    } else if (abortController.requestCompleted) {
-      return;
-    }
-
-    abortController.abort();
-    logger.debug('[EditController] Request aborted on close');
-  });
-
   try {
     const { client } = await initializeClient({ req, res, endpointOption });
 

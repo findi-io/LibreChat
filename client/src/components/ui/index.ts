@@ -26,4 +26,3 @@ export { default as SelectDropDown } from './SelectDropDown';
 export { default as MultiSelectPop } from './MultiSelectPop';
 export { default as SelectDropDownPop } from './SelectDropDownPop';
 export { default as MultiSelectDropDown } from './MultiSelectDropDown';
-export { default as ThemeSelector } from './ThemeSelector';

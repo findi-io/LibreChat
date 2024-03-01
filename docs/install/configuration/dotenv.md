@@ -1,7 +1,7 @@
 ---
 title: ⚙️ Environment Variables
 description: Comprehensive guide for configuring your application's environment with the `.env` file. This document is your one-stop resource for understanding and customizing the environment variables that will shape your application's behavior in different contexts.
-weight: -12
+weight: -11
 ---
 
 # .env File Configuration
@@ -29,6 +29,16 @@ For more info see:
 ---
 
 ## Server Configuration
+
+### Customization
+- Here you can change the app title and footer
+- Uncomment to add a custom footer.
+    - Uncomment and make empty "" to remove the footer.
+
+```bash
+APP_TITLE=LibreChat
+CUSTOM_FOOTER="My custom footer"
+```
 
 ### Port
 
@@ -106,15 +116,6 @@ UID=1000
 GID=1000
 ```
 
-### librechat.yaml path
-Set an alternative path for the LibreChat config file
-
-> Note: leave commented out to have LibreChat look for the config file in the root folder (default behavior)
-
-```sh
-CONFIG_PATH="/alternative/path/to/librechat.yaml"
-```
-
 ## Endpoints
 In this section you can configure the endpoints and models selection, their API keys, and the proxy and reverse proxy settings for the endpoints that support it. 
 
@@ -125,20 +126,6 @@ In this section you can configure the endpoints and models selection, their API 
 ```bash
 ENDPOINTS=openAI,assistants,azureOpenAI,bingAI,chatGPTBrowser,google,gptPlugins,anthropic
 PROXY=
-```
-
-### Known Endpoints - librechat.yaml
-- see: [AI Endpoints](./ai_endpoints.md)
-- see also: [Custom Configuration](./custom_config.md)
-
-```sh
-GROQ_API_KEY=
-MISTRAL_API_KEY=
-OPENROUTER_KEY=
-ANYSCALE_API_KEY=
-FIREWORKS_API_KEY=
-PERPLEXITY_API_KEY=
-TOGETHERAI_API_KEY=
 ```
 
 ### Anthropic
@@ -864,29 +851,16 @@ Mail address for from field. It is **REQUIRED** to set a value here (even if it'
 ```bash
 EMAIL_FROM=noreply@librechat.ai 
 ```
-### UI
 
-- **Help and FAQ button:** 
+### Other
 
-Empty or commented `HELP_AND_FAQ_URL`, button enabled
+- **Redis:** Redis support is experimental, you may encounter some problems when using it. 
 
-`HELP_AND_FAQ_URL=https://example.com`, button enabled and goes to `https://example.com`
-
-`HELP_AND_FAQ_URL=/`, button disabled
+> If using Redis, you should flush the cache after changing any LibreChat settings
 
 ```bash
-HELP_AND_FAQ_URL=
-```
-
-- **App title and footer:**
-
-Uncomment to add a custom footer
-
-Uncomment and make empty "" to remove the footer
-
-```bash
-APP_TITLE=LibreChat
-CUSTOM_FOOTER="My custom footer"
+REDIS_URI=
+USE_REDIS=
 ```
 
 - **Birthday Hat:** Give the AI Icon a Birthday Hat 🥳
@@ -899,15 +873,4 @@ CUSTOM_FOOTER="My custom footer"
 
 ```bash
 SHOW_BIRTHDAY_ICON=true
-```
-
-### Other
-
-- **Redis:** Redis support is experimental, you may encounter some problems when using it. 
-
-> If using Redis, you should flush the cache after changing any LibreChat settings
-
-```bash
-REDIS_URI=
-USE_REDIS=
 ```

@@ -286,9 +286,6 @@ function createInProgressHandler(openai, thread_id, messages) {
       openai.seenCompletedMessages.add(message_id);
 
       const message = await openai.beta.threads.messages.retrieve(thread_id, message_id);
-      if (!message?.content?.length) {
-        return;
-      }
       messages.push(message);
 
       let messageIndex = openai.mappedOrder.get(step.id);

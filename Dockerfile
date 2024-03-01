@@ -8,11 +8,9 @@ ARG CLERK_PEM_PUBLIC_KEY
 # Allow mounting of these files, which have no default
 # values.
 RUN touch .env
-RUN npm config set fetch-retry-maxtimeout 300000
-RUN apk add --no-cache g++ make python3 py3-pip
-RUN npm install -g node-gyp
+# Install call deps - Install curl for health check
 RUN apk --no-cache add curl && \
-    npm install
+    npm ci
 
 # React client build
 ENV NODE_OPTIONS="--max-old-space-size=2048"
