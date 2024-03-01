@@ -108,6 +108,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
 
     const messageOptions = {
       user,
+      sender: req.user.sender,
       parentMessageId,
       conversationId,
       overrideParentMessageId,
@@ -143,6 +144,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
       sendMessage(res, {
         title: await getConvoTitle(user, conversationId),
         final: true,
+        sender: req.user.sender,
         conversation: await getConvo(user, conversationId),
         requestMessage: userMessage,
         responseMessage: response,
@@ -151,7 +153,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
 
       await saveMessage({ ...response, user });
     }
-
+    userMessage.sender = req.user.sender;
     await saveMessage(userMessage);
 
     if (addTitle && parentMessageId === Constants.NO_PARENT && newConvo) {

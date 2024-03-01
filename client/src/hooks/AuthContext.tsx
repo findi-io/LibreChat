@@ -8,7 +8,8 @@ import {
   useContext,
 } from 'react';
 import { useRecoilState } from 'recoil';
-import { TUser, TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
+import { dark, neobrutalism } from '@clerk/themes';
+import { TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
 import {
   useGetUserQuery,
   useLoginUserMutation,
@@ -19,7 +20,13 @@ import { TAuthConfig, TUserContext, TAuthContext, TResError } from '~/common';
 import { useLogoutUserMutation } from '~/data-provider';
 import useTimeout from './useTimeout';
 import store from '~/store';
+import { ClerkProvider } from '@clerk/clerk-react';
 
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Missing Publishable Key');
+}
 const AuthContext = createContext<TAuthContext | undefined>(undefined);
 
 const AuthContextProvider = ({
@@ -88,7 +95,7 @@ const AuthContextProvider = ({
       onError: (error: TResError | unknown) => {
         const resError = error as TResError;
         doSetError(resError.message);
-        navigate('/login', { replace: true });
+        navigate('/error', { replace: true });
       },
     });
   };
@@ -116,7 +123,7 @@ const AuthContextProvider = ({
         if (authConfig?.test) {
           return;
         }
-        navigate('/login');
+        navigate('/error');
       },
     });
   }, []);
@@ -126,7 +133,7 @@ const AuthContextProvider = ({
       setUser(userQuery.data);
     } else if (userQuery.isError) {
       doSetError((userQuery?.error as Error).message);
-      navigate('/login', { replace: true });
+      navigate('/error', { replace: true });
     }
     if (error && isAuthenticated) {
       doSetError(undefined);
@@ -177,7 +184,18 @@ const AuthContextProvider = ({
     [user, error, isAuthenticated, token],
   );
 
-  return <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={memoedValue}>
+      <ClerkProvider
+        publishableKey={PUBLISHABLE_KEY}
+        appearance={{
+          baseTheme: [neobrutalism, dark],
+        }}
+      >
+        {children}
+      </ClerkProvider>
+    </AuthContext.Provider>
+  );
 };
 
 const useAuthContext = () => {

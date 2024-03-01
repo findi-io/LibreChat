@@ -5,6 +5,9 @@ const GoogleSearchAPI = require('./GoogleSearch');
 const WolframAlphaAPI = require('./Wolfram');
 const AzureAiSearch = require('./AzureAiSearch');
 const OpenAICreateImage = require('./DALL-E');
+const Demo = require('./Demo');
+const Email = require('./Email');
+const Chart = require('./Chart');
 const StableDiffusionAPI = require('./StableDiffusion');
 const SelfReflectionTool = require('./SelfReflection');
 
@@ -27,6 +30,9 @@ module.exports = {
   GoogleSearchAPI,
   WolframAlphaAPI,
   OpenAICreateImage,
+  Demo,
+  Email,
+  Chart,
   StableDiffusionAPI,
   SelfReflectionTool,
   // Structured Tools
