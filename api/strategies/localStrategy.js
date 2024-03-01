@@ -1,7 +1,8 @@
+const { errorsToString } = require('librechat-data-provider');
 const { Strategy: PassportLocalStrategy } = require('passport-local');
-const User = require('../models/User');
-const { loginSchema, errorsToString } = require('./validators');
-const logger = require('../utils/logger');
+const { loginSchema } = require('./validators');
+const logger = require('~/utils/logger');
+const User = require('~/models/User');
 const cookies = require('cookie');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');

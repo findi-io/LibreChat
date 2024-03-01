@@ -27,6 +27,8 @@
   },
   "homepage": "https://librechat.ai",
   "dependencies": {
+    "@clerk/clerk-react": "^4.30.5",
+    "@clerk/themes": "^1.7.9",
     "@dicebear/collection": "^7.0.4",
     "@dicebear/core": "^7.0.4",
     "@headlessui/react": "^1.7.13",
