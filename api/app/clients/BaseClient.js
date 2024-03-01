@@ -457,7 +457,10 @@ class BaseClient {
     if (message.startsWith('@')) {
       return { dummy: true };
     }
+
     const completion = await this.sendCompletion(payload, opts);
+    this.abortController.requestCompleted = true;
+
     const responseMessage = {
       messageId: responseMessageId,
       conversationId,
