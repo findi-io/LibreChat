@@ -3,7 +3,9 @@ import App from './App';
 import './style.css';
 import './mobile.css';
 import { ApiErrorBoundaryProvider } from './hooks/ApiErrorBoundaryContext';
+import ReactGA from 'react-ga4';
 
+ReactGA.initialize('G-00D8S295GT');
 const container = document.getElementById('root');
 const root = createRoot(container);
 
