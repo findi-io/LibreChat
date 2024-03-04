@@ -6,6 +6,7 @@ import { ApiErrorBoundaryProvider } from './hooks/ApiErrorBoundaryContext';
 import ReactGA from 'react-ga4';
 
 ReactGA.initialize('G-00D8S295GT');
+ReactGA.event('conversion', { send_to: 'AW-628046278/6GBPCJPSi5IZEMbzvKsC' });
 const container = document.getElementById('root');
 const root = createRoot(container);
 
