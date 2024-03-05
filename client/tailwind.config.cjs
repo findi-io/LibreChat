@@ -5,6 +5,7 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   // darkMode: 'class',
   darkMode: ['class'],
+  safelist: ['ProseMirror'],
   theme: {
     // colors: {
     //   'gpt-dark-gray': '#343541',
