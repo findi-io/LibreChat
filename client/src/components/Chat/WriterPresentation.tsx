@@ -77,7 +77,7 @@ export default function WriterPresentation({
       >
         <div className="relative flex flex-col flex-1 h-full overflow-hidden">
         <EditorContext.Provider value={providerValue}>
-        <WriterSidePanel editor={editor} defaultLayout={defaultLayout} defaultCollapsed={defaultCollapsed}>
+        <WriterSidePanel displayedUsers={displayedUsers} characterCount={characterCount} collabState={collabState} editor={editor} defaultLayout={defaultLayout} defaultCollapsed={defaultCollapsed}>
           <div className="flex h-full flex-col" role="presentation" tabIndex={0}>
             {children}
             {isActive && <DragDropOverlay />}

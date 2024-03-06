@@ -12,14 +12,13 @@ import NavToggle from '~/components/Nav/NavToggle';
 import PanelSwitch from './Builder/PanelSwitch';
 import FilesPanel from './Files/Panel';
 import { cn } from '~/utils';
-import { EditorContent, PureEditorContent } from '@tiptap/react'
-import { ColumnsMenu } from '~/extensions/MultiColumn/menus'
-import { TableColumnMenu, TableRowMenu } from '~/extensions/Table/menus'
+import { createPortal } from 'react-dom'
+import { Surface } from '~/components/ui/Surface'
+import { Toolbar } from '~/components/ui/Toolbar'
+import { Icon } from '~/components/ui/Icon'
+import '~/styles/index.css'
 
-import { LinkMenu } from '~/components/menus2'
-import { TextMenu } from '../menus2/TextMenu'
-import { ContentItemMenu } from '../menus2/ContentItemMenu'
-import ImageBlockMenu from '~/extensions/ImageBlock/components/ImageBlockMenu'
+import EditorView from '../Chat/Messages/EditorView';
 
 interface WriterSidePanelProps {
   defaultLayout?: number[] | undefined;
@@ -27,6 +26,9 @@ interface WriterSidePanelProps {
   navCollapsedSize?: number;
   children: React.ReactNode;
   editor: any;
+  displayedUsers: any;
+  characterCount: any;
+  collabState: any;
 }
 
 const defaultMinSize = 20;
@@ -36,7 +38,10 @@ export default function WriterSidePanel({
   defaultCollapsed = false,
   navCollapsedSize = 3,
   children,
-  editor
+  editor,
+  displayedUsers,
+  characterCount,
+  collabState
 }: WriterSidePanelProps) {
   const [minSize, setMinSize] = useState(defaultMinSize);
   const [isHovering, setIsHovering] = useState(false);
@@ -48,8 +53,6 @@ export default function WriterSidePanel({
   const isSmallScreen = useMediaQuery('(max-width: 767px)');
 
   const panelRef = useRef<ImperativePanelHandle>(null);
-  const menuContainerRef = useRef(null)
-  const editorRef = useRef<PureEditorContent | null>(null)
 
   const activePanel = localStorage.getItem('side:active-panel');
   const defaultActive = activePanel ? activePanel : undefined;
@@ -123,6 +126,49 @@ export default function WriterSidePanel({
   const userProvidesKey = !!assistants?.userProvide;
   const keyProvided = userProvidesKey ? !!keyExpiry?.expiresAt : true;
 
+  const useDarkmode = () => {
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(
+      typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)').matches : false,
+    )
+  
+    useEffect(() => {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      const handleChange = () => setIsDarkMode(mediaQuery.matches)
+      mediaQuery.addEventListener('change', handleChange)
+      return () => mediaQuery.removeEventListener('change', handleChange)
+    }, [])
+  
+    useEffect(() => {
+      document.documentElement.classList.toggle('dark', isDarkMode)
+    }, [isDarkMode])
+  
+    const toggleDarkMode = useCallback(() => setIsDarkMode(isDark => !isDark), [])
+    const lightMode = useCallback(() => setIsDarkMode(false), [])
+    const darkMode = useCallback(() => setIsDarkMode(true), [])
+  
+    return {
+      isDarkMode,
+      toggleDarkMode,
+      lightMode,
+      darkMode,
+    }
+  }
+
+  const { isDarkMode, darkMode, lightMode } = useDarkmode()
+
+  const DarkModeSwitcher = createPortal(
+    <Surface className="flex items-center gap-1 fixed bottom-6 right-6 z-[99999] p-1">
+      <Toolbar.Button onClick={lightMode} active={!isDarkMode}>
+        <Icon name="Sun" />
+      </Toolbar.Button>
+      <Toolbar.Button onClick={darkMode} active={isDarkMode}>
+        <Icon name="Moon" />
+      </Toolbar.Button>
+    </Surface>,
+    document.body,
+  )
+
+
   return (
     <>
       <TooltipProvider delayDuration={0}>
@@ -131,15 +177,10 @@ export default function WriterSidePanel({
           onLayout={(sizes: number[]) => throttledSaveLayout(sizes)}
           className="transition-width relative h-full w-full flex-1 overflow-auto bg-white dark:bg-gray-800"
         >
-          <ResizablePanel defaultSize={defaultLayout[0]} minSize={30}>
-            <EditorContent editor={editor} ref={editorRef} className="flex-1 overflow-y-auto" />
-            <ContentItemMenu editor={editor} />
-          <LinkMenu editor={editor} appendTo={menuContainerRef} />
-          <TextMenu editor={editor} />
-          <ColumnsMenu editor={editor} appendTo={menuContainerRef} />
-          <TableRowMenu editor={editor} appendTo={menuContainerRef} />
-          <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
-          <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
+          <ResizablePanel className='EditorViewScroll' defaultSize={defaultLayout[0]} minSize={30}>
+            {DarkModeSwitcher}
+            <EditorView displayedUsers={displayedUsers} characterCount={characterCount} collabState={collabState} editor={editor} />
+
           </ResizablePanel>
           <TooltipProvider delayDuration={400}>
             <Tooltip>

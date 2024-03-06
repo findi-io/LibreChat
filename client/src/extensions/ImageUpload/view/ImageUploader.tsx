@@ -1,9 +1,10 @@
 import { Spinner } from '~/components/ui/Spinner'
 import { useDropZone, useFileUpload, useUploader } from './hooks'
-import { Button } from '~/components/ui/Button'
+import { Button } from '~/components/ui/Button2'
 import { Icon } from '~/components/ui/Icon'
 import { cn } from '~/lib/utils'
 import { ChangeEvent, useCallback } from 'react'
+import { useUploadFileMutation, useGetFileConfig } from '~/data-provider';
 
 export const ImageUploader = ({ onUpload }: { onUpload: (url: string) => void }) => {
   const { loading, uploadFile } = useUploader({ onUpload })

@@ -16,7 +16,6 @@ import WriterPresentation from './WriterPresentation';
 import { useUser } from '@clerk/clerk-react';
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 import * as Y from 'yjs'
-import '~/styles/index.css'
 
 function WriterView({ index = 0 }: { index?: number }) {
   const { conversationId } = useParams();
