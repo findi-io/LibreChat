@@ -16,6 +16,7 @@ export default function WriterPresentation({
   useSidePanel = false,
   panel,
   fullName,
+  avatar,
   hasCollab,
   ydoc,
   aiToken,
@@ -27,6 +28,7 @@ export default function WriterPresentation({
   aiToken: string;
   hasCollab: boolean
   fullName: string | null | undefined
+  avatar: string | null | undefined
   ydoc: Y.Doc
   provider?: TiptapCollabProvider | null | undefined
 }) {
@@ -35,7 +37,7 @@ export default function WriterPresentation({
 
   const aiState = useAIState()
 
-  const { editor, users, characterCount, collabState } = useBlockEditor({ aiToken, ydoc, provider,fullName })
+  const { editor, users, characterCount, collabState } = useBlockEditor({ aiToken, ydoc, provider,fullName, avatar })
 
   const displayedUsers = users.slice(0, 3)
 

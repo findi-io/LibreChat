@@ -26,11 +26,13 @@ export const useBlockEditor = ({
   aiToken,
   ydoc,
   fullName,
+  avatar,
   provider,
 }: {
   aiToken: string
   ydoc: Y.Doc
   fullName: string | null | undefined
+  avatar: string | null | undefined
   provider?: TiptapCollabProvider | null | undefined
 }) => {
   const [collabState, setCollabState] = useState<WebSocketStatus>(WebSocketStatus.Connecting)
@@ -57,6 +59,7 @@ export const useBlockEditor = ({
           provider,
           user: {
             name: fullName,
+            avatar: avatar,
             color: randomElement(userColors),
           },
         }),
@@ -118,9 +121,9 @@ export const useBlockEditor = ({
     editor?.commands.updateUser({
       name: fullName,
       color: randomElement(userColors),
-      avatar: 'https://unavatar.io/github/ueberdosis',
+      avatar: avatar,
     })
-  }, [fullName])
+  }, [fullName,avatar])
 
   
 

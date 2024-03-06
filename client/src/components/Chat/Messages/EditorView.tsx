@@ -59,6 +59,7 @@ export default function EditorView({
         >
           <div className="flex flex-col pb-9 text-sm dark:bg-transparent">
             <EditorHeader
+              editor={editor}
               conversationId={conversationId}
               characters={characterCount.characters()}
               collabState={collabState}

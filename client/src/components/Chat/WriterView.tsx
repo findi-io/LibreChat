@@ -96,7 +96,7 @@ function WriterView({ index = 0 }: { index?: number }) {
 
   return (
     <ChatContext.Provider value={chatHelpers}>
-      <WriterPresentation useSidePanel={true} fullName={user?.fullName} aiToken={aiToken} hasCollab={hasCollab} ydoc={ydoc} provider={provider}>
+      <WriterPresentation avatar={user?.imageUrl} useSidePanel={true} fullName={user?.fullName} aiToken={aiToken} hasCollab={hasCollab} ydoc={ydoc} provider={provider}>
         {isLoading && conversationId !== 'new' ? (
           <div className="flex h-screen items-center justify-center">
             <Spinner className="opacity-0" />

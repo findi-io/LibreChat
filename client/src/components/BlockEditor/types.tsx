@@ -15,6 +15,7 @@ export type EditorUser = {
   clientId: string
   name: string
   color: string
+  avatar: string
   initials?: string
 }
 
