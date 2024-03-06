@@ -5,10 +5,10 @@ import { API } from '~/lib/api'
 export const useUploader = ({ onUpload }: { onUpload: (url: string) => void }) => {
   const [loading, setLoading] = useState(false)
 
-  const uploadFile = useCallback(async () => {
+  const uploadFile = useCallback(async (file: File) => {
     setLoading(true)
     try {
-      const url = await API.uploadImage()
+      const url = await API.uploadImage(file)
 
       onUpload(url)
     } catch (errPayload: any) {
