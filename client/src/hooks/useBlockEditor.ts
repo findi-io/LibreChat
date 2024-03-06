@@ -5,13 +5,13 @@ import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import { TiptapCollabProvider, WebSocketStatus } from '@hocuspocus/provider'
 import * as Y from 'yjs'
-
 import { ExtensionKit } from '~/extensions/extension-kit'
 import { EditorContext } from '../context/EditorContext'
 import { userColors, userNames } from '../lib/constants'
 import { randomElement } from '../lib/utils'
 import { EditorUser } from '~/components/BlockEditor/types'
 import { initialContent } from '~/lib/data/initialContent'
+import { Ai } from '~/extensions'
 
 const TIPTAP_AI_APP_ID = process.env.NEXT_PUBLIC_TIPTAP_AI_APP_ID
 const TIPTAP_AI_BASE_URL = process.env.NEXT_PUBLIC_TIPTAP_AI_BASE_URL || 'https://api.tiptap.dev/v1/ai'
@@ -44,6 +44,7 @@ export const useBlockEditor = ({
             editor.commands.setContent(initialContent)
           }
         })
+        
       },
       extensions: [
         ...ExtensionKit({
@@ -59,7 +60,24 @@ export const useBlockEditor = ({
             color: randomElement(userColors),
           },
         }),
-
+        Ai.configure({
+          appId: TIPTAP_AI_APP_ID,
+          token: aiToken,
+          baseUrl: TIPTAP_AI_BASE_URL,
+          autocompletion: true,
+          onLoading: () => {
+            setIsAiLoading(true)
+            setAiError(null)
+          },
+          onSuccess: () => {
+            setIsAiLoading(false)
+            setAiError(null)
+          },
+          onError: error => {
+            setIsAiLoading(false)
+            setAiError(error.message)
+          },
+        }),
       ],
       editorProps: {
         attributes: {

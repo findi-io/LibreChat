@@ -317,6 +317,7 @@ export default {
   com_nav_auto_scroll: 'Auto-scroll to Newest on Open',
   com_nav_hide_panel: 'Hide Right-most Side Panel',
   com_nav_modular_chat: 'Enable switching Endpoints mid-conversation',
+  com_nav_writer_mode: 'Enable writer mode for chat',
   com_nav_latex_parsing: 'Parsing LaTeX in messages (may affect performance)',
   com_nav_profile_picture: 'Profile Picture',
   com_nav_change_picture: 'Change picture',

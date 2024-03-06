@@ -278,6 +278,7 @@ export default {
   com_nav_welcome_message: 'Come posso aiutarti oggi?',
   com_nav_auto_scroll: 'Scorri automaticamente al messaggio più recente all\'apertura',
   com_nav_modular_chat: 'Abilita il cambio di endpoint durante la conversazione',
+  com_nav_writer_mode: 'Enable writer mode for chat',
   com_nav_latex_parsing: 'Analisi del LaTeX nei messaggi (può influire sulle prestazioni)',
   com_nav_profile_picture: 'Immagine del profilo',
   com_nav_change_picture: 'Cambia immagine',

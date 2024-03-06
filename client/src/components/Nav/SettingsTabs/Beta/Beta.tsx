@@ -3,6 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { SettingsTabValues } from 'librechat-data-provider';
 import LaTeXParsing from './LaTeXParsing';
 import ModularChat from './ModularChat';
+import WriterMode from './WriterMode';
 
 function Beta() {
   return (
@@ -14,6 +15,9 @@ function Beta() {
       <div className="flex flex-col gap-3 text-sm text-gray-600 dark:text-gray-300">
         <div className="border-b pb-3 last-of-type:border-b-0 dark:border-gray-700">
           <ModularChat />
+        </div>
+        <div className="border-b pb-3 last-of-type:border-b-0 dark:border-gray-700">
+          <WriterMode />
         </div>
         <div className="border-b pb-3 last-of-type:border-b-0 dark:border-gray-700">
           <LaTeXParsing />

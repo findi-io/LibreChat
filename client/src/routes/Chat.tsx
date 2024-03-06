@@ -30,7 +30,7 @@ export default function Chat() {
   const messagesQuery = useGetMessagesByConvoId(conversationId ?? '', { enabled: !messagesTree });
   const getConversationMutation = useGetConversationByIdMutation(conversationId ?? '');
   const { data: config } = useGetStartupConfig();
-
+  const writerMode = useRecoilValue(store.writerMode);
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!isAuthenticated) {
@@ -67,7 +67,7 @@ export default function Chat() {
         onError: (error) => {
           console.error('Failed to fetch the conversation');
           console.error(error);
-          navigate('/c/new');
+          navigate((writerMode?'/w/':'/c/') +'new');
           newConversation();
           setShouldNavigate(true);
         },
@@ -76,7 +76,7 @@ export default function Chat() {
     }
     // No current conversation and no conversationId
     else if (conversation === null) {
-      navigate('/c/new');
+      navigate((writerMode?'/w/':'/c/') +'new');
       setShouldNavigate(true);
     }
     // Current conversationId is 'search'

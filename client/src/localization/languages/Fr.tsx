@@ -286,6 +286,7 @@ export default {
   com_nav_welcome_message: 'Comment puis-je vous aider aujourd\'hui?',
   com_nav_auto_scroll: 'Défilement automatique jusqu\'au plus récent à l\'ouverture',
   com_nav_modular_chat: 'Activer le changement de points de terminaison en cours de conversation',
+  com_nav_writer_mode: 'Enable writer mode for chat',
   com_nav_latex_parsing: 'Analyse LaTeX dans les messages (peut affecter les performances)',
   com_nav_profile_picture: 'Photo de profil',
   com_nav_change_picture: 'Changer de photo',
