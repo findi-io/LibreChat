@@ -7,7 +7,7 @@ import {
   createContext,
   useContext,
 } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { dark, neobrutalism } from '@clerk/themes';
 import { TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
 import {
@@ -85,12 +85,12 @@ const AuthContextProvider = ({
   const logout = useCallback(() => logoutUser.mutate(undefined), [logoutUser]);
   const userQuery = useGetUserQuery({ enabled: !!token });
   const refreshToken = useRefreshTokenMutation();
-  const writerMode = useRecoilValue(store.writerMode);
+
   const login = (data: TLoginUser) => {
     loginUser.mutate(data, {
       onSuccess: (data: TLoginResponse) => {
         const { user, token } = data;
-        setUserContext({ token, isAuthenticated: true, user, redirect: (writerMode?'/w/':'/c/') +'new' });
+        setUserContext({ token, isAuthenticated: true, user, redirect: '/c/new' });
       },
       onError: (error: TResError | unknown) => {
         const resError = error as TResError;

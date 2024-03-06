@@ -125,10 +125,10 @@ export default function Conversation({ conversation, retainView, toggleNav, isLa
     aProps.className =
       'group relative rounded-lg active:opacity-50 flex cursor-pointer items-center mt-2 gap-3 break-all rounded-lg py-2 px-2 hover:bg-gray-900';
   }
-  const writerMode = useRecoilValue(store.writerMode);
+
   return (
     <a
-      href={`${(writerMode?'/w/':'/c/') +conversationId}`}
+      href={`/c/${conversationId}`}
       data-testid="convo-item"
       onClick={clickHandler}
       {...aProps}

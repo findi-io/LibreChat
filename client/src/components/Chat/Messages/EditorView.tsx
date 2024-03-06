@@ -20,7 +20,7 @@ export default function EditorView({
   editor,
   displayedUsers,
   characterCount,
-  collabState
+  collabState,
 }: {
   messagesTree?: TMessage[] | null;
   Header?: ReactNode;
@@ -59,21 +59,22 @@ export default function EditorView({
         >
           <div className="flex flex-col pb-9 text-sm dark:bg-transparent">
             <EditorHeader
+              conversationId={conversationId}
               characters={characterCount.characters()}
               collabState={collabState}
               users={displayedUsers}
               words={characterCount.words()}
 
             />
-              <EditorContent editor={editor} ref={editorRef} />
-              <ContentItemMenu editor={editor} />
-            <LinkMenu editor={editor} appendTo={menuContainerRef} />
-            <TextMenu editor={editor} />
-            <ColumnsMenu editor={editor} appendTo={menuContainerRef} />
-            <TableRowMenu editor={editor} appendTo={menuContainerRef} />
-            <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
-            <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
-
+              <EditorContent editor={editor} >
+                <ContentItemMenu editor={editor} />
+                <LinkMenu editor={editor} appendTo={menuContainerRef} />
+                <TextMenu editor={editor} />
+                <ColumnsMenu editor={editor} appendTo={menuContainerRef} />
+                <TableRowMenu editor={editor} appendTo={menuContainerRef} />
+                <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
+                <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
+              </EditorContent>
 
             <div
               className="dark:gpt-dark-gray group h-0 w-full flex-shrink-0 dark:border-gray-900/50"

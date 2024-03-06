@@ -14,7 +14,6 @@ export default function Search() {
   const { searchPlaceholderConversation } = useConversation();
   const { query } = useParams();
   const navigate = useNavigate();
-  const writerMode = useRecoilValue(store.writerMode);
 
   // when conversation changed or conversationId (in url) changed
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function Search() {
         searchPlaceholderConversation();
         setSearchQuery(query);
       } else {
-        navigate((writerMode?'/w/':'/c/') +'new');
+        navigate('/c/new');
       }
     } else if (conversation?.conversationId === 'search') {
       // jump to search page

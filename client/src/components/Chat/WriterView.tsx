@@ -43,9 +43,6 @@ function WriterView({ index = 0 }: { index?: number }) {
   const {user} = useUser();
   const hasCollab = parseInt(searchParams.get('noCollab') as string) !== 1
 
-  const room = conversationId
-
-
   useEffect(() => {
     // fetch data
     const dataFetch = async () => {
@@ -73,20 +70,21 @@ function WriterView({ index = 0 }: { index?: number }) {
     setAiToken("test")
   }, [])
 
-  const ydoc = useMemo(() => new Y.Doc(), [])
+  const ydoc = useMemo(() => new Y.Doc(), [conversationId])
 
   useLayoutEffect(() => {
     if (hasCollab && collabToken) {
+      console.log(conversationId)
       setProvider(
         new TiptapCollabProvider({
-          name: `doc_${room}`,
+          name: `doc_${conversationId}`,
           appId: '8MZ0X19X',
           token: collabToken,
           document: ydoc,
         }),
       )
     }
-  }, [setProvider, collabToken, ydoc, room, hasCollab])
+  }, [setProvider, collabToken, ydoc, conversationId, hasCollab])
 
   if ((hasCollab && (!collabToken || !provider)) || !aiToken) return
 
