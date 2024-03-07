@@ -5,7 +5,6 @@ import ChatRoute from './ChatRoute';
 import Search from './Search';
 import {
   Login,
-  Error,
   Registration,
   RequestPasswordReset,
   ResetPassword,

@@ -52,7 +52,6 @@ bower_components/
 librechat.yaml
 
 # Environment
-.npmrc
 .env*
 my.secrets
 !**/.env.example
