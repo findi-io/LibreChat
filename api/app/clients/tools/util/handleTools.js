@@ -23,6 +23,7 @@ const {
   StructuredSD,
   StructuredACS,
   CodeSherpaTools,
+  TraversaalSearch,
   StructuredWolfram,
   TavilySearchResults,
 } = require('../');

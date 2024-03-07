@@ -21,6 +21,7 @@ const StructuredACS = require('./structured/AzureAISearch');
 const CodeSherpaTools = require('./structured/CodeSherpaTools');
 const StructuredWolfram = require('./structured/Wolfram');
 const TavilySearchResults = require('./structured/TavilySearchResults');
+const TraversaalSearch = require('./structured/TraversaalSearch');
 
 module.exports = {
   availableTools,
@@ -45,4 +46,5 @@ module.exports = {
   CodeSherpaTools,
   StructuredWolfram,
   TavilySearchResults,
+  TraversaalSearch,
 };
