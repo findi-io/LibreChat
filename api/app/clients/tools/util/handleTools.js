@@ -146,6 +146,7 @@ const loadToolWithAuth = (userId, authFields, ToolConstructor, options = {}) => 
         authValues[result.authField] = result.authValue;
       }
     }
+
     return new ToolConstructor({ ...options, ...authValues, userId });
   };
 };
@@ -173,6 +174,7 @@ const loadTools = async ({
     'stable-diffusion': functions ? StructuredSD : StableDiffusionAPI,
     'azure-ai-search': functions ? StructuredACS : AzureAISearch,
     CodeBrew: CodeBrew,
+    traversaal_search: TraversaalSearch,
   };
 
   const openAIApiKey = await getOpenAIKey(options, user);
