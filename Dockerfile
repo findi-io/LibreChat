@@ -9,6 +9,8 @@ ARG TIPTAP_PRO_TOKEN
 # Allow mounting of these files, which have no default
 # values.
 RUN touch .env
+RUN npm config set "@tiptap-pro:registry" https://registry.tiptap.dev/
+RUN npm config set "//registry.tiptap.dev/:_authToken" ${TIPTAP_PRO_TOKEN}
 RUN npm config set fetch-retry-maxtimeout 300000
 RUN apk add --no-cache g++ make python3 py3-pip
 RUN npm install -g node-gyp
