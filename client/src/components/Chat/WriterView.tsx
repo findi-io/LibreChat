@@ -74,7 +74,6 @@ function WriterView({ index = 0 }: { index?: number }) {
 
   useLayoutEffect(() => {
     if (hasCollab && collabToken) {
-      console.log(conversationId)
       setProvider(
         new TiptapCollabProvider({
           name: `doc_${conversationId}`,
