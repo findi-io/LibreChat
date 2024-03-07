@@ -10,7 +10,7 @@ import { EditorContext } from '../context/EditorContext'
 import { userColors, userNames } from '../lib/constants'
 import { randomElement } from '../lib/utils'
 import { EditorUser } from '~/components/BlockEditor/types'
-import { initialContent } from '~/lib/data/initialContent'
+
 import { Ai } from '~/extensions'
 
 const TIPTAP_AI_APP_ID = process.env.NEXT_PUBLIC_TIPTAP_AI_APP_ID
@@ -43,7 +43,7 @@ export const useBlockEditor = ({
       onCreate: ({ editor }) => {
         provider?.on('synced', () => {
           if (editor.isEmpty) {
-            editor.commands.setContent(initialContent)
+            editor.commands.setContent("")
           }
         })
         
