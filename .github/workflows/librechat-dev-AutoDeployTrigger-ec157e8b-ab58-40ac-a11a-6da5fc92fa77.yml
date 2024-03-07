@@ -36,7 +36,7 @@ jobs:
           containerAppName: librechat-dev
           resourceGroup: chatlog
           imageToBuild: handler.azurecr.io/librechat-dev:${{ github.sha }}
-          buildArguments: "VITE_CLERK_PUBLISHABLE_KEY=${{secrets.VITE_CLERK_PUBLISHABLE_KEY}} CLERK_PEM_PUBLIC_KEY=${{secrets.CLERK_PEM_PUBLIC_KEY}} MEILI_HOST=http://meilisearch:7700 MEILI_HTTP_ADDR=meilisearch:7700 MEILI_MASTER_KEY=${{secrets.MEILI_MASTER_KEY}} MEILI_NO_ANALYTICS=true SEARCH=true USE_REDIS=true TIPTAP_PRO_TOKEN=test REDIS_URI=${{secrets.REDIS_URI}}"
+          buildArguments: "VITE_CLERK_PUBLISHABLE_KEY=${{secrets.VITE_CLERK_PUBLISHABLE_KEY}} CLERK_PEM_PUBLIC_KEY=${{secrets.CLERK_PEM_PUBLIC_KEY}} MEILI_HOST=http://meilisearch:7700 MEILI_HTTP_ADDR=meilisearch:7700 MEILI_MASTER_KEY=${{secrets.MEILI_MASTER_KEY}} MEILI_NO_ANALYTICS=true SEARCH=true USE_REDIS=true TIPTAP_PRO_TOKEN=${{secrets.TIPTAP_PRO_TOKEN}} REDIS_URI=${{secrets.REDIS_URI}}"
         env:
           TIPTAP_PRO_TOKEN: ${{ secrets.TIPTAP_PRO_TOKEN }}
             
