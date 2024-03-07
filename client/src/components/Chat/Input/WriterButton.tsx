@@ -14,15 +14,16 @@ import { useChatContext } from '~/Providers';
 import { Button } from '~/components/ui';
 import { cn, cardStyle } from '~/utils/';
 import store from '~/store';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function WriterButton() {
-
 
   const { showPopover, conversation, latestMessage, setShowPopover, setShowBingToneSetting } =
     useChatContext();
 
   const { endpoint, conversationId, jailbreak } = conversation ?? {};
+  const location = useLocation();
+  const display = conversationId != "new" && location.pathname.startsWith("/c/")
 
   return (
     <Root
@@ -34,7 +35,7 @@ export default function WriterButton() {
           <span className="flex w-full flex-col items-center justify-center gap-0 md:order-none md:m-auto md:gap-2">
             <div className="z-[61] flex w-full items-center justify-center gap-2">
 
-            {conversationId != "new" && 
+            { display && 
                 <Link
                 type="button"
                 className={cn(

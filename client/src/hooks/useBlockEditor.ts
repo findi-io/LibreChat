@@ -2,6 +2,8 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 
 import { Editor, useEditor } from '@tiptap/react'
 import Collaboration from '@tiptap/extension-collaboration'
+import CollabHistory from '@tiptap-pro/extension-collaboration-history'
+
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import { TiptapCollabProvider, WebSocketStatus } from '@hocuspocus/provider'
 import * as Y from 'yjs'
@@ -50,6 +52,9 @@ export const useBlockEditor = ({
       },
       extensions: [
         ...ExtensionKit({
+          provider,
+        }),
+        CollabHistory.configure({
           provider,
         }),
         Collaboration.configure({

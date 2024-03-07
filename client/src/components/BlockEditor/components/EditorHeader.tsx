@@ -42,7 +42,9 @@ export const EditorHeader = ({
           )} to={`/c/${conversationId}`}                >
             Chat Mode
           </Link>
-          <Button onClick={()=>console.log(editor.getHTML())}>Export</Button>
+          <Link target='_blank' to={`/p/${conversationId}`} onClick={()=>console.log(editor.getHTML())}>Save</Link>
+          <Link target='_blank' to={`/p/${conversationId}`} onClick={()=>console.log(editor.getHTML())}>Restore</Link>
+          
         </div>
       </div>
       <EditorInfo characters={characters} words={words} collabState={collabState} users={users} />
