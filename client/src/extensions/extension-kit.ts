@@ -49,6 +49,7 @@ import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
 import { ImageUpload } from './ImageUpload'
 import { TableOfContentsNode } from './TableOfContentsNode'
 import { lowlight } from 'lowlight'
+import { Image } from '@tiptap/extension-image'
 
 interface ExtensionKitProps {
   provider?: HocuspocusProvider | null
@@ -108,6 +109,9 @@ export const ExtensionKit = ({ provider, userId, userName = 'Maxi' }: ExtensionK
     clientId: provider?.document?.clientID,
   }),
   ImageBlock,
+  Image.configure({
+    inline: true,
+  }),
   FileHandler.configure({
     allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
     onDrop: (currentEditor, files, pos) => {

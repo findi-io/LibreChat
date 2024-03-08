@@ -36,7 +36,7 @@ export default function WriterPresentation({
   const aiState = useAIState()
 
   const { editor, users, characterCount, collabState } = useBlockEditor({ aiToken, ydoc, provider,fullName, avatar })
-  const { isOver, canDrop, drop } = useEditorDragHelpers(editor);
+  const { isOver, canDrop, drop } = useEditorDragHelpers(editor!);
 
   const displayedUsers = users.slice(0, 3)
 
@@ -54,7 +54,7 @@ export default function WriterPresentation({
   }
 
 
-  const isActive = canDrop && isOver;
+  const isActive = false;
   const resizableLayout = localStorage.getItem('react-resizable-panels:layout');
   const collapsedPanels = localStorage.getItem('react-resizable-panels:collapsed');
 

@@ -3,17 +3,24 @@ import { NativeTypes } from 'react-dnd-html5-backend';
 import type { DropTargetMonitor } from 'react-dnd';
 import useFileHandling from './useFileHandling';
 import { Editor } from '@tiptap/react';
+import API from '~/lib/api';
 
-export default function useDragHelpers(editor: Editor) {
-  const { files, handleFiles } = useFileHandling();
+export default function useEditorDragHelpers(editor: Editor) {
+  let pos = 0 
   const [{ canDrop, isOver }, drop] = useDrop(
     () => ({
-      accept: [NativeTypes.URL,NativeTypes.HTML,NativeTypes.TEXT],
-      drop(item: { files: any[] }) {
+      accept: [NativeTypes.FILE,NativeTypes.HTML],
+      drop(item: { files?: File[], html?: string }) {
         console.log('drop', item);
-        item.files.forEach((url)=>editor.chain().focus().setImage({
-          src: url.toString()
-        }))
+        if(item.files) {
+          item.files.forEach(async (file)=>{
+            const url = await API.uploadImage(file)
+            editor?.commands.setImage({ src: url })
+          })
+        }
+        if(item.html) {
+          editor?.chain().focus().insertContentAt(pos, item.html).run()
+        }
       },
       canDrop() {
         // console.log('canDrop', item.files, item.items);
@@ -27,14 +34,14 @@ export default function useDragHelpers(editor: Editor) {
         // if (item) {
         //   console.log('collect', item.files, item.items);
         // }
-
+        pos = editor?.state.selection.anchor
         return {
           isOver: monitor.isOver(),
           canDrop: monitor.canDrop(),
         };
       },
     }),
-    [files],
+    [editor],
   );
 
   return {
