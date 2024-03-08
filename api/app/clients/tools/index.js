@@ -35,6 +35,7 @@ module.exports = {
   Demo,
   Email,
   Chart,
+  Writer,
   StableDiffusionAPI,
   SelfReflectionTool,
   // Structured Tools
