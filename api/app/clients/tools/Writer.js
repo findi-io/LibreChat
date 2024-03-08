@@ -12,7 +12,7 @@ class Writer extends Tool {
     this.messages = fields.messages;
     this.conversationId = fields.conversationId;
   }
-  name = 'email';
+  name = 'writer';
   description = 'send the conversation by email';
   description_for_model = 'send email, no input needed';
 
