@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { useDragHelpers } from '~/hooks';
+import { useEditorDragHelpers } from '~/hooks';
 import DragDropOverlay from './Input/Files/DragDropOverlay';
 
 import store from '~/store';
@@ -33,11 +33,10 @@ export default function WriterPresentation({
   provider?: TiptapCollabProvider | null | undefined
 }) {
   const hideSidePanel = useRecoilValue(store.hideSidePanel);
-  const { isOver, canDrop, drop } = useDragHelpers();
-
   const aiState = useAIState()
 
   const { editor, users, characterCount, collabState } = useBlockEditor({ aiToken, ydoc, provider,fullName, avatar })
+  const { isOver, canDrop, drop } = useEditorDragHelpers(editor);
 
   const displayedUsers = users.slice(0, 3)
 
