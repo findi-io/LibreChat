@@ -8,8 +8,8 @@ export default function useDragHelpers(editor: Editor) {
   const { files, handleFiles } = useFileHandling();
   const [{ canDrop, isOver }, drop] = useDrop(
     () => ({
-      accept: [NativeTypes.URL],
-      drop(item: { files: URL[] }) {
+      accept: [NativeTypes.URL,NativeTypes.HTML,NativeTypes.TEXT],
+      drop(item: { files: any[] }) {
         console.log('drop', item);
         item.files.forEach((url)=>editor.chain().focus().setImage({
           src: url.toString()
