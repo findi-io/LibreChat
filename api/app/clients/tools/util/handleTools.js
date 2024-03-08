@@ -15,6 +15,7 @@ const {
   Demo,
   Email,
   Chart,
+  Writer,
   StableDiffusionAPI,
   // Structured Tools
   DALLE3,
@@ -168,6 +169,7 @@ const loadTools = async ({
     google: GoogleSearchAPI,
     demo: Demo,
     email: Email,
+    writer: Writer,
     chart: Chart,
     wolfram: functions ? StructuredWolfram : WolframAlphaAPI,
     'dall-e': OpenAICreateImage,
@@ -260,8 +262,13 @@ const loadTools = async ({
       messages: options.memory.chatHistory.messages,
       conversationId: options.conversationId,
       sender,
-      senderEmail,
-      apiKey: process.env.RESEND_API_KEY,
+      senderEmail
+    },
+    writer: {
+      messages: options.memory.chatHistory.messages,
+      conversationId: options.conversationId,
+      sender,
+      senderEmail
     },
   };
 

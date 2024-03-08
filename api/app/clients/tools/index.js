@@ -7,6 +7,7 @@ const AzureAiSearch = require('./AzureAiSearch');
 const OpenAICreateImage = require('./DALL-E');
 const Demo = require('./Demo');
 const Email = require('./Email');
+const Writer = require('./Writer');
 const Chart = require('./Chart');
 const StableDiffusionAPI = require('./StableDiffusion');
 const SelfReflectionTool = require('./SelfReflection');

@@ -167,6 +167,14 @@
     "authConfig": []
   },
   {
+    "name": "Writer",
+    "pluginKey": "writer",
+    "description": "Your writing assistant",
+    "icon": "https://www.chatlog.ai/images/email.png",
+    "isAuthRequired": "false",
+    "authConfig": []
+  },
+  {
     "name": "Stable Diffusion",
     "pluginKey": "stable-diffusion",
     "description": "Generate photo-realistic images given any text input.",
