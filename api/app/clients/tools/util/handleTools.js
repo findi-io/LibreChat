@@ -271,6 +271,8 @@ const loadTools = async ({
       sender,
       senderEmail,
       selection,
+      appId: process.env.TIPTAP_APPID,
+      apiKey: process.env.TIPTAP_API_KEY
     },
   };
 
