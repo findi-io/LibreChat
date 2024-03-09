@@ -20,7 +20,8 @@ export default function WriterPresentation({
   hasCollab,
   ydoc,
   aiToken,
-  provider
+  provider,
+  chatHelpers
 }: {
   children: React.ReactNode;
   panel?: React.ReactNode;
@@ -31,11 +32,12 @@ export default function WriterPresentation({
   avatar: string | null | undefined
   ydoc: Y.Doc
   provider?: TiptapCollabProvider | null | undefined
+  chatHelpers: any
 }) {
   const hideSidePanel = useRecoilValue(store.hideSidePanel);
   const aiState = useAIState()
 
-  const { editor, users, characterCount, collabState } = useBlockEditor({ aiToken, ydoc, provider,fullName, avatar })
+  const { editor, users, characterCount, collabState, selection } = useBlockEditor({ aiToken, ydoc, provider,fullName, avatar,chatHelpers })
   const { isOver, canDrop, drop } = useEditorDragHelpers(editor!);
 
   const displayedUsers = users.slice(0, 3)

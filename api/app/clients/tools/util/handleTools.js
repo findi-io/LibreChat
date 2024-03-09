@@ -156,6 +156,7 @@ const loadTools = async ({
   user,
   sender,
   senderEmail,
+  selection,
   model,
   functions = null,
   returnMap = false,
@@ -268,7 +269,8 @@ const loadTools = async ({
       messages: options.memory.chatHistory.messages,
       conversationId: options.conversationId,
       sender,
-      senderEmail
+      senderEmail,
+      selection,
     },
   };
 

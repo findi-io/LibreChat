@@ -29,14 +29,17 @@ export const useBlockEditor = ({
   fullName,
   avatar,
   provider,
+  chatHelpers,
 }: {
   aiToken: string
   ydoc: Y.Doc
   fullName: string | null | undefined
   avatar: string | null | undefined
   provider?: TiptapCollabProvider | null | undefined
+  chatHelpers: any
 }) => {
   const [collabState, setCollabState] = useState<WebSocketStatus>(WebSocketStatus.Connecting)
+
   const { setIsAiLoading, setAiError } = useContext(EditorContext)
   const editor = useEditor(
     {
@@ -47,7 +50,11 @@ export const useBlockEditor = ({
             editor.commands.setContent("")
           }
         })
-        
+        chatHelpers.setSelection(null)
+      },
+      onSelectionUpdate: ({ editor }) => {
+        // Perform actions based on selection change
+        chatHelpers.setSelection(editor.state.selection)
       },
       extensions: [
         ...ExtensionKit({
