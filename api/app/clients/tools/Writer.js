@@ -43,7 +43,7 @@ class Writer extends Tool {
 
       console.log(input);
 
-      const res = await fetch(url, {
+      const res = await fetch(this.url, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -75,7 +75,7 @@ class Writer extends Tool {
       });
 
       console.log(JSON.stringify(response));
-      await fetch(url, {
+      await fetch(this.url, {
         method: "PATCH", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
