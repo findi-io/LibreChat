@@ -170,7 +170,7 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
       sender: 'User',
       isCreatedByUser: true,
       parentMessageId,
-      selection: {anchor: selection.anchor, from: selection.from, to: selection.to},
+      selection: selection,
       conversationId,
       messageId: isContinued && messageId ? messageId : fakeMessageId,
       thread_id,

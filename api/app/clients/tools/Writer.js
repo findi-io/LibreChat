@@ -24,17 +24,16 @@ class Writer extends Tool {
   }
   name = 'writer';
   description = 'Writing according request';
-  description_for_model = 'writing according user input, just pass raw user prompt as input';
+  description_for_model = 'document editing tool, edit document according user input';
   llm = new ChatOpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo-16k' });
 
   // We can use zod to define a schema for the output using the `fromZodSchema` method of `StructuredOutputParser`.
   parser = StructuredOutputParser.fromZodSchema(
     z.object({
-      answer: z.string().optional().describe('answer from chatbot'),
-      doc: z
-        .string()
-        .optional()
-        .describe('tiptap editor document in json format'),
+      type: z.string(),
+      content: z
+        .array(z.any())
+        .describe('content'),
     }),
   );
   async _call(input) {
@@ -43,7 +42,8 @@ class Writer extends Tool {
 
       console.log(input);
 
-      const res = await fetch(this.url, {
+
+const res = await fetch(this.url, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -59,13 +59,12 @@ class Writer extends Tool {
 
       const chain = RunnableSequence.from([
         PromptTemplate.fromTemplate(
-          'This is an TipTap document in json format {document}. \n\n user selection in document is {}\n modify the document and return the same json format according the instruction {format_instructions}\n Modification command: \n {question}',
+          'This is an TipTap document in json format: \n {document} \n\n\n selected text is "{selection}" \n\n replace the selection with the text or append to the end if nothing selected: \n\n {question}, \n answer should include updated document in same json format. in content, accepted types are heading, paragraph, bulletList, listItem, orderedList, taskList, taskItem, blockquoteFigure, table, tableRow, tableCell, imageBlock, columns, column, horizontalRule, tableOfContentsNode  ',
         ),
         this.llm,
         this.parser,
       ]);
-      const jsonData = await res.json()
-      console.log(this.parser.getFormatInstructions());
+      const jsonData = await res.text()
 
       const response = await chain.invoke({
         question: input,
@@ -73,22 +72,25 @@ class Writer extends Tool {
         selection: this.selection,
         format_instructions: this.parser.getFormatInstructions(),
       });
-
+      
       console.log(JSON.stringify(response));
-      await fetch(this.url, {
-        method: "PATCH", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, *cors, same-origin
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
 
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': this.apiKey,
-        },
-        redirect: "follow", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-ur
-        body: response.doc
-      });
-      return response.answer
+        const res2 = await fetch(this.url, {
+          method: "PATCH", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': this.apiKey,
+          },
+          redirect: "follow", // manual, *follow, error
+          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-ur
+          body: JSON.stringify(response)
+        });
+        console.log(res2)
+  
+      return "done"
     } catch (error) {
       logger.error('Failed to process request. {}',error);
     }

@@ -50,11 +50,13 @@ export const useBlockEditor = ({
             editor.commands.setContent("")
           }
         })
-        chatHelpers.setSelection(null)
+        chatHelpers.setSelection('')
       },
       onSelectionUpdate: ({ editor }) => {
         // Perform actions based on selection change
-        chatHelpers.setSelection(editor.state.selection)
+        const { from, to } = editor.state.selection
+        const text = editor.state.doc.textBetween(from, to, ' ')
+        chatHelpers.setSelection(text)
       },
       extensions: [
         ...ExtensionKit({
