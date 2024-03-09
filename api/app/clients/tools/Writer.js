@@ -1,6 +1,12 @@
 const { Tool } = require('langchain/tools');
 const { logger } = require('~/config');
-const { sendEmail } = require('~/server/utils');
+const { ChatOpenAI } = require('@langchain/openai');
+const { PromptTemplate } = require('@langchain/core/prompts');
+const { RunnableSequence } = require('@langchain/core/runnables');
+
+const { z } = require('zod');
+const { StructuredOutputParser } = require('langchain/output_parsers');
+
 
 class Writer extends Tool {
   constructor(fields = {}) {
