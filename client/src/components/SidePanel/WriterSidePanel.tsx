@@ -126,49 +126,6 @@ export default function WriterSidePanel({
   const userProvidesKey = !!assistants?.userProvide;
   const keyProvided = userProvidesKey ? !!keyExpiry?.expiresAt : true;
 
-  const useDarkmode = () => {
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(
-      typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)').matches : false,
-    )
-  
-    useEffect(() => {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-      const handleChange = () => setIsDarkMode(mediaQuery.matches)
-      mediaQuery.addEventListener('change', handleChange)
-      return () => mediaQuery.removeEventListener('change', handleChange)
-    }, [])
-  
-    useEffect(() => {
-      document.documentElement.classList.toggle('dark', isDarkMode)
-    }, [isDarkMode])
-  
-    const toggleDarkMode = useCallback(() => setIsDarkMode(isDark => !isDark), [])
-    const lightMode = useCallback(() => setIsDarkMode(false), [])
-    const darkMode = useCallback(() => setIsDarkMode(true), [])
-  
-    return {
-      isDarkMode,
-      toggleDarkMode,
-      lightMode,
-      darkMode,
-    }
-  }
-
-  const { isDarkMode, darkMode, lightMode } = useDarkmode()
-
-  const DarkModeSwitcher = createPortal(
-    <Surface className="flex items-center gap-1 fixed bottom-6 right-6 z-[99999] p-1">
-      <Toolbar.Button onClick={lightMode} active={!isDarkMode}>
-        <Icon name="Sun" />
-      </Toolbar.Button>
-      <Toolbar.Button onClick={darkMode} active={isDarkMode}>
-        <Icon name="Moon" />
-      </Toolbar.Button>
-    </Surface>,
-    document.body,
-  )
-
-
   return (
     <>
       <TooltipProvider delayDuration={0}>
@@ -178,7 +135,6 @@ export default function WriterSidePanel({
           className="transition-width relative h-full w-full flex-1 overflow-auto bg-white dark:bg-gray-800"
         >
           <ResizablePanel className='EditorViewScroll' defaultSize={defaultLayout[0]} minSize={30}>
-            {DarkModeSwitcher}
             <EditorView displayedUsers={displayedUsers} characterCount={characterCount} collabState={collabState} editor={editor} />
 
           </ResizablePanel>
