@@ -71,7 +71,7 @@ class PluginsClient extends OpenAIClient {
     };
   }
 
-  async initialize({ user, sender, senderEmail,selection, message, onAgentAction, onChainEnd, signal }) {
+  async initialize({ user, sender, senderEmail, message, onAgentAction, onChainEnd, signal }) {
     const modelOptions = {
       modelName: this.agentOptions.model,
       temperature: this.agentOptions.temperature,
@@ -103,7 +103,6 @@ class PluginsClient extends OpenAIClient {
       user,
       sender,
       senderEmail,
-      selection,
       model,
       tools: this.options.tools,
       functions: this.functionsAgent,
@@ -252,7 +251,6 @@ class PluginsClient extends OpenAIClient {
       user,
       sender,
       senderEmail,
-      selection,
       isEdited,
       conversationId,
       responseMessageId,
@@ -324,7 +322,6 @@ class PluginsClient extends OpenAIClient {
       user,
       sender,
       senderEmail,
-      selection,
       message,
       onAgentAction,
       onChainEnd,

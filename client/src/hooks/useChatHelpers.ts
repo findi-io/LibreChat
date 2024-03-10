@@ -30,7 +30,6 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const setShowStopButton = useSetRecoilState(store.showStopButtonByIndex(index));
   const [files, setFiles] = useRecoilState(store.filesByIndex(index));
   const [filesLoading, setFilesLoading] = useState(false);
-  const [selection, setSelection] = useState<any>(null);
   const setFilesToDelete = useSetFilesToDelete();
   const getSender = useGetSender();
 
@@ -170,7 +169,6 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
       sender: 'User',
       isCreatedByUser: true,
       parentMessageId,
-      selection: selection,
       conversationId,
       messageId: isContinued && messageId ? messageId : fakeMessageId,
       thread_id,
@@ -206,7 +204,6 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
       parentMessageId: isRegenerate ? messageId : fakeMessageId,
       messageId: responseMessageId ?? `${isRegenerate ? messageId : fakeMessageId}_`,
       thread_id,
-      selection,
       conversationId,
       unfinished: false,
       isCreatedByUser: false,
@@ -366,7 +363,6 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
     setShowAgentSettings,
     files,
     setFiles,
-    setSelection,
     filesLoading,
     setFilesLoading,
   };
