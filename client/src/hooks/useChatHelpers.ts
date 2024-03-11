@@ -42,9 +42,10 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
 
-  const pusherKey = import.meta.env.PUSHER_KEY;
-  const cluster = import.meta.env.PUSHER_CLUSTER;
-
+  const pusherKey = process.env.PUSHER_KEY??"";
+  const cluster = process.env.PUSHER_CLUSTER??"";
+  console.log(pusherKey)
+  console.log(cluster)
   var pusher = new Pusher( pusherKey, {
     cluster: cluster
   });
