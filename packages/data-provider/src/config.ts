@@ -200,7 +200,6 @@ export const defaultEndpoints: EModelEndpoint[] = [
 
 export const alternateName = {
   [EModelEndpoint.openAI]: 'OpenAI',
-  [EModelEndpoint.teamChat]: 'Team Chat',
   [EModelEndpoint.assistants]: 'Assistants',
   [EModelEndpoint.azureOpenAI]: 'Azure OpenAI',
   [EModelEndpoint.bingAI]: 'Bing',
@@ -212,9 +211,6 @@ export const alternateName = {
 };
 
 export const defaultModels = {
-  [EModelEndpoint.teamChat]: [
-    'default',
-  ],
   [EModelEndpoint.assistants]: [
     'gpt-3.5-turbo-0125',
     'gpt-4-0125-preview',
@@ -286,7 +282,6 @@ export const supportsRetrieval = new Set([
 
 export const EndpointURLs: { [key in EModelEndpoint]: string } = {
   [EModelEndpoint.openAI]: `/api/ask/${EModelEndpoint.openAI}`,
-  [EModelEndpoint.teamChat]: `/api/ask/${EModelEndpoint.teamChat}`,
   [EModelEndpoint.bingAI]: `/api/ask/${EModelEndpoint.bingAI}`,
   [EModelEndpoint.google]: `/api/ask/${EModelEndpoint.google}`,
   [EModelEndpoint.custom]: `/api/ask/${EModelEndpoint.custom}`,

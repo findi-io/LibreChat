@@ -29,7 +29,6 @@ type EndpointSchema =
 
 const endpointSchemas: Record<EModelEndpoint, EndpointSchema> = {
   [EModelEndpoint.openAI]: openAISchema,
-  [EModelEndpoint.teamChat]: openAISchema,
   [EModelEndpoint.azureOpenAI]: openAISchema,
   [EModelEndpoint.custom]: openAISchema,
   [EModelEndpoint.google]: googleSchema,
@@ -270,7 +269,6 @@ type CompactEndpointSchema =
 
 const compactEndpointSchemas: Record<string, CompactEndpointSchema> = {
   [EModelEndpoint.openAI]: compactOpenAISchema,
-  [EModelEndpoint.teamChat]: compactOpenAISchema,
   [EModelEndpoint.azureOpenAI]: compactOpenAISchema,
   [EModelEndpoint.custom]: compactOpenAISchema,
   [EModelEndpoint.assistants]: assistantSchema,

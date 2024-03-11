@@ -7,7 +7,6 @@ export const isUUID = z.string().uuid();
 export enum EModelEndpoint {
   azureOpenAI = 'azureOpenAI',
   openAI = 'openAI',
-  teamChat = 'teamChat',
   bingAI = 'bingAI',
   chatGPTBrowser = 'chatGPTBrowser',
   google = 'google',

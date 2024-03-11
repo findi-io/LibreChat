@@ -33,11 +33,11 @@ const sendMessage = (res, message, event = 'message') => {
   if (typeof message === 'string' && message.length === 0) {
     return;
   }
-  console.log(message)
+
   if(message.final) {
     pusher.trigger(`${message.conversation.conversationId}`, "message", [message.requestMessage,message.responseMessage]);
-    res.write(`event: ${event}\ndata: ${JSON.stringify(message)}\n\n`);
   }
+  res.write(`event: ${event}\ndata: ${JSON.stringify(message)}\n\n`);
 };
 
 /**
