@@ -7,6 +7,7 @@ ARG VITE_CLERK_PUBLISHABLE_KEY
 ARG CLERK_PEM_PUBLIC_KEY
 ARG TIPTAP_PRO_TOKEN
 ARG VITE_PUSHER_KEY
+ARG VITE_PUSHER_CLUSTER
 # Allow mounting of these files, which have no default
 # values.
 RUN touch .env
