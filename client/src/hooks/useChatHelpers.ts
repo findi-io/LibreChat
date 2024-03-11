@@ -24,6 +24,7 @@ import useUserKey from './Input/useUserKey';
 import { getEndpointField } from '~/utils';
 import useNewConvo from './useNewConvo';
 import store from '~/store';
+import Pusher from 'pusher-js';
 
 // this to be set somewhere else
 export default function useChatHelpers(index = 0, paramId: string | undefined) {
@@ -40,6 +41,32 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { useCreateConversationAtom } = store;
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
+
+  const pusherKey = import.meta.env.PUSHER_KEY;
+  const cluster = import.meta.env.PUSHER_CLUSTER;
+
+  var pusher = new Pusher( pusherKey, {
+    cluster: cluster
+  });
+  if(conversationId) {
+    var channel = pusher.subscribe(`${conversationId}`);
+    channel.bind('message', function(data: Array<TMessage>) {
+      console.log(JSON.stringify(data))
+      const messages = getMessages();
+      if(messages) {
+        data.forEach((msg)=>{
+          const exists = messages.filter((m)=>m.messageId === msg.messageId)
+          if(exists.length == 0) {
+            messages.push(msg)
+          }
+        })
+        setMessages(messages.concat(data))
+      }else {
+        setMessages(data)
+      }
+    });
+  }
+
 
   const queryParam = paramId === 'new' ? paramId : conversationId ?? paramId ?? '';
 

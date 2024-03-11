@@ -3,6 +3,15 @@ const { parseConvo } = require('librechat-data-provider');
 const { saveMessage, getMessages } = require('~/models/Message');
 const { getConvo } = require('~/models/Conversation');
 const { logger } = require('~/config');
+const Pusher = require("pusher");
+
+const pusher = new Pusher({
+  appId: process.env.PUSHER_APPID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET,
+  cluster: process.env.PUSHER_CLUSTER,
+  useTLS: true
+});
 
 /**
  * Sends error data in Server Sent Events format and ends the response.
@@ -24,7 +33,11 @@ const sendMessage = (res, message, event = 'message') => {
   if (typeof message === 'string' && message.length === 0) {
     return;
   }
-  res.write(`event: ${event}\ndata: ${JSON.stringify(message)}\n\n`);
+  console.log(message)
+  if(message.final) {
+    pusher.trigger(`${message.conversation.conversationId}`, "message", [message.requestMessage,message.responseMessage]);
+    res.write(`event: ${event}\ndata: ${JSON.stringify(message)}\n\n`);
+  }
 };
 
 /**

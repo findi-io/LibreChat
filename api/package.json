@@ -115,6 +115,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.11.3",
     "pino": "^8.12.1",
+    "pusher": "^5.2.0",
     "sharp": "^0.32.6",
     "tiktoken": "^1.0.10",
     "traverse": "^0.6.7",

@@ -131,6 +131,7 @@
     "nanoid": "^4.0.2",
     "next": "^14.1.0",
     "postcss": "8.4.27",
+    "pusher-js": "^8.4.0-rc2",
     "rc-input-number": "^7.4.2",
     "react": "^18.2.0",
     "react-colorful": "^5.6.1",
