@@ -95,19 +95,11 @@ const refreshController = async (req, res) => {
     const hashedToken = hash.update(refreshToken).digest('hex');
 
     // Find the session with the hashed refresh token
-    const session = await Session.findOne({ user: userId, refreshTokenHash: hashedToken });
-    if (session && session.expiration > new Date()) {
-      const token = await setAuthTokens(userId, res, session._id);
+
+      const token = await setAuthTokens(userId, res, null);
       const userObj = user.toJSON();
       res.status(200).send({ token, user: userObj });
-    } else if (req?.query?.retry) {
-      // Retrying from a refresh token request that failed (401)
-      res.status(403).send('No session found');
-    } else if (payload.exp < Date.now() / 1000) {
-      res.status(403).redirect('/login');
-    } else {
-      res.status(401).send('Refresh token expired or not found for this user');
-    }
+
   } catch (err) {
     logger.error(`[refreshController] Refresh token: ${refreshToken}`, err);
     res.status(403).send('Invalid refresh token');
