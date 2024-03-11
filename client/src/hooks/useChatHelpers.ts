@@ -44,8 +44,6 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
 
   const pusherKey = import.meta.env.VITE_PUSHER_KEY;
   const cluster = import.meta.env.VITE_PUSHER_CLUSTER;
-  console.log(pusherKey)
-  console.log(cluster)
   var pusher = new Pusher( pusherKey, {
     cluster: cluster
   });
