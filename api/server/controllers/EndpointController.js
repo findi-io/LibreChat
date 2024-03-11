@@ -21,7 +21,7 @@ async function endpointController(req, res) {
   }
 
   const endpointsConfig = orderEndpointsConfig(mergedConfig);
-
+  endpointsConfig.teamChat = { userProvide: false, order: 1 },
   await cache.set(CacheKeys.ENDPOINT_CONFIG, endpointsConfig);
   res.send(JSON.stringify(endpointsConfig));
 }
