@@ -147,7 +147,11 @@ const processDeleteRequest = async ({ req, files }) => {
 const processFileURL = async ({ fileStrategy, userId, URL, fileName, basePath, context }) => {
   const { saveURL, getFileURL } = getStrategyFunctions(fileStrategy);
   try {
-    const { bytes, type, dimensions } = await saveURL({ userId, URL, fileName, basePath });
+    const {
+      bytes = 0,
+      type = '',
+      dimensions = {},
+    } = (await saveURL({ userId, URL, fileName, basePath })) || {};
     const filepath = await getFileURL({ fileName: `${userId}/${fileName}`, basePath });
     return await createFile(
       {
@@ -186,6 +190,13 @@ const processImageFile = async ({ req, res, file, metadata }) => {
   const { handleImageUpload } = getStrategyFunctions(source);
   const { file_id, temp_file_id, endpoint } = metadata;
   const { filepath, bytes, width, height } = await handleImageUpload({ req, file, endpoint });
+  const { file_id, temp_file_id, endpoint } = metadata;
+  const { filepath, bytes, width, height } = await handleImageUpload({
+    req,
+    file,
+    file_id,
+    endpoint,
+  });
   const result = await createFile(
     {
       user: req.user.id,

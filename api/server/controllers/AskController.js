@@ -148,9 +148,9 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
     if (!abortController.signal.aborted) {
       sendMessage(res, {
         final: true,
-        sender: req.user.sender,
         conversation,
         title: conversation.title,
+        sender: req.user.sender,
         requestMessage: userMessage,
         responseMessage: response,
       });
