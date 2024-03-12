@@ -26,7 +26,6 @@ const { logger } = require('~/config');
  *            - width: The width of the converted image.
  *            - height: The height of the converted image.
  */
-async function uploadImageToFirebase({ req, file, endpoint, resolution = 'high' }) {
 async function uploadImageToFirebase({ req, file, file_id, endpoint, resolution = 'high' }) {
   const inputFilePath = file.path;
   const inputBuffer = await fs.promises.readFile(inputFilePath);

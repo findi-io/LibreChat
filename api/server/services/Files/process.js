@@ -189,8 +189,6 @@ const processImageFile = async ({ req, res, file, metadata }) => {
   const source = req.app.locals.fileStrategy;
   const { handleImageUpload } = getStrategyFunctions(source);
   const { file_id, temp_file_id, endpoint } = metadata;
-  const { filepath, bytes, width, height } = await handleImageUpload({ req, file, endpoint });
-  const { file_id, temp_file_id, endpoint } = metadata;
   const { filepath, bytes, width, height } = await handleImageUpload({
     req,
     file,
