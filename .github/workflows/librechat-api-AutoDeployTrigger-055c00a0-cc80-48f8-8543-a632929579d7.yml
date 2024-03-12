@@ -1,0 +1,42 @@
+name: Trigger auto deployment for librechat-api
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ release ]
+    paths:
+    - '**'
+    - '.github/workflows/librechat-api-AutoDeployTrigger-055c00a0-cc80-48f8-8543-a632929579d7.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.LIBRECHATAPI_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: handler.azurecr.io
+          registryUsername: ${{ secrets.LIBRECHATAPI_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.LIBRECHATAPI_REGISTRY_PASSWORD }}
+          containerAppName: librechat-api
+          resourceGroup: chatlog
+          imageToBuild: handler.azurecr.io/librechat-api:${{ github.sha }}
+          buildArguments: "VITE_CLERK_PUBLISHABLE_KEY=${{secrets.VITE_CLERK_PUBLISHABLE_KEY}} CLERK_PEM_PUBLIC_KEY=${{secrets.CLERK_PEM_PUBLIC_KEY}} MEILI_HOST=http://meilisearch:7700 MEILI_HTTP_ADDR=meilisearch:7700 MEILI_MASTER_KEY=${{secrets.MEILI_MASTER_KEY}} MEILI_NO_ANALYTICS=true SEARCH=true USE_REDIS=true REDIS_URI=${{secrets.REDIS_URI}}"
+
+     
+
