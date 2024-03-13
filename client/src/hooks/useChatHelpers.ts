@@ -28,7 +28,8 @@ import { Centrifuge, UnauthorizedError } from 'centrifuge';
 import { useClerk } from "@clerk/clerk-react";
 
 // this to be set somewhere else
-export default function useChatHelpers(index = 0, paramId: string | undefined) {
+export default function useChatHelpers(index = 0, paramId: string | undefined,collabToken: string | null) {
+  console.log("token: "+collabToken)
   const setShowStopButton = useSetRecoilState(store.showStopButtonByIndex(index));
   const [files, setFiles] = useRecoilState(store.filesByIndex(index));
   const [filesLoading, setFilesLoading] = useState(false);
@@ -44,28 +45,13 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
 
-  const getToken = async () => {
-      // ctx argument has a channel.
-      try {
-        const val =  await clerk.session?.getToken({ template: 'centrifugo' }) // => "eyJhbGciOiJSUzI1NiIsImtpZC..."
-        if(val) {
-          return val
-        }else {
-          return ""
-        }
-      } catch(e) {
-          // handle error
-          console.log("failed to get centrifugo token")
-      }
-      return ""
-  }
-  if(conversationId) {
-    const centrifuge = new Centrifuge('wss://ws.chatlog.ai/connection/websocket');
-    const sub = centrifuge.newSubscription(`${conversationId}`, {
-        token: 'JWT-GENERATED-ON-BACKEND-SIDE',
-        getToken: getToken,
+  if(conversationId && collabToken) {
+    const centrifuge = new Centrifuge('wss://ws.chatlog.ai/connection/websocket', {
+      token: collabToken??"",
     });
+    const sub = centrifuge.newSubscription(`${conversationId}`);
     sub.on('publication', function(ctx) {
+      console.log(ctx.data)
       const data: Array<TMessage> = ctx.data
       console.log(JSON.stringify(data))
       const messages = getMessages();
