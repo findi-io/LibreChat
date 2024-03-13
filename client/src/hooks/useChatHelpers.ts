@@ -24,7 +24,7 @@ import useUserKey from './Input/useUserKey';
 import { getEndpointField } from '~/utils';
 import useNewConvo from './useNewConvo';
 import store from '~/store';
-import Pusher from 'pusher-js';
+import { Centrifuge } from 'centrifuge';
 
 // this to be set somewhere else
 export default function useChatHelpers(index = 0, paramId: string | undefined) {
@@ -42,14 +42,11 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
 
-  const pusherKey = "9209e8b493150f5d25ad";
-  const cluster = "us3";
-  var pusher = new Pusher( pusherKey, {
-    cluster: cluster
-  });
   if(conversationId) {
-    var channel = pusher.subscribe(`${conversationId}`);
-    channel.bind('message', function(data: Array<TMessage>) {
+    const centrifuge = new Centrifuge('wss://ws.chatlog.ai/connection/websocket');
+    const sub = centrifuge.newSubscription(`${conversationId}`);
+    sub.on('publication', function(ctx) {
+      const data: Array<TMessage> = ctx.data
       console.log(JSON.stringify(data))
       const messages = getMessages();
       if(messages) {
@@ -64,6 +61,11 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
         setMessages(data)
       }
     });
+    // Trigger subscribe process.
+    sub.subscribe();
+
+    // Trigger actual connection establishement.
+    centrifuge.connect();
   }
 
 
