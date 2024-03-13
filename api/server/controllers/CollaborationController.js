@@ -2,9 +2,9 @@ const jsonwebtoken = require('jsonwebtoken');
 const JWT_SECRET = process.env?.TIPTAP_COLLAB_SECRET
 async function collaborationController(req, res) {
   let {
-    conversationId,
+    channel,
   } = req.body;
-  console.log(conversationId)
+  console.log(channel)
   const jwt = await jsonwebtoken.sign(
     {
       sub: conversationId,
@@ -13,7 +13,7 @@ async function collaborationController(req, res) {
       aud: "centrifugo",
       iss: "centrifugo",
       /* object to be encoded in the JWT */
-      channels: [conversationId]
+      channels: [channel]
     },
     JWT_SECRET,
   )

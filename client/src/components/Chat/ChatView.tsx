@@ -13,6 +13,7 @@ import Landing from './Landing';
 import Header from './Header';
 import Footer from './Footer';
 import store from '~/store';
+import { useAuth } from '@clerk/clerk-react';
 
 function ChatView({ index = 0 }: { index?: number }) {
   const { conversationId } = useParams();
@@ -29,6 +30,7 @@ function ChatView({ index = 0 }: { index?: number }) {
     enabled: !!fileMap,
   });
 
+  const { userId, orgId } = useAuth();
   const [collabToken, setCollabToken] = useState<string | null>(null)
   
   const chatHelpers = useChatHelpers(index, conversationId, collabToken);
@@ -43,7 +45,7 @@ function ChatView({ index = 0 }: { index?: number }) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            conversationId
+            channel: orgId??userId
           }),
         })
       ).json()

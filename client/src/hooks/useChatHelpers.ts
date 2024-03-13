@@ -25,18 +25,18 @@ import { getEndpointField } from '~/utils';
 import useNewConvo from './useNewConvo';
 import store from '~/store';
 import { Centrifuge, UnauthorizedError } from 'centrifuge';
-import { useClerk } from "@clerk/clerk-react";
+import { useAuth, useClerk } from "@clerk/clerk-react";
 
 // this to be set somewhere else
-export default function useChatHelpers(index = 0, paramId: string | undefined,collabToken: string | null) {
+export default function useChatHelpers(index = 0, paramId: string | undefined,collabToken?: string | null) {
   console.log("token: "+collabToken)
   const setShowStopButton = useSetRecoilState(store.showStopButtonByIndex(index));
   const [files, setFiles] = useRecoilState(store.filesByIndex(index));
   const [filesLoading, setFilesLoading] = useState(false);
   const setFilesToDelete = useSetFilesToDelete();
   const getSender = useGetSender();
-  const clerk = useClerk();
-
+  const { userId, orgId } = useAuth();
+  const channel = orgId ?? userId
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthContext();
 
@@ -45,27 +45,13 @@ export default function useChatHelpers(index = 0, paramId: string | undefined,co
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
 
-  if(conversationId && collabToken) {
+  if(collabToken) {
     const centrifuge = new Centrifuge('wss://ws.chatlog.ai/connection/websocket', {
       token: collabToken??"",
     });
-    const sub = centrifuge.newSubscription(`${conversationId}`);
+    const sub = centrifuge.newSubscription(`${channel}`);
     sub.on('publication', function(ctx) {
       console.log(ctx.data)
-      const data: Array<TMessage> = ctx.data
-      console.log(JSON.stringify(data))
-      const messages = getMessages();
-      if(messages) {
-        data.forEach((msg)=>{
-          const exists = messages.filter((m)=>m.messageId === msg.messageId)
-          if(exists.length == 0) {
-            messages.push(msg)
-          }
-        })
-        setMessages(messages.concat(data))
-      }else {
-        setMessages(data)
-      }
     });
     // Trigger subscribe process.
     sub.subscribe();
