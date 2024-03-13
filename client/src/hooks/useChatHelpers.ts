@@ -42,8 +42,8 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
 
-  const pusherKey = import.meta.env.VITE_PUSHER_KEY;
-  const cluster = import.meta.env.VITE_PUSHER_CLUSTER;
+  const pusherKey = "9209e8b493150f5d25ad";
+  const cluster = "us3";
   var pusher = new Pusher( pusherKey, {
     cluster: cluster
   });

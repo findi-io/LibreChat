@@ -33,9 +33,14 @@ const sendMessage = (res, message, event = 'message') => {
   if (typeof message === 'string' && message.length === 0) {
     return;
   }
-
+  console.log(message)
   if(message.final) {
-    pusher.trigger(`${message.conversation.conversationId}`, "message", [message.requestMessage,message.responseMessage]);
+    try {
+      //pusher.trigger(`${message.conversation.conversationId}`, "message", [message.requestMessage,message.responseMessage]);
+    }catch(error) {
+      logger.error("error happend to push data {}",error)
+    }
+   
   }
   res.write(`event: ${event}\ndata: ${JSON.stringify(message)}\n\n`);
 };
