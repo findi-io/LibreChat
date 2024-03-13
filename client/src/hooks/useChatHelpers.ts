@@ -24,7 +24,8 @@ import useUserKey from './Input/useUserKey';
 import { getEndpointField } from '~/utils';
 import useNewConvo from './useNewConvo';
 import store from '~/store';
-import { Centrifuge } from 'centrifuge';
+import { Centrifuge, UnauthorizedError } from 'centrifuge';
+import { useClerk } from "@clerk/clerk-react";
 
 // this to be set somewhere else
 export default function useChatHelpers(index = 0, paramId: string | undefined) {
@@ -33,6 +34,7 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const [filesLoading, setFilesLoading] = useState(false);
   const setFilesToDelete = useSetFilesToDelete();
   const getSender = useGetSender();
+  const clerk = useClerk();
 
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthContext();
@@ -42,9 +44,27 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
 
+  const getToken = async () => {
+      // ctx argument has a channel.
+      try {
+        const val =  await clerk.session?.getToken({ template: 'centrifugo' }) // => "eyJhbGciOiJSUzI1NiIsImtpZC..."
+        if(val) {
+          return val
+        }else {
+          return ""
+        }
+      } catch(e) {
+          // handle error
+          console.log("failed to get centrifugo token")
+      }
+      return ""
+  }
   if(conversationId) {
     const centrifuge = new Centrifuge('wss://ws.chatlog.ai/connection/websocket');
-    const sub = centrifuge.newSubscription(`${conversationId}`);
+    const sub = centrifuge.newSubscription(`${conversationId}`, {
+        token: 'JWT-GENERATED-ON-BACKEND-SIDE',
+        getToken: getToken,
+    });
     sub.on('publication', function(ctx) {
       const data: Array<TMessage> = ctx.data
       console.log(JSON.stringify(data))
