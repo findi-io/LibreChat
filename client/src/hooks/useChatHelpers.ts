@@ -24,19 +24,19 @@ import useUserKey from './Input/useUserKey';
 import { getEndpointField } from '~/utils';
 import useNewConvo from './useNewConvo';
 import store from '~/store';
-import { Centrifuge, UnauthorizedError } from 'centrifuge';
-import { useAuth, useClerk } from "@clerk/clerk-react";
-
+import Pusher from 'pusher-js';
+var pusher = new Pusher( import.meta.env.VITE_PUSHER_KEY, {
+  cluster: import.meta.env.VITE_PUSHER_CLUSTER
+});
 // this to be set somewhere else
-export default function useChatHelpers(index = 0, paramId: string | undefined,collabToken?: string | null) {
-  console.log("token: "+collabToken)
+export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const setShowStopButton = useSetRecoilState(store.showStopButtonByIndex(index));
   const [files, setFiles] = useRecoilState(store.filesByIndex(index));
   const [filesLoading, setFilesLoading] = useState(false);
   const setFilesToDelete = useSetFilesToDelete();
   const getSender = useGetSender();
-  const { userId, orgId } = useAuth();
-  const channel = orgId ?? userId
+  const { user } = useAuthContext();
+
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthContext();
 
@@ -45,20 +45,33 @@ export default function useChatHelpers(index = 0, paramId: string | undefined,co
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
 
-  if(collabToken) {
-    const centrifuge = new Centrifuge('wss://ws.chatlog.ai/connection/websocket', {
-      token: collabToken??"",
-    });
-    const sub = centrifuge.newSubscription(`${channel}`);
-    sub.on('publication', function(ctx) {
-      console.log(ctx.data)
-    });
-    // Trigger subscribe process.
-    sub.subscribe();
 
+  if(conversationId) {
+    var channel = pusher.subscribe(`${user?.id}`);
+    channel.bind('message', function(data: any) {
+      console.log(JSON.stringify(data))
+      if(data.conversation.conversationId === conversationId) {
+        const messages = getMessages();
+        const msgs = [data.requestMessage,data.responseMessage]
+        if(messages) {
+          msgs.forEach((msg)=>{
+            const exists = messages.filter((m)=>m.messageId === msg.messageId)
+            if(exists.length == 0) {
+              messages.push(msg)
+            }
+          })
+          setMessages(messages)
+        }else {
+          setMessages(msgs)
+        }
+     }
+    });
     // Trigger actual connection establishement.
     centrifuge.connect();
   }
+
+
+
 
 
   const queryParam = paramId === 'new' ? paramId : conversationId ?? paramId ?? '';

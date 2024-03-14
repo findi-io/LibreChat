@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useParams } from 'react-router-dom';
 import { useGetMessagesByConvoId } from 'librechat-data-provider/react-query';
@@ -13,7 +13,6 @@ import Landing from './Landing';
 import Header from './Header';
 import Footer from './Footer';
 import store from '~/store';
-import { useAuth } from '@clerk/clerk-react';
 
 function ChatView({ index = 0 }: { index?: number }) {
   const { conversationId } = useParams();
@@ -30,34 +29,7 @@ function ChatView({ index = 0 }: { index?: number }) {
     enabled: !!fileMap,
   });
 
-  const { userId, orgId } = useAuth();
-  const [collabToken, setCollabToken] = useState<string | null>(null)
-  
-  const chatHelpers = useChatHelpers(index, conversationId, collabToken);
-
-  useEffect(() => {
-    // fetch data
-    const dataFetch = async () => {
-      const data = await (
-        await fetch('/api/collaboration', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            channel: orgId??userId
-          }),
-        })
-      ).json()
-
-      const { token } = data
-
-      // set state when the data received
-      setCollabToken(token)
-    }
-
-    dataFetch()
-  }, [])
+  const chatHelpers = useChatHelpers(index, conversationId);
 
   return (
     <ChatContext.Provider value={chatHelpers}>
