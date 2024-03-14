@@ -4,8 +4,8 @@
   </a>
   <h1 align="center">
     <a href="https://librechat.ai">LibreChat</a>
-  </h1>
-</p>
+  </h1> 
+</p> 
 
 <p align="center">
   <a href="https://discord.librechat.ai"> 

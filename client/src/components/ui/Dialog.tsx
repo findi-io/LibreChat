@@ -72,7 +72,7 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex flex-col space-y-2 border-b border-black/10 dark:border-white/10 p-6 pb-4 text-left',
+      'flex flex-col space-y-2 border-b border-black/10 p-6 pb-4 text-left dark:border-white/10',
       className ?? '',
     )}
     {...props}
@@ -82,10 +82,7 @@ DialogHeader.displayName = 'DialogHeader';
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(
-      'flex px-6 py-4 flex-row justify-between space-x-2',
-      className ?? '',
-    )}
+    className={cn('flex flex-row justify-between space-x-2 px-6 py-4', className ?? '')}
     {...props}
   />
 );

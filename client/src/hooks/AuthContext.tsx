@@ -8,7 +8,8 @@ import {
   useContext,
 } from 'react';
 import { useRecoilState } from 'recoil';
-import { TUser, TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
+import { dark, neobrutalism } from '@clerk/themes';
+import { TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
 import {
   useGetUserQuery,
   useLoginUserMutation,

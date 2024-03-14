@@ -146,7 +146,6 @@ const loadToolWithAuth = (userId, authFields, ToolConstructor, options = {}) => 
         authValues[result.authField] = result.authValue;
       }
     }
-
     return new ToolConstructor({ ...options, ...authValues, userId });
   };
 };

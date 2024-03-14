@@ -40,12 +40,7 @@ export default function Message(props: TMessageProps) {
 
   const { text, children, messageId = null, isCreatedByUser, error, unfinished } = message ?? {};
 
-  let messageLabel = '';
-  if (isCreatedByUser) {
-    messageLabel = UsernameDisplay ? user?.name : localize('com_user_message');
-  } else {
-    messageLabel = message.sender;
-  }
+  const messageLabel = message.sender;
 
   return (
     <>
