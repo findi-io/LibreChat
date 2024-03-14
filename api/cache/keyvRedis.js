@@ -7,7 +7,12 @@ const { REDIS_URI, USE_REDIS } = process.env;
 let keyvRedis;
 
 if (REDIS_URI && isEnabled(USE_REDIS)) {
-  keyvRedis = new KeyvRedis(REDIS_URI, { useRedisSets: false });
+  keyvRedis = new KeyvRedis({
+    uri: REDIS_URI,
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
   keyvRedis.on('error', (err) => logger.error('KeyvRedis connection error:', err));
   keyvRedis.setMaxListeners(20);
   logger.info(

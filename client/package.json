@@ -27,6 +27,8 @@
   },
   "homepage": "https://librechat.ai",
   "dependencies": {
+    "@clerk/clerk-react": "^4.30.5",
+    "@clerk/themes": "^1.7.9",
     "@dicebear/collection": "^7.0.4",
     "@dicebear/core": "^7.0.4",
     "@headlessui/react": "^1.7.13",
@@ -71,6 +73,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-flip-toolkit": "^7.1.0",
+    "react-ga4": "^2.1.0",
     "react-hook-form": "^7.43.9",
     "react-lazy-load-image-component": "^1.6.0",
     "react-markdown": "^8.0.6",

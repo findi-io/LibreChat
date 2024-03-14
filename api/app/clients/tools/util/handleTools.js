@@ -12,6 +12,9 @@ const {
   GoogleSearchAPI,
   WolframAlphaAPI,
   OpenAICreateImage,
+  Demo,
+  Email,
+  Chart,
   StableDiffusionAPI,
   // Structured Tools
   DALLE3,
@@ -150,6 +153,8 @@ const loadToolWithAuth = (userId, authFields, ToolConstructor, options = {}) => 
 
 const loadTools = async ({
   user,
+  sender,
+  senderEmail,
   model,
   functions = null,
   returnMap = false,
@@ -161,6 +166,9 @@ const loadTools = async ({
     tavily_search_results_json: TavilySearchResults,
     calculator: Calculator,
     google: GoogleSearchAPI,
+    demo: Demo,
+    email: Email,
+    chart: Chart,
     wolfram: functions ? StructuredWolfram : WolframAlphaAPI,
     'dall-e': OpenAICreateImage,
     'stable-diffusion': functions ? StructuredSD : StableDiffusionAPI,
@@ -245,8 +253,16 @@ const loadTools = async ({
   const toolOptions = {
     serpapi: { location: 'Austin,Texas,United States', hl: 'en', gl: 'us' },
     dalle: imageGenOptions,
+    chart: imageGenOptions,
     'dall-e': imageGenOptions,
     'stable-diffusion': imageGenOptions,
+    email: {
+      messages: options.memory.chatHistory.messages,
+      conversationId: options.conversationId,
+      sender,
+      senderEmail,
+      apiKey: process.env.RESEND_API_KEY,
+    },
   };
 
   const toolAuthFields = {};
