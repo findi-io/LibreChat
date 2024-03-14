@@ -66,8 +66,7 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
         }
      }
     });
-    // Trigger actual connection establishement.
-    centrifuge.connect();
+ 
   }
 
 
