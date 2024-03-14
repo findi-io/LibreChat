@@ -1,7 +1,7 @@
 const { getResponseSender, Constants } = require('librechat-data-provider');
-const { sendMessage, createOnProgress } = require('~/server/utils');
-const { saveMessage, getConvoTitle, getConvo } = require('~/models');
 const { createAbortController, handleAbortError } = require('~/server/middleware');
+const { sendMessage, createOnProgress } = require('~/server/utils');
+const { saveMessage, getConvo } = require('~/models');
 const { logger } = require('~/config');
 
 const AskController = async (req, res, next, initializeClient, addTitle) => {
@@ -135,17 +135,22 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
 
     response.endpoint = endpointOption.endpoint;
 
+    const conversation = await getConvo(user, conversationId);
+    conversation.title =
+      conversation && !conversation.title ? null : conversation?.title || 'New Chat';
+
     if (client.options.attachments) {
       userMessage.files = client.options.attachments;
+      conversation.model = endpointOption.modelOptions.model;
       delete userMessage.image_urls;
     }
 
     if (!abortController.signal.aborted) {
       sendMessage(res, {
-        title: await getConvoTitle(user, conversationId),
         final: true,
+        conversation,
         sender: req.user.sender,
-        conversation: await getConvo(user, conversationId),
+        title: conversation.title,
         requestMessage: userMessage,
         responseMessage: response,
       });

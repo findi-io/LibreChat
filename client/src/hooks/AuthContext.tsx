@@ -186,14 +186,7 @@ const AuthContextProvider = ({
 
   return (
     <AuthContext.Provider value={memoedValue}>
-      <ClerkProvider
-        publishableKey={PUBLISHABLE_KEY}
-        appearance={{
-          baseTheme: [neobrutalism, dark],
-        }}
-      >
-        {children}
-      </ClerkProvider>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>{children}</ClerkProvider>
     </AuthContext.Provider>
   );
 };
