@@ -149,6 +149,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
       sendMessage(res, {
         final: true,
         conversation,
+        isOrg: req.user.username.startsWith('org_'),
         sender: req.user.sender,
         title: conversation.title,
         requestMessage: userMessage,

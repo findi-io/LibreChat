@@ -32,6 +32,7 @@ type TResData = {
   plugin: TResPlugin;
   final?: boolean;
   initial?: boolean;
+  isOrg?: boolean;
   requestMessage: TMessage;
   responseMessage: TMessage;
   conversation: TConversation;
@@ -57,7 +58,7 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
 
-  if (conversationId) {
+  if (conversationId && user?.username.startsWith('org_')) {
     const channel = pusher.subscribe(`${user?.id}`);
     channel.bind('message', function (data: TResData) {
       console.log(JSON.stringify(data));
