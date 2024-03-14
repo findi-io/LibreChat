@@ -36,7 +36,7 @@ const sendMessage = (res, message, event = 'message') => {
   console.log(message)
   if(message.final) {
     try {
-      pusher.trigger(`${message.conversation.user}`, "message", message);
+      //pusher.trigger(`${message.conversation.user}`, "message", message);
     }catch(error) {
       logger.error("error happend to push data {}",error)
     }

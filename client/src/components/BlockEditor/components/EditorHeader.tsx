@@ -42,8 +42,8 @@ export const EditorHeader = ({
           )} to={`/c/${conversationId}`}                >
             Chat Mode
           </Link>
-          <Link target='_blank' to={`/p/${conversationId}`} onClick={()=>console.log(editor.getHTML())}>Save</Link>
-          <Link target='_blank' to={`/p/${conversationId}`} onClick={()=>console.log(editor.getHTML())}>Restore</Link>
+          <Button  onClick={()=>console.log(editor.storage.collabHistory.versioningEnabled)}>Save</Button>
+          <Button onClick={()=>console.log(editor.getHTML())}>Restore</Button>
           
         </div>
       </div>

@@ -25,6 +25,9 @@ import { getEndpointField } from '~/utils';
 import useNewConvo from './useNewConvo';
 import store from '~/store';
 import Pusher from 'pusher-js';
+import TurndownService from 'turndown'
+const turndownService = new TurndownService()
+
 var pusher = new Pusher( import.meta.env.VITE_PUSHER_KEY, {
   cluster: import.meta.env.VITE_PUSHER_CLUSTER
 });
@@ -33,6 +36,9 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const setShowStopButton = useSetRecoilState(store.showStopButtonByIndex(index));
   const [files, setFiles] = useRecoilState(store.filesByIndex(index));
   const [filesLoading, setFilesLoading] = useState(false);
+  const [doc, setDoc] = useState("");
+  const [selection, setSelection] = useState("");
+  
   const setFilesToDelete = useSetFilesToDelete();
   const getSender = useGetSender();
   const { user } = useAuthContext();
@@ -204,6 +210,8 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
       sender: 'User',
       isCreatedByUser: true,
       parentMessageId,
+      doc: turndownService.turndown(doc),
+      selection,
       conversationId,
       messageId: isContinued && messageId ? messageId : fakeMessageId,
       thread_id,
@@ -396,6 +404,8 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
     setOptionSettings,
     showAgentSettings,
     setShowAgentSettings,
+    setDoc,
+    setSelection,
     files,
     setFiles,
     filesLoading,

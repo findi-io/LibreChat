@@ -11,6 +11,7 @@ import { EditorContext } from '../context/EditorContext'
 import { userColors, userNames } from '../lib/constants'
 import { randomElement } from '../lib/utils'
 import { EditorUser } from '~/components/BlockEditor/types'
+import {CollabHistory} from '@tiptap-pro/extension-collaboration-history'
 
 import { Ai } from '~/extensions'
 
@@ -29,12 +30,14 @@ export const useBlockEditor = ({
   fullName,
   avatar,
   provider,
+  chatHelpers,
 }: {
   aiToken: string
   ydoc: Y.Doc
   fullName: string | null | undefined
   avatar: string | null | undefined
-  provider?: TiptapCollabProvider | null | undefined
+  provider?: TiptapCollabProvider | null | undefined,
+  chatHelpers: any
 }) => {
   const [collabState, setCollabState] = useState<WebSocketStatus>(WebSocketStatus.Connecting)
   const { setIsAiLoading, setAiError } = useContext(EditorContext)
@@ -49,8 +52,21 @@ export const useBlockEditor = ({
         })
         
       },
+      onUpdate({ editor }) {
+        chatHelpers.setDoc(editor.getHTML())
+      },
+      onSelectionUpdate({ editor }) {
+        // The selection has changed.
+        const { state } = editor
+        const { from, to } = state.selection
+        const text = state.doc.textBetween(from, to, ' ')
+        chatHelpers.setSelection(text)
+      },
       extensions: [
         ...ExtensionKit({
+          provider,
+        }),
+        CollabHistory.configure({
           provider,
         }),
         Collaboration.configure({

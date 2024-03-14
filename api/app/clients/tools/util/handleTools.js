@@ -156,6 +156,8 @@ const loadTools = async ({
   user,
   sender,
   senderEmail,
+  doc,
+  selection,
   model,
   functions = null,
   returnMap = false,
@@ -269,6 +271,8 @@ const loadTools = async ({
       conversationId: options.conversationId,
       sender,
       senderEmail,
+      doc,
+      selection,
       appId: process.env.TIPTAP_APPID,
       apiKey: process.env.TIPTAP_API_KEY
     },

@@ -30,12 +30,14 @@ router.post(
   async (req, res) => {
     let {
       text,
+      doc,
+      selection,
       endpointOption,
       conversationId,
       parentMessageId = null,
       overrideParentMessageId = null,
     } = req.body;
-    logger.debug('[/ask/gptPlugins]', { text, conversationId, ...endpointOption });
+    logger.debug('[/ask/gptPlugins]', { text, doc,selection, conversationId, ...endpointOption });
     let metadata;
     let userMessage;
     let promptTokens;
@@ -174,6 +176,8 @@ router.post(
         user,
         sender: req.user.sender,
         senderEmail: req.user.senderEmail,
+        doc,
+        selection,
         conversationId,
         parentMessageId,
         overrideParentMessageId,
