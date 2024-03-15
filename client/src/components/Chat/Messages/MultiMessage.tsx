@@ -13,6 +13,7 @@ export default function MultiMessage({
   messagesTree,
   currentEditId,
   setCurrentEditId,
+  insertIntoEditor,
 }: TMessageProps) {
   const [siblingIdx, setSiblingIdx] = useRecoilState(store.messagesSiblingIdxFamily(messageId));
 
@@ -41,11 +42,11 @@ export default function MultiMessage({
   if (!message) {
     return null;
   }
-
   if (message.content) {
     return (
       <MessageParts
         key={message.messageId}
+        insertIntoEditor={insertIntoEditor}
         message={message}
         currentEditId={currentEditId}
         setCurrentEditId={setCurrentEditId}
@@ -60,6 +61,7 @@ export default function MultiMessage({
     <Message
       key={message.messageId}
       message={message}
+      insertIntoEditor={insertIntoEditor}
       currentEditId={currentEditId}
       setCurrentEditId={setCurrentEditId}
       siblingIdx={messagesTree.length - siblingIdx - 1}

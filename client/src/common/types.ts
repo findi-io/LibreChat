@@ -187,6 +187,8 @@ export type TMessageProps = {
   isSearchView?: boolean;
   siblingIdx?: number;
   siblingCount?: number;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  insertIntoEditor?: Function | null;
   setCurrentEditId?: React.Dispatch<React.SetStateAction<string | number | null>> | null;
   setSiblingIdx?: ((value: number) => void | React.Dispatch<React.SetStateAction<number>>) | null;
 };

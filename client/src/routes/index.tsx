@@ -11,6 +11,7 @@ import {
   ApiErrorWatcher,
 } from '~/components/Auth';
 import { AuthContextProvider } from '~/hooks/AuthContext';
+import WriterRoute from './WriterRoute';
 
 const AuthLayout = () => (
   <AuthContextProvider>
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
           {
             path: 'c/:conversationId?',
             element: <ChatRoute />,
+          },
+          {
+            path: 'w/:conversationId?',
+            element: <WriterRoute />,
           },
           {
             path: 'chat/:conversationId?',

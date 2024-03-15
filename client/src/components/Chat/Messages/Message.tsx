@@ -15,7 +15,6 @@ export default function Message(props: TMessageProps) {
   const UsernameDisplay = useRecoilValue<boolean>(store.UsernameDisplay);
   const { user } = useAuthContext();
   const localize = useLocalize();
-
   const {
     ask,
     icon,
@@ -107,6 +106,7 @@ export default function Message(props: TMessageProps) {
                     isSubmitting={isSubmitting}
                     conversation={conversation ?? null}
                     regenerate={() => regenerateMessage()}
+                    insertIntoEditor={props.insertIntoEditor}
                     copyToClipboard={copyToClipboard}
                     handleContinue={handleContinue}
                     latestMessage={latestMessage}
@@ -120,6 +120,7 @@ export default function Message(props: TMessageProps) {
       <MultiMessage
         key={messageId}
         messageId={messageId}
+        insertIntoEditor={props.insertIntoEditor}
         conversation={conversation}
         messagesTree={children ?? []}
         currentEditId={currentEditId}

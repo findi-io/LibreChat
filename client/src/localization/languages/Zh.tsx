@@ -250,6 +250,7 @@ export default {
   com_nav_welcome_message: '有什么可以帮助到您？',
   com_nav_auto_scroll: '打开时自动滚动到最新内容',
   com_nav_modular_chat: '启用对话中切换渠道',
+  com_nav_writer_mode: 'Enable writer mode for chat',
   com_nav_profile_picture: '个人资料头像',
   com_nav_change_picture: '修改头像',
   com_nav_plugin_store: '插件商店',

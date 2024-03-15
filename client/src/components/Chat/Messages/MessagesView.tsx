@@ -9,9 +9,12 @@ import MultiMessage from './MultiMessage';
 export default function MessagesView({
   messagesTree: _messagesTree,
   Header,
+  insertIntoEditor,
 }: {
   messagesTree?: TMessage[] | null;
   Header?: ReactNode;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  insertIntoEditor?: Function | null;
 }) {
   const { screenshotTargetRef } = useScreenshot();
   const [currentEditId, setCurrentEditId] = useState<number | string | null>(-1);
@@ -49,6 +52,7 @@ export default function MessagesView({
                 {Header && Header}
                 <div ref={screenshotTargetRef}>
                   <MultiMessage
+                    insertIntoEditor={insertIntoEditor}
                     key={conversationId} // avoid internal state mixture
                     messagesTree={_messagesTree}
                     messageId={conversationId ?? null}
