@@ -69,7 +69,7 @@ function WriterView({ index = 0 }: { index?: number }) {
     setAiToken('test');
   }, []);
 
-  const ydoc = useMemo(() => new Y.Doc(), []);
+  const ydoc = useMemo(() => new Y.Doc(), [conversationId]);
 
   useLayoutEffect(() => {
     if (hasCollab && collabToken) {
