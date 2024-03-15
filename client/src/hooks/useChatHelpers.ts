@@ -12,6 +12,8 @@ import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { useGetMessagesByConvoId } from 'librechat-data-provider/react-query';
 import type {
   TMessage,
+  TConversation,
+  TResPlugin,
   TSubmission,
   TEndpointOption,
   TEndpointsConfig,
@@ -24,7 +26,21 @@ import useUserKey from './Input/useUserKey';
 import { getEndpointField } from '~/utils';
 import useNewConvo from './useNewConvo';
 import store from '~/store';
+import Pusher from 'pusher-js';
 
+type TResData = {
+  plugin: TResPlugin;
+  final?: boolean;
+  initial?: boolean;
+  isOrg?: boolean;
+  requestMessage: TMessage;
+  responseMessage: TMessage;
+  conversation: TConversation;
+};
+
+const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+  cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+});
 // this to be set somewhere else
 export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const setShowStopButton = useSetRecoilState(store.showStopButtonByIndex(index));
@@ -32,6 +48,7 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const [filesLoading, setFilesLoading] = useState(false);
   const setFilesToDelete = useSetFilesToDelete();
   const getSender = useGetSender();
+  const { user } = useAuthContext();
 
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthContext();
@@ -40,6 +57,28 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { useCreateConversationAtom } = store;
   const { conversation, setConversation } = useCreateConversationAtom(index);
   const { conversationId, endpoint } = conversation ?? {};
+
+  if (conversationId && user?.username.startsWith('org_')) {
+    const channel = pusher.subscribe(`${user?.id}`);
+    channel.bind('message', function (data: TResData) {
+      console.log(JSON.stringify(data));
+      if (data.conversation.conversationId === conversationId) {
+        const messages = getMessages();
+        const msgs = [data.requestMessage, data.responseMessage];
+        if (messages) {
+          msgs.forEach((msg) => {
+            const exists = messages.filter((m) => m.messageId === msg.messageId);
+            if (exists.length == 0) {
+              messages.push(msg);
+            }
+          });
+          setMessages(messages);
+        } else {
+          setMessages(msgs);
+        }
+      }
+    });
+  }
 
   const queryParam = paramId === 'new' ? paramId : conversationId ?? paramId ?? '';
 

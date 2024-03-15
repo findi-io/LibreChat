@@ -18,6 +18,7 @@ type TResData = {
   plugin: TResPlugin;
   final?: boolean;
   initial?: boolean;
+  isOrg?: boolean;
   requestMessage: TMessage;
   responseMessage: TMessage;
   conversation: TConversation;

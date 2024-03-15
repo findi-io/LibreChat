@@ -143,6 +143,7 @@ const EditController = async (req, res, next, initializeClient) => {
       sendMessage(res, {
         final: true,
         conversation,
+        isOrg: req.user.username.startsWith('org_'),
         title: conversation.title,
         requestMessage: userMessage,
         responseMessage: response,
