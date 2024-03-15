@@ -1,7 +1,13 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { useDragHelpers } from '~/hooks';
+import { useDragHelpers, useSSE } from '~/hooks';
 import DragDropOverlay from './Input/Files/DragDropOverlay';
+import Landing from './Landing';
+import Header from './Header';
+import MessagesView from './Messages/MessagesView';
+import { Spinner } from '~/components/svg';
+import { useGetMessagesByConvoId } from 'librechat-data-provider/react-query';
+import { buildTree } from '~/utils';
 
 import store from '~/store';
 import WriterSidePanel from '../SidePanel/WriterSidePanel';
@@ -10,6 +16,9 @@ import * as Y from 'yjs';
 import { useAIState } from '~/hooks/useAIState';
 import { useBlockEditor } from '~/hooks/useBlockEditor';
 import { EditorContext } from '~/context/EditorContext';
+import { useFileMapContext } from '~/Providers';
+import { useParams } from 'react-router-dom';
+import { TMessage } from 'librechat-data-provider';
 
 export default function WriterPresentation({
   children,
@@ -35,6 +44,19 @@ export default function WriterPresentation({
   const { isOver, canDrop, drop } = useDragHelpers();
 
   const aiState = useAIState();
+  const { conversationId } = useParams();
+  const submissionAtIndex = useRecoilValue(store.submissionByIndex(0));
+  useSSE(submissionAtIndex);
+
+  const fileMap = useFileMapContext();
+
+  const { data: messagesTree = null, isLoading } = useGetMessagesByConvoId(conversationId ?? '', {
+    select: (data) => {
+      const dataTree = buildTree({ messages: data, fileMap });
+      return dataTree?.length === 0 ? null : dataTree ?? null;
+    },
+    enabled: !!fileMap,
+  });
 
   const { editor, users, characterCount, collabState } = useBlockEditor({
     aiToken,
@@ -43,6 +65,11 @@ export default function WriterPresentation({
     fullName,
     avatar,
   });
+
+  const insertIntoEditor = (content: TMessage) => {
+    console.log(content);
+    editor?.commands.insertContent(content.text);
+  };
 
   const displayedUsers = users.slice(0, 3);
 
@@ -69,6 +96,19 @@ export default function WriterPresentation({
   const layout = () => (
     <div className="transition-width relative flex h-full w-full flex-1 flex-col items-stretch overflow-hidden bg-white pt-0 dark:bg-gray-800">
       <div className="flex h-full flex-col" role="presentation" tabIndex={0}>
+        {isLoading && conversationId !== 'new' ? (
+          <div className="flex h-screen items-center justify-center">
+            <Spinner className="opacity-0" />
+          </div>
+        ) : messagesTree && messagesTree.length !== 0 ? (
+          <MessagesView
+            insertIntoEditor={insertIntoEditor}
+            messagesTree={messagesTree}
+            Header={<Header />}
+          />
+        ) : (
+          <Landing Header={<Header />} />
+        )}
         {children}
         {isActive && <DragDropOverlay />}
       </div>
@@ -92,6 +132,19 @@ export default function WriterPresentation({
               defaultCollapsed={defaultCollapsed}
             >
               <div className="flex h-full flex-col" role="presentation" tabIndex={0}>
+                {isLoading && conversationId !== 'new' ? (
+                  <div className="flex h-screen items-center justify-center">
+                    <Spinner className="opacity-0" />
+                  </div>
+                ) : messagesTree && messagesTree.length !== 0 ? (
+                  <MessagesView
+                    insertIntoEditor={insertIntoEditor}
+                    messagesTree={messagesTree}
+                    Header={<Header />}
+                  />
+                ) : (
+                  <Landing Header={<Header />} />
+                )}
                 {children}
                 {isActive && <DragDropOverlay />}
               </div>

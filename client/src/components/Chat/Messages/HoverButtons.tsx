@@ -1,8 +1,16 @@
 import { useState } from 'react';
 import type { TConversation, TMessage } from 'librechat-data-provider';
-import { Clipboard, CheckMark, EditIcon, RegenerateIcon, ContinueIcon } from '~/components/svg';
+import {
+  Clipboard,
+  CheckMark,
+  EditIcon,
+  RegenerateIcon,
+  ContinueIcon,
+  PinIcon,
+} from '~/components/svg';
 import { useGenerationsByLatest, useLocalize } from '~/hooks';
 import { cn } from '~/utils';
+import { useLocation } from 'react-router-dom';
 
 type THoverButtons = {
   isEditing: boolean;
@@ -12,6 +20,8 @@ type THoverButtons = {
   isSubmitting: boolean;
   message: TMessage;
   regenerate: () => void;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  insertIntoEditor?: Function | null;
   handleContinue: (e: React.MouseEvent<HTMLButtonElement>) => void;
   latestMessage: TMessage | null;
 };
@@ -24,10 +34,13 @@ export default function HoverButtons({
   isSubmitting,
   message,
   regenerate,
+  insertIntoEditor,
   handleContinue,
   latestMessage,
 }: THoverButtons) {
   const localize = useLocalize();
+  const location = useLocation();
+  const writerView = conversation?.conversationId != 'new' && location.pathname.startsWith('/w/');
   const { endpoint: _endpoint, endpointType } = conversation ?? {};
   const endpoint = endpointType ?? _endpoint;
   const [isCopied, setIsCopied] = useState(false);
@@ -88,6 +101,16 @@ export default function HoverButtons({
           title={localize('com_ui_regenerate')}
         >
           <RegenerateIcon className="hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400" />
+        </button>
+      ) : null}
+      {writerView ? (
+        <button
+          className="hover-button active rounded-md p-1 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
+          onClick={() => (insertIntoEditor ? insertIntoEditor(message) : null)}
+          type="button"
+          title={localize('com_ui_regenerate')}
+        >
+          <PinIcon />
         </button>
       ) : null}
       {continueSupported ? (
