@@ -2,17 +2,17 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 
 import { Editor, useEditor } from '@tiptap/react';
 import Collaboration from '@tiptap/extension-collaboration';
-import CollabHistory from '@tiptap-pro/extension-collaboration-history';
 
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import { TiptapCollabProvider, WebSocketStatus } from '@hocuspocus/provider';
 import * as Y from 'yjs';
 import { ExtensionKit } from '~/extensions/extension-kit';
+import { Image } from '@tiptap/extension-image';
 import { EditorContext } from '../context/EditorContext';
-import { userColors, userNames } from '../lib/constants';
+import { userColors } from '../lib/constants';
 import { randomElement } from '../lib/utils';
 import { EditorUser } from '~/components/BlockEditor/types';
-
+import { Markdown } from 'tiptap-markdown';
 import { Ai } from '~/extensions';
 
 const TIPTAP_AI_APP_ID = process.env.NEXT_PUBLIC_TIPTAP_AI_APP_ID;
@@ -53,8 +53,9 @@ export const useBlockEditor = ({
         ...ExtensionKit({
           provider,
         }),
-        CollabHistory.configure({
-          provider,
+        Markdown,
+        Image.configure({
+          inline: true,
         }),
         Collaboration.configure({
           document: ydoc,

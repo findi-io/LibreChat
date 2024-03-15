@@ -6,7 +6,7 @@ import {
   EditIcon,
   RegenerateIcon,
   ContinueIcon,
-  PinIcon,
+  WritingIcon,
 } from '~/components/svg';
 import { useGenerationsByLatest, useLocalize } from '~/hooks';
 import { cn } from '~/utils';
@@ -110,7 +110,7 @@ export default function HoverButtons({
           type="button"
           title={localize('com_ui_regenerate')}
         >
-          <PinIcon />
+          <WritingIcon />
         </button>
       ) : null}
       {continueSupported ? (
