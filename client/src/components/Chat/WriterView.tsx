@@ -13,7 +13,7 @@ import Header from './Header';
 import Footer from './Footer';
 import store from '~/store';
 import WriterPresentation from './WriterPresentation';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useUser } from '@clerk/clerk-react';
 import { TiptapCollabProvider } from '@hocuspocus/provider';
 import * as Y from 'yjs';
 
@@ -38,8 +38,7 @@ function WriterView({ index = 0 }: { index?: number }) {
   const [collabToken, setCollabToken] = useState<string | null>(null);
   const [aiToken, setAiToken] = useState<string | null>(null);
   const { user } = useUser();
-  const { orgId } = useAuth();
-  const hasCollab = orgId ? true : false;
+  const hasCollab = true;
 
   useEffect(() => {
     // fetch data
@@ -58,10 +57,8 @@ function WriterView({ index = 0 }: { index?: number }) {
       // set state when the data received
       setCollabToken(token);
     };
-    if (hasCollab) {
-      dataFetch();
-    }
-  }, [hasCollab]);
+    dataFetch();
+  }, []);
 
   useEffect(() => {
     // fetch data
@@ -73,6 +70,9 @@ function WriterView({ index = 0 }: { index?: number }) {
 
   useLayoutEffect(() => {
     if (hasCollab && collabToken) {
+      if (provider) {
+        provider.disconnect();
+      }
       setProvider(
         new TiptapCollabProvider({
           name: `doc_${conversationId}`,
