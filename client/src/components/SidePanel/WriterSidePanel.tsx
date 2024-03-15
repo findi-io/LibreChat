@@ -1,21 +1,11 @@
 import throttle from 'lodash/throttle';
-import { useState, useRef, useCallback, useEffect, useMemo, Ref } from 'react';
-import { useGetEndpointsQuery, useUserKeyQuery } from 'librechat-data-provider/react-query';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import type { ImperativePanelHandle } from 'react-resizable-panels';
-import { EModelEndpoint, type TEndpointsConfig } from 'librechat-data-provider';
-import type { NavLink } from '~/common';
 import { ResizableHandleAlt, ResizablePanel, ResizablePanelGroup } from '~/components/ui/Resizable';
 import { TooltipProvider, Tooltip } from '~/components/ui/Tooltip';
-import { Blocks, AttachmentIcon } from '~/components/svg';
 import { useMediaQuery, useLocalStorage } from '~/hooks';
 import NavToggle from '~/components/Nav/NavToggle';
-import PanelSwitch from './Builder/PanelSwitch';
-import FilesPanel from './Files/Panel';
 import { cn } from '~/utils';
-import { createPortal } from 'react-dom';
-import { Surface } from '~/components/ui/Surface';
-import { Toolbar } from '~/components/ui/Toolbar';
-import { Icon } from '~/components/ui/Icon';
 import '~/styles/index.css';
 
 import EditorView from '../Chat/Messages/EditorView';
@@ -48,8 +38,6 @@ export default function WriterSidePanel({
   const [newUser, setNewUser] = useLocalStorage('newUser', true);
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const [collapsedSize, setCollapsedSize] = useState(navCollapsedSize);
-  const { data: endpointsConfig = {} as TEndpointsConfig } = useGetEndpointsQuery();
-  const { data: keyExpiry = { expiresAt: undefined } } = useUserKeyQuery(EModelEndpoint.assistants);
   const isSmallScreen = useMediaQuery('(max-width: 767px)');
 
   const panelRef = useRef<ImperativePanelHandle>(null);
@@ -93,53 +81,6 @@ export default function WriterSidePanel({
     }
   };
 
-  const assistants = endpointsConfig?.[EModelEndpoint.assistants];
-  const userProvidesKey = !!assistants?.userProvide;
-
-  const useDarkmode = () => {
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(
-      typeof window !== 'undefined'
-        ? window.matchMedia('(prefers-color-scheme: dark)').matches
-        : false,
-    );
-
-    useEffect(() => {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleChange = () => setIsDarkMode(mediaQuery.matches);
-      mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
-    }, []);
-
-    useEffect(() => {
-      document.documentElement.classList.toggle('dark', isDarkMode);
-    }, [isDarkMode]);
-
-    const toggleDarkMode = useCallback(() => setIsDarkMode((isDark) => !isDark), []);
-    const lightMode = useCallback(() => setIsDarkMode(false), []);
-    const darkMode = useCallback(() => setIsDarkMode(true), []);
-
-    return {
-      isDarkMode,
-      toggleDarkMode,
-      lightMode,
-      darkMode,
-    };
-  };
-
-  const { isDarkMode, darkMode, lightMode } = useDarkmode();
-
-  const DarkModeSwitcher = createPortal(
-    <Surface className="fixed bottom-6 right-6 z-[99999] flex items-center gap-1 p-1">
-      <Toolbar.Button onClick={lightMode} active={!isDarkMode}>
-        <Icon name="Sun" />
-      </Toolbar.Button>
-      <Toolbar.Button onClick={darkMode} active={isDarkMode}>
-        <Icon name="Moon" />
-      </Toolbar.Button>
-    </Surface>,
-    document.body,
-  );
-
   return (
     <>
       <TooltipProvider delayDuration={0}>
@@ -149,7 +90,6 @@ export default function WriterSidePanel({
           className="transition-width relative h-full w-full flex-1 overflow-auto bg-white dark:bg-gray-800"
         >
           <ResizablePanel className="EditorViewScroll" defaultSize={defaultLayout[0]} minSize={30}>
-            {DarkModeSwitcher}
             <EditorView
               displayedUsers={displayedUsers}
               characterCount={characterCount}
