@@ -111,7 +111,7 @@ export const useBlockEditor = ({
 
       return { ...user, initials: initials.length ? initials : '?' };
     });
-  }, [editor?.storage.collaborationCursor?.users]);
+  }, [provider, editor?.storage.collaborationCursor?.users]);
 
   const characterCount = editor?.storage.characterCount || { characters: () => 0, words: () => 0 };
 
