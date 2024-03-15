@@ -24,7 +24,7 @@ declare global {
     editor: Editor | null;
   }
 }
-
+let lastProvider: TiptapCollabProvider | null | undefined = null;
 export const useBlockEditor = ({
   aiToken,
   ydoc,
@@ -40,6 +40,10 @@ export const useBlockEditor = ({
 }) => {
   const [collabState, setCollabState] = useState<WebSocketStatus>(WebSocketStatus.Connecting);
   const { setIsAiLoading, setAiError } = useContext(EditorContext);
+  if (lastProvider) {
+    lastProvider.disconnect();
+  }
+  lastProvider = provider;
   const editor = useEditor(
     {
       autofocus: true,
