@@ -23,7 +23,6 @@ const jwtLogin = async () =>
         const user = await User.findOne({ username: id.trim() });
         if (user) {
           user.sender = payload.name;
-          user.senderEmail = payload.email;
           done(null, user);
         } else {
           logger.warn('[jwtLogin] JwtStrategy => no user found: ' + payload?.id);
