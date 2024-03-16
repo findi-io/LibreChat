@@ -27,67 +27,71 @@ class Demo extends Tool {
   llm = new ChatOpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo-16k' });
   async _call(input) {
     logger.warn('call tool');
-    const db = await SqlDatabase.fromDataSourceParams({
-      appDataSource: this.datasource,
-    });
-    const schema = await db.getTableInfo();
-    const prompt = PromptTemplate.fromTemplate(`example output: 
-      select * from customers
-      select count(*) as count from employee
-      
-      Based on the table schema below, print out SQL statement works for Postgresql that would answer the user's question:
-      {schema}
+    try {
+      const db = await SqlDatabase.fromDataSourceParams({
+        appDataSource: this.datasource,
+      });
+      const schema = await db.getTableInfo();
+      const prompt = PromptTemplate.fromTemplate(`example output: 
+        select * from customers
+        select count(*) as count from employee
+        
+        Based on the table schema below, print out SQL statement works for Postgresql that would answer the user's question:
+        {schema}
 
-      Question: {question}
-      SQL Query:`);
-    const sqlQueryGeneratorChain = RunnableSequence.from([
-      RunnablePassthrough.assign({
-        schema: async () => schema,
-      }),
-      prompt,
-      this.llm.bind({ stop: ['\nSQLResult:'] }),
-      new StringOutputParser(),
-    ]);
-    /*
+        Question: {question}
+        SQL Query:`);
+      const sqlQueryGeneratorChain = RunnableSequence.from([
+        RunnablePassthrough.assign({
+          schema: async () => schema,
+        }),
+        prompt,
+        this.llm.bind({ stop: ['\nSQLResult:'] }),
+        new StringOutputParser(),
+      ]);
+      /*
+          {
+            result: "SELECT COUNT(EmployeeId) AS TotalEmployees FROM Employee"
+          }
+        */
+
+      const finalResponsePrompt =
+        PromptTemplate.fromTemplate(`Based on the table schema below, question, sql query, and sql response, write a natural language response:
+        {schema}
+        
+        Question: {question}
+        SQL Query: {query}
+        SQL Response: {response}`);
+
+      const fullChain = RunnableSequence.from([
+        RunnablePassthrough.assign({
+          query: sqlQueryGeneratorChain,
+        }),
         {
-          result: "SELECT COUNT(EmployeeId) AS TotalEmployees FROM Employee"
-        }
-      */
-
-    const finalResponsePrompt =
-      PromptTemplate.fromTemplate(`Based on the table schema below, question, sql query, and sql response, write a natural language response:
-      {schema}
-      
-      Question: {question}
-      SQL Query: {query}
-      SQL Response: {response}`);
-
-    const fullChain = RunnableSequence.from([
-      RunnablePassthrough.assign({
-        query: sqlQueryGeneratorChain,
-      }),
-      {
-        schema: () => schema,
-        question: () => input,
-        query: (input) => {
-          console.log('---------------');
-          console.log(input);
-          console.log('--------------');
-          return input.query;
+          schema: () => schema,
+          question: () => input,
+          query: (input) => {
+            console.log('---------------');
+            console.log(input);
+            console.log('--------------');
+            return input.query;
+          },
+          response: (input) => db.run(input.query),
         },
-        response: (input) => db.run(input.query),
-      },
-      finalResponsePrompt,
-      this.llm,
-    ]);
+        finalResponsePrompt,
+        this.llm,
+      ]);
 
-    const finalResponse = await fullChain.invoke({
-      question: input,
-    });
+      const finalResponse = await fullChain.invoke({
+        question: input,
+      });
 
-    finalResponse.name = 'demo';
-    finalResponse.includes = () => {};
-    return finalResponse;
+      finalResponse.name = 'demo';
+      finalResponse.includes = () => {};
+      return finalResponse;
+    } catch (error) {
+      return 'failed to query database';
+    }
   }
 }
 
