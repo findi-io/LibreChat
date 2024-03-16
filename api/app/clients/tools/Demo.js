@@ -8,21 +8,22 @@ const { RunnablePassthrough, RunnableSequence } = require('@langchain/core/runna
 const { StringOutputParser } = require('@langchain/core/output_parsers');
 
 class Demo extends Tool {
-  constructor() {
+  constructor(fields = {}) {
     super();
+    let url = fields.DATABASE_URL;
+    let type = 'postgres';
+    if (url.includes('mysql')) {
+      type = 'mysql';
+    }
+    this.datasource = new DataSource({
+      type: type,
+      url,
+      synchronize: false,
+    });
   }
   name = 'demo';
   description = 'Use the \'demo\' tool to search data from sql database';
   description_for_model = 'Use the \'demo\' tool to search data from sql database';
-  datasource = new DataSource({
-    type: 'postgres',
-    host: 'ep-billowing-night-a4ozbph0.us-east-1.aws.neon.tech',
-    port: 5432,
-    username: 'default',
-    password: 'zsSZ6BNGh8Lg',
-    database: 'verceldb',
-    ssl: true,
-  });
 
   llm = new ChatOpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo-16k' });
   async _call(input) {
