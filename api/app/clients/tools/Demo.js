@@ -10,14 +10,10 @@ const { StringOutputParser } = require('@langchain/core/output_parsers');
 class Demo extends Tool {
   constructor(fields = {}) {
     super();
-    let url = fields.DATABASE_URL;
-    let type = 'postgres';
-    if (url.includes('mysql')) {
-      type = 'mysql';
-    }
+    this.type = fields.DATABASE_TYPE;
     this.datasource = new DataSource({
-      type: type,
-      url,
+      type: fields.DATABASE_TYPE,
+      url: fields.DATABASE_URL,
       synchronize: false,
     });
   }
@@ -37,7 +33,7 @@ class Demo extends Tool {
         select * from customers
         select count(*) as count from employee
         
-        Based on the table schema below, print out SQL statement works for Postgresql that would answer the user's question:
+        Based on the table schema below, print out SQL statement works for ${this.type} that would answer the user's question:
         {schema}
 
         Question: {question}
