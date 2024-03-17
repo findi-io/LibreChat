@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import Root from './Root';
 import Chat from './Chat';
 import ChatRoute from './ChatRoute';
+import WorkflowRoute from './WorkflowRoute';
 import Search from './Search';
 import {
   Login,
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <Navigate to="/c/new" replace={true} />,
+          },
+          {
+            path: 'workflow',
+            element: <WorkflowRoute />,
           },
           {
             path: 'c/:conversationId?',

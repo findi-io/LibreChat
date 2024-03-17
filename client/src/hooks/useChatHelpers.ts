@@ -38,9 +38,7 @@ type TResData = {
   conversation: TConversation;
 };
 
-const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
-  cluster: import.meta.env.VITE_PUSHER_CLUSTER,
-});
+let pusher: any | null = null;
 // this to be set somewhere else
 export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const setShowStopButton = useSetRecoilState(store.showStopButtonByIndex(index));
@@ -59,6 +57,11 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const { conversationId, endpoint } = conversation ?? {};
 
   if (conversationId && user?.username.startsWith('org_')) {
+    if (!pusher) {
+      pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+        cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+      });
+    }
     const channel = pusher.subscribe(`${user?.id}`);
     channel.bind('message', function (data: TResData) {
       console.log(JSON.stringify(data));
