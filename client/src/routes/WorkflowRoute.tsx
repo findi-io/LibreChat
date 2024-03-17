@@ -8,7 +8,7 @@ export default function WorkflowRoute() {
     session?.getToken({ template: orgId ? 'ap_org' : 'ap_user' }).then((result) => {
       console.log(result);
       activepieces.configure({
-        prefix: '/',
+        prefix: '/workflow',
         instanceUrl: 'https://workflow.chatlog.ai',
         jwtToken: result,
         embedding: {

@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
             element: <Navigate to="/c/new" replace={true} />,
           },
           {
-            path: 'flow',
+            path: 'workflow',
             element: <WorkflowRoute />,
           },
           {
