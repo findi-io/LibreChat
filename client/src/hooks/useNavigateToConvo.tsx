@@ -52,7 +52,7 @@ const useNavigateToConvo = (index = 0) => {
     }
     setStorage(convo);
     setConversation(convo);
-    navigate(convo?.conversationId);
+    navigate(`/c/${convo?.conversationId}`);
   };
 
   return {
