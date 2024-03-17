@@ -325,6 +325,7 @@ export default {
     'Êtes-vous sûr de vouloir effacer toutes les conversations ? Ceci est irréversible.',
   com_nav_help_faq: 'Aide & FAQ',
   com_nav_settings: 'Paramètres',
+  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Rechercher des messages',
   com_nav_setting_general: 'Général',
   com_nav_setting_beta: 'Fonctionnalités bêta',

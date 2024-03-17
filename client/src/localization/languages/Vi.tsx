@@ -260,6 +260,7 @@ export default {
     'Bạn có chắc chắn muốn xóa tất cả cuộc trò chuyện? Hành động này không thể hoàn tác.',
   com_nav_help_faq: 'Trợ giúp & Câu hỏi thường gặp',
   com_nav_settings: 'Cài đặt',
+  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Tìm kiếm tin nhắn',
   com_nav_setting_general: 'Chung',
   com_nav_setting_data: 'Kiểm soát dữ liệu',

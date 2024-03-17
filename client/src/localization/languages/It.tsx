@@ -313,6 +313,7 @@ export default {
     'Sei sicuro di voler eliminare tutte le conversazioni? Questa operazione è irreversibile.',
   com_nav_help_faq: 'Aiuto e FAQ',
   com_nav_settings: 'Impostazioni',
+  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Cerca messaggi',
   com_nav_setting_general: 'Generale',
   com_nav_setting_beta: 'Funzioni Beta',

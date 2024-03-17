@@ -245,6 +245,7 @@ export default {
   com_nav_clear_conversation_confirm_message: '您確定要清除所有對話嗎？此操作無法復原。',
   com_nav_help_faq: '說明與常見問題',
   com_nav_settings: '設定',
+  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: '搜尋訊息',
   com_nav_setting_general: '一般',
   com_nav_setting_data: '資料控制',

@@ -365,6 +365,7 @@ export default {
     'Are you sure you want to clear all conversations? This is irreversible.',
   com_nav_help_faq: 'Help & FAQ',
   com_nav_settings: 'Settings',
+  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Search messages',
   com_nav_setting_general: 'General',
   com_nav_setting_beta: 'Beta features',

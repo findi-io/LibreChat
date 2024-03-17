@@ -317,6 +317,7 @@ export default {
     'Вы уверены, что хотите удалить все разговоры? Это действие нельзя отменить.',
   com_nav_help_faq: 'Помощь и Вопросы',
   com_nav_settings: 'Настройки',
+  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Поиск сообщений',
   com_nav_setting_general: 'Общие',
   com_nav_setting_beta: 'Бета-функции',
