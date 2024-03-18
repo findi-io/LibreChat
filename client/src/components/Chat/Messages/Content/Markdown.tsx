@@ -13,6 +13,14 @@ import CodeBlock from '~/components/Messages/Content/CodeBlock';
 import { cn, langSubset, validateIframe, processLaTeX } from '~/utils';
 import { useChatContext } from '~/Providers';
 import store from '~/store';
+import mermaid from 'mermaid';
+import { useEffect } from 'react';
+
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'default',
+  securityLevel: 'loose',
+});
 
 type TCodeProps = {
   inline: boolean;
@@ -29,7 +37,9 @@ type TContentProps = {
 export const code = memo(({ inline, className, children }: TCodeProps) => {
   const match = /language-(\w+)/.exec(className || '');
   const lang = match && match[1];
-
+  if ('mermaid' === lang) {
+    return <div className="mermaid">{children}</div>;
+  }
   if (inline) {
     return <code className={className}>{children}</code>;
   } else {
@@ -50,6 +60,10 @@ const Markdown = memo(({ content, message, showCursor }: TContentProps) => {
 
   const { isEdited, messageId } = message ?? {};
   const isLatestMessage = messageId === latestMessage?.messageId;
+
+  useEffect(() => {
+    mermaid.contentLoaded();
+  }, []);
 
   let currentContent = content;
   if (!isInitializing) {
