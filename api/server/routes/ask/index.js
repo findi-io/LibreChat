@@ -1,5 +1,7 @@
 const express = require('express');
 const openAI = require('./openAI');
+const workflow = require('./workflow');
+const chat = require('./chat');
 const custom = require('./custom');
 const google = require('./google');
 const bingAI = require('./bingAI');
@@ -44,5 +46,7 @@ router.use(`/${EModelEndpoint.anthropic}`, anthropic);
 router.use(`/${EModelEndpoint.google}`, google);
 router.use(`/${EModelEndpoint.bingAI}`, bingAI);
 router.use(`/${EModelEndpoint.custom}`, custom);
+router.use(`/${EModelEndpoint.workflow}`, workflow);
+router.use(`/${EModelEndpoint.chat}`, chat);
 
 module.exports = router;
