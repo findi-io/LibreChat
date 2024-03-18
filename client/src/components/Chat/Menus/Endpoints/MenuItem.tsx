@@ -47,7 +47,7 @@ const MenuItem: FC<MenuItemProps> = ({
       if (!expiryTime) {
         setDialogOpen(true);
       }
-
+      console.log('onSelectEndpoint');
       const currentEndpoint = conversation?.endpoint;
       const template: Partial<TPreset> = {
         ...conversation,
@@ -75,6 +75,15 @@ const MenuItem: FC<MenuItemProps> = ({
 
       const endpointsMatch = currentEndpoint === newEndpoint;
       const shouldSwitch = endpointsMatch || modularChat || isAssistantSwitch;
+      console.log('isExistingConversation: {}', isExistingConversation);
+      console.log('isCurrentModular: {}', isCurrentModular);
+      console.log('isNewModular: {}', isNewModular);
+      console.log('hasNewEndpoint: {}', hasNewEndpoint);
+      console.log('hasNewEndpointType: {}', hasNewEndpointType);
+      console.log('isAssistantSwitch: {}', isAssistantSwitch);
+      console.log('modularEndpoints: {}', modularEndpoints);
+
+      console.log('shouldSwitch: {}', shouldSwitch);
 
       if (isExistingConversation && isCurrentModular && isNewModular && shouldSwitch) {
         template.endpointType = newEndpointType;
