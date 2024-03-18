@@ -148,7 +148,18 @@
     "description": "a simple demo to query northwind database",
     "icon": "https://www.chatlog.ai/images/database.png",
     "isAuthRequired": "false",
-    "authConfig": []
+    "authConfig": [
+      {
+        "authField": "DATABASE_TYPE",
+        "label": "Database type",
+        "description": "mysql,postgres,sqlite3,oracle,mssql"
+      },
+      {
+        "authField": "DATABASE_URL",
+        "label": "Database URL",
+        "description": "only support mysql and postgresql"
+      }
+    ]
   },
   {
     "name": "Chart",

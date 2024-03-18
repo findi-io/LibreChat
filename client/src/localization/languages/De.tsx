@@ -323,6 +323,7 @@ export default {
     'Bist du sicher, dass du alle Unterhaltungen löschen willst? Dies ist unumkehrbar.',
   com_nav_help_faq: 'Hilfe & FAQ',
   com_nav_settings: 'Einstellungen',
+  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Nachrichten suchen',
   com_nav_setting_general: 'Allgemein',
   com_nav_setting_beta: 'Beta-Funktionen',
