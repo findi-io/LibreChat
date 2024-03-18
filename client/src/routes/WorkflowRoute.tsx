@@ -6,7 +6,6 @@ export default function WorkflowRoute() {
   useEffect(() => {
     console.log('load activepieces');
     session?.getToken({ template: orgId ? 'ap_org' : 'ap_user' }).then((result) => {
-      console.log(result);
       activepieces.configure({
         prefix: '/workflow',
         instanceUrl: 'https://workflow.chatlog.ai',
