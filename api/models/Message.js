@@ -32,7 +32,10 @@ module.exports = {
       if (!validConvoId.success) {
         return;
       }
-
+      if (!text || text === '') {
+        console.log('empty message text');
+        return;
+      }
       const update = {
         user,
         endpoint,

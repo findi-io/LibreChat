@@ -100,7 +100,7 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
 
   const setMessages = useCallback(
     (messages: TMessage[]) => {
-      const filtered = messages.filter((msg) => !msg.dummy);
+      const filtered = messages.filter((msg) => msg.text != '');
       queryClient.setQueryData<TMessage[]>([QueryKeys.messages, queryParam], filtered);
     },
     // [conversationId, queryClient],
