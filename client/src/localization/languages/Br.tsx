@@ -371,7 +371,6 @@ export default {
     'Tem certeza de que deseja limpar todas as conversas? Isso é irreversível.',
   com_nav_help_faq: 'Ajuda & FAQ',
   com_nav_settings: 'Configurações',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Pesquisar mensagens',
   com_nav_setting_general: 'Geral',
   com_nav_setting_beta: 'Recursos beta',

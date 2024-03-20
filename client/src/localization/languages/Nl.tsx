@@ -266,7 +266,6 @@ export default {
     'Weet u zeker dat u alle conversaties wilt wissen? Dit is onomkeerbaar.',
   com_nav_help_faq: 'Help & FAQ',
   com_nav_settings: 'Instellingen',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Berichten doorzoeken',
   com_nav_setting_general: 'Algemeen',
   com_nav_setting_data: 'Gegevensbesturing',

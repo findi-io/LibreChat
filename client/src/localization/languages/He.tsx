@@ -352,7 +352,6 @@ export default {
     'אתה בטוח שאתה רוצה לנקות את כל השיחות? זה בלתי הפיך.',
   com_nav_help_faq: 'עזרה ושאלות נפוצות',
   com_nav_settings: 'הגדרות',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'חפש הודעות',
   com_nav_setting_general: 'כללי',
   com_nav_setting_beta: 'תכונות ביטא',

@@ -240,7 +240,6 @@ export default {
     '모든 대화를 지우시겠습니까? 이 작업은 되돌릴 수 없습니다.',
   com_nav_help_faq: '도움말 및 FAQ',
   com_nav_settings: '설정',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: '메시지 검색',
   com_nav_setting_general: '일반',
   com_nav_setting_data: '데이터 제어',

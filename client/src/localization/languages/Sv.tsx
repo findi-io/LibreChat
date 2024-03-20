@@ -255,7 +255,6 @@ export default {
     'Är du säker på att du vill rensa alla konversationer? Detta går inte att ångra.', // Are you sure you want to clear all conversations? This is irreversible.
   com_nav_help_faq: 'Hjälp & Vanliga frågor', // Help & FAQ
   com_nav_settings: 'Inställningar', // Settings
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Sök meddelanden', // Search messages
   com_nav_setting_general: 'Allmänt', // General
   com_nav_setting_data: 'Datakontroller', // Data controls

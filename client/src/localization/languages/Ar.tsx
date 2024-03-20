@@ -259,7 +259,6 @@ export default {
     'هل أنت متأكد أنك تريد مسح جميع المحادثات؟ هذا لا يمكن التراجع عنه.',
   com_nav_help_faq: 'مساعدة & الأسئلة الشائعة',
   com_nav_settings: 'الإعدادات',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'بحث في الرسائل',
   com_nav_setting_general: 'عام',
   com_nav_setting_data: 'تحكم في البيانات',

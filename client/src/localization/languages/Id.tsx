@@ -312,7 +312,6 @@ export default {
     'Anda yakin ingin menghapus semua percakapan? Ini tidak dapat dibatalkan.',
   com_nav_help_faq: 'Bantuan & FAQ',
   com_nav_settings: 'Pengaturan',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Cari pesan',
   com_nav_setting_general: 'Umum',
   com_nav_setting_beta: 'Fitur beta',

@@ -308,7 +308,6 @@ export default {
     '本当にすべての会話を削除しますか？ この操作は取り消せません。',
   com_nav_help_faq: 'ヘルプ & FAQ',
   com_nav_settings: '設定',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'メッセージ検索',
   com_nav_setting_general: '一般',
   com_nav_setting_beta: 'ベータ版の機能',

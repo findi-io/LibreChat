@@ -283,7 +283,6 @@ export default {
     'Tüm sohbetleri temizlemek istediğinizden emin misiniz? Bu geri alınamaz.',
   com_nav_help_faq: 'Yardım ve SSS',
   com_nav_settings: 'Ayarlar',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Mesajları ara',
   com_nav_setting_general: 'Genel',
   com_nav_setting_data: 'Veri kontrolleri',

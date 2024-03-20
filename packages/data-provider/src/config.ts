@@ -208,7 +208,6 @@ export const alternateName = {
   [EModelEndpoint.google]: 'Google',
   [EModelEndpoint.anthropic]: 'Anthropic',
   [EModelEndpoint.custom]: 'Custom',
-  [EModelEndpoint.workflow]: 'Workflow',
   [EModelEndpoint.chat]: 'Chat',
 };
 
@@ -292,7 +291,6 @@ export const EndpointURLs: { [key in EModelEndpoint]: string } = {
   [EModelEndpoint.azureOpenAI]: `/api/ask/${EModelEndpoint.azureOpenAI}`,
   [EModelEndpoint.chatGPTBrowser]: `/api/ask/${EModelEndpoint.chatGPTBrowser}`,
   [EModelEndpoint.assistants]: '/api/assistants/chat',
-  [EModelEndpoint.workflow]: `/api/ask/${EModelEndpoint.workflow}`,
   [EModelEndpoint.chat]: `/api/ask/${EModelEndpoint.chat}`,
 };
 
@@ -303,7 +301,6 @@ export const modularEndpoints = new Set<EModelEndpoint | string>([
   EModelEndpoint.openAI,
   EModelEndpoint.azureOpenAI,
   EModelEndpoint.custom,
-  EModelEndpoint.workflow,
   EModelEndpoint.chat,
 ]);
 

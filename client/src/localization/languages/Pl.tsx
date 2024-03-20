@@ -203,7 +203,6 @@ export default {
     'Czy na pewno chcesz usunąć wszystkie konwersacje? Tej operacji nie można cofnąć.',
   com_nav_help_faq: 'Pomoc i często zadawane pytania',
   com_nav_settings: 'Ustawienia',
-  com_nav_workflow: 'Workflow',
   com_nav_search_placeholder: 'Szukaj wiadomości',
   com_nav_setting_general: 'Ogólne',
 };

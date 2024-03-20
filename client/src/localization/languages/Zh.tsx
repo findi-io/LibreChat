@@ -281,7 +281,6 @@ export default {
   com_nav_clear_conversation_confirm_message: '请是否清空所有对话？该操作无法撤销',
   com_nav_help_faq: '帮助',
   com_nav_settings: '设置',
-  com_nav_workflow: '工作流',
   com_nav_search_placeholder: '搜索对话及对话内容',
   com_nav_setting_general: '通用',
   com_nav_setting_data: '数据管理',
