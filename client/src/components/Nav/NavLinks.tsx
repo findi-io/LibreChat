@@ -17,13 +17,11 @@ import Settings from './Settings';
 import NavLink from './NavLink';
 import { cn } from '~/utils/';
 import store from '~/store';
-import { useNavigate } from 'react-router-dom';
 import { OrganizationSwitcher, SignOutButton, SignedIn } from '@clerk/clerk-react';
 
 function NavLinks() {
   const localize = useLocalize();
   const location = useLocation();
-  const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuthContext();
   const { data: startupConfig } = useGetStartupConfig();
   const balanceQuery = useGetUserBalance({
@@ -143,14 +141,6 @@ function NavLinks() {
                     />
                   </Menu.Item>
                 )}
-                <Menu.Item as="div">
-                  <NavLink
-                    className="flex w-full cursor-pointer items-center gap-3 rounded-none px-3 py-3 text-sm text-black transition-colors duration-200 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                    svg={() => <GearIcon className="icon-md" />}
-                    text={localize('com_nav_workflow')}
-                    clickHandler={() => navigate('/workflow')}
-                  />
-                </Menu.Item>
                 <Menu.Item as="div">
                   <NavLink
                     className="flex w-full cursor-pointer items-center gap-3 rounded-none px-3 py-3 text-sm text-black transition-colors duration-200 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
