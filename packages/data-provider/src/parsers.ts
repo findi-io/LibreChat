@@ -29,6 +29,7 @@ type EndpointSchema =
 
 const endpointSchemas: Record<EModelEndpoint, EndpointSchema> = {
   [EModelEndpoint.openAI]: openAISchema,
+  [EModelEndpoint.workflow]: openAISchema,
   [EModelEndpoint.chat]: openAISchema,
   [EModelEndpoint.azureOpenAI]: openAISchema,
   [EModelEndpoint.custom]: openAISchema,
@@ -48,6 +49,7 @@ const endpointSchemas: Record<EModelEndpoint, EndpointSchema> = {
 export function getEnabledEndpoints() {
   const defaultEndpoints: string[] = [
     EModelEndpoint.openAI,
+    EModelEndpoint.workflow,
     EModelEndpoint.chat,
     EModelEndpoint.assistants,
     EModelEndpoint.azureOpenAI,
@@ -271,6 +273,7 @@ type CompactEndpointSchema =
 
 const compactEndpointSchemas: Record<string, CompactEndpointSchema> = {
   [EModelEndpoint.openAI]: compactOpenAISchema,
+  [EModelEndpoint.workflow]: compactOpenAISchema,
   [EModelEndpoint.chat]: compactOpenAISchema,
   [EModelEndpoint.azureOpenAI]: compactOpenAISchema,
   [EModelEndpoint.custom]: compactOpenAISchema,

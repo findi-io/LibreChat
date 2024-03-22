@@ -19,6 +19,7 @@ async function endpointController(req, res) {
     mergedConfig[EModelEndpoint.assistants].disableBuilder =
       req.app.locals[EModelEndpoint.assistants].disableBuilder;
   }
+  mergedConfig[EModelEndpoint.workflow] = { userProvide: true };
   mergedConfig[EModelEndpoint.chat] = {};
   const endpointsConfig = orderEndpointsConfig(mergedConfig);
 

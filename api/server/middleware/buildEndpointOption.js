@@ -10,6 +10,7 @@ const google = require('~/server/services/Endpoints/google');
 
 const buildFunction = {
   [EModelEndpoint.openAI]: openAI.buildOptions,
+  [EModelEndpoint.workflow]: openAI.buildOptions,
   [EModelEndpoint.chat]: openAI.buildOptions,
   [EModelEndpoint.google]: google.buildOptions,
   [EModelEndpoint.custom]: custom.buildOptions,
