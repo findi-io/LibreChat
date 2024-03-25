@@ -1,9 +1,10 @@
 const { getUserKey, checkUserKeyExpiry } = require('~/server/services/UserService');
 const { isEnabled, isUserProvided } = require('~/server/utils');
-const { OpenAIClient } = require('~/app');
+const { WorkflowClient } = require('~/app');
 
 const initializeClient = async ({ req, res, endpointOption }) => {
-  const { WORKFLOW_API_KEY, WORKFLOW_BASEURL, OPENAI_SUMMARIZE, DEBUG_OPENAI } = process.env;
+  const { WORKFLOW_API_KEY, WORKFLOW_BASEURL, OPENAI_API_KEY, OPENAI_SUMMARIZE, DEBUG_OPENAI } =
+    process.env;
   const { key: expiresAt, endpoint } = req.body;
   const contextStrategy = isEnabled(OPENAI_SUMMARIZE) ? 'summarize' : null;
 
@@ -44,10 +45,10 @@ const initializeClient = async ({ req, res, endpointOption }) => {
     throw new Error(`${endpoint} API key not provided. Please provide it again.`);
   }
 
-  const client = new OpenAIClient(apiKey, clientOptions);
+  const client = new WorkflowClient(apiKey, clientOptions);
   return {
     client,
-    openAIApiKey: apiKey,
+    openAIApiKey: OPENAI_API_KEY,
   };
 };
 
