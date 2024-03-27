@@ -10,7 +10,7 @@ const checkBalance = require('~/models/checkBalance');
 const { SelfReflectionTool } = require('./tools');
 const { isEnabled } = require('~/server/utils');
 const { extractBaseURL } = require('~/utils');
-const { loadTools } = require('./tools/util');
+const { loadWorkflowTools } = require('./tools/util');
 const { logger } = require('~/config');
 
 class WorkflowClient extends OpenAIClient {
@@ -98,11 +98,10 @@ class WorkflowClient extends OpenAIClient {
       llm: model,
       chatHistory: new ChatMessageHistory(pastMessages),
     });
-    this.tools = await loadTools({
+    this.tools = await loadWorkflowTools({
       user,
       sender,
       model,
-      tools: this.options.tools,
       functions: this.functionsAgent,
       options: {
         memory,
