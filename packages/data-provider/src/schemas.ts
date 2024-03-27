@@ -136,10 +136,10 @@ export const tExampleSchema = z.object({
 export type TExample = z.infer<typeof tExampleSchema>;
 
 export const tAgentOptionsSchema = z.object({
-  agent: z.string(),
-  skipCompletion: z.boolean(),
-  model: z.string(),
-  temperature: z.number(),
+  agent: z.optional(z.string()),
+  skipCompletion: z.optional(z.boolean()),
+  model: z.optional(z.string()),
+  temperature: z.optional(z.number()),
 });
 
 export const tMessageSchema = z.object({
