@@ -33,7 +33,7 @@ const sendMessage = (res, message, event = 'message') => {
   if (typeof message === 'string' && message.length === 0) {
     return;
   }
-  if (message.final && message.isOrg) {
+  if (message.isOrg) {
     try {
       pusher.trigger(`${message.conversation.user}`, 'message', message);
     } catch (error) {
