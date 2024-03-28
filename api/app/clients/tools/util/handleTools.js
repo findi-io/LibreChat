@@ -13,7 +13,6 @@ const {
   WolframAlphaAPI,
   OpenAICreateImage,
   Demo,
-  Chart,
   StableDiffusionAPI,
   // Structured Tools
   DALLE3,
@@ -145,6 +144,7 @@ const loadToolWithAuth = (userId, authFields, ToolConstructor, options = {}) => 
         authValues[result.authField] = result.authValue;
       }
     }
+
     return new ToolConstructor({ ...options, ...authValues, userId });
   };
 };
@@ -163,7 +163,6 @@ const loadTools = async ({
     calculator: Calculator,
     google: GoogleSearchAPI,
     demo: Demo,
-    chart: Chart,
     wolfram: functions ? StructuredWolfram : WolframAlphaAPI,
     'dall-e': OpenAICreateImage,
     'stable-diffusion': functions ? StructuredSD : StableDiffusionAPI,
@@ -248,7 +247,6 @@ const loadTools = async ({
   const toolOptions = {
     serpapi: { location: 'Austin,Texas,United States', hl: 'en', gl: 'us' },
     dalle: imageGenOptions,
-    chart: imageGenOptions,
     'dall-e': imageGenOptions,
     'stable-diffusion': imageGenOptions,
   };

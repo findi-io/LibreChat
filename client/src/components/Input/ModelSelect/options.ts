@@ -13,7 +13,6 @@ import PluginsByIndex from './PluginsByIndex';
 export const options: { [key: string]: FC<TModelSelectProps> } = {
   [EModelEndpoint.openAI]: OpenAI,
   [EModelEndpoint.custom]: OpenAI,
-  [EModelEndpoint.chat]: OpenAI,
   [EModelEndpoint.azureOpenAI]: OpenAI,
   [EModelEndpoint.bingAI]: BingAI,
   [EModelEndpoint.google]: Google,

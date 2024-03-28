@@ -1,23 +1,28 @@
 # Base node image
 FROM node:18-alpine AS node
 
-COPY . /app
+RUN apk add g++ make py3-pip
+RUN npm install -g node-gyp
+RUN apk --no-cache add curl
+
+RUN mkdir -p /app && chown node:node /app
 WORKDIR /app
 ARG VITE_CLERK_PUBLISHABLE_KEY
 ARG CLERK_PEM_PUBLIC_KEY
 ARG TIPTAP_PRO_TOKEN
 ARG VITE_PUSHER_KEY
 ARG VITE_PUSHER_CLUSTER
+USER node
+
+COPY --chown=node:node . .
+
 # Allow mounting of these files, which have no default
 # values.
 RUN touch .env
 RUN npm config set "@tiptap-pro:registry" https://registry.tiptap.dev/
 RUN npm config set "//registry.tiptap.dev/:_authToken" ${TIPTAP_PRO_TOKEN}
 RUN npm config set fetch-retry-maxtimeout 300000
-RUN apk add --no-cache g++ make python3 py3-pip
-RUN npm install -g node-gyp
-RUN apk --no-cache add curl && \
-    npm install
+RUN npm install --no-audit
 
 # React client build
 ENV NODE_OPTIONS="--max-old-space-size=2048"

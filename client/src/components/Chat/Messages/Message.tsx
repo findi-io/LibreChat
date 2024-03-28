@@ -15,6 +15,7 @@ export default function Message(props: TMessageProps) {
   const UsernameDisplay = useRecoilValue<boolean>(store.UsernameDisplay);
   const { user } = useAuthContext();
   const localize = useLocalize();
+
   const {
     ask,
     icon,
@@ -39,7 +40,12 @@ export default function Message(props: TMessageProps) {
 
   const { text, children, messageId = null, isCreatedByUser, error, unfinished } = message ?? {};
 
-  const messageLabel = message.sender;
+  let messageLabel = '';
+  if (isCreatedByUser) {
+    messageLabel = UsernameDisplay ? user?.name : localize('com_user_message');
+  } else {
+    messageLabel = message.sender;
+  }
 
   return (
     <>
@@ -110,6 +116,7 @@ export default function Message(props: TMessageProps) {
                     copyToClipboard={copyToClipboard}
                     handleContinue={handleContinue}
                     latestMessage={latestMessage}
+                    isLast={isLast}
                   />
                 </SubRow>
               )}
