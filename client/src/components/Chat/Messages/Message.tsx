@@ -10,10 +10,12 @@ import HoverButtons from './HoverButtons';
 import SubRow from './SubRow';
 import { cn } from '~/utils';
 import store from '~/store';
+import { useUser } from '@clerk/clerk-react';
 
 export default function Message(props: TMessageProps) {
   const UsernameDisplay = useRecoilValue<boolean>(store.UsernameDisplay);
   const { user } = useAuthContext();
+  const { user: clerkUser } = useUser();
   const localize = useLocalize();
 
   const {
@@ -41,8 +43,8 @@ export default function Message(props: TMessageProps) {
   const { text, children, messageId = null, isCreatedByUser, error, unfinished } = message ?? {};
 
   let messageLabel = '';
-  if (isCreatedByUser) {
-    messageLabel = UsernameDisplay ? user?.name : localize('com_user_message');
+  if (isCreatedByUser && !UsernameDisplay && clerkUser?.fullName === message.sender) {
+    messageLabel = localize('com_user_message');
   } else {
     messageLabel = message.sender;
   }
