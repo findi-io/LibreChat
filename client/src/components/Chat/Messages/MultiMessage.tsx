@@ -42,6 +42,7 @@ export default function MultiMessage({
   if (!message) {
     return null;
   }
+
   if (message.content) {
     return (
       <MessageParts

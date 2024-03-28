@@ -16,11 +16,16 @@ async function endpointController(req, res) {
   /** @type {TEndpointsConfig} */
   const mergedConfig = { ...defaultEndpointsConfig, ...customConfigEndpoints };
   if (mergedConfig[EModelEndpoint.assistants] && req.app.locals?.[EModelEndpoint.assistants]) {
-    mergedConfig[EModelEndpoint.assistants].disableBuilder =
-      req.app.locals[EModelEndpoint.assistants].disableBuilder;
+    const { disableBuilder, retrievalModels, capabilities, ..._rest } =
+      req.app.locals[EModelEndpoint.assistants];
+    mergedConfig[EModelEndpoint.assistants] = {
+      ...mergedConfig[EModelEndpoint.assistants],
+      retrievalModels,
+      disableBuilder,
+      capabilities,
+    };
   }
-  mergedConfig[EModelEndpoint.workflow] = { userProvide: true };
-  mergedConfig[EModelEndpoint.chat] = {};
+
   const endpointsConfig = orderEndpointsConfig(mergedConfig);
 
   await cache.set(CacheKeys.ENDPOINT_CONFIG, endpointsConfig);

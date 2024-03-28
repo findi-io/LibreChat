@@ -162,14 +162,6 @@
     ]
   },
   {
-    "name": "Chart",
-    "pluginKey": "chart",
-    "description": "a simple demo to generate chart image",
-    "icon": "https://www.chatlog.ai/images/chart.png",
-    "isAuthRequired": "false",
-    "authConfig": []
-  },
-  {
     "name": "Stable Diffusion",
     "pluginKey": "stable-diffusion",
     "description": "Generate photo-realistic images given any text input.",

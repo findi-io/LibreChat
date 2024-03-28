@@ -272,7 +272,6 @@ const ask = async ({
       return {
         title: await getConvoTitle(user, conversationId),
         final: true,
-        isOrg: req.user.username.startsWith('org_'),
         conversation: await getConvo(user, conversationId),
         requestMessage: userMessage,
         responseMessage: responseMessage,
