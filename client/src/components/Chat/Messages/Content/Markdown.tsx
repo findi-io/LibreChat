@@ -16,12 +16,6 @@ import store from '~/store';
 import mermaid from 'mermaid';
 import { useEffect } from 'react';
 
-mermaid.initialize({
-  startOnLoad: true,
-  theme: 'default',
-  securityLevel: 'loose',
-});
-
 type TCodeProps = {
   inline: boolean;
   className?: string;
