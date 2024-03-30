@@ -36,6 +36,11 @@ class N8n extends Tool {
           timezone: 'America/New_York',
         };
       }
+      if (!json.staticData) {
+        json.staticData = {
+          lastId: 1,
+        };
+      }
       if (!json.name) {
         json.name = 'Workflow ' + nanoid();
       }
@@ -45,7 +50,7 @@ class N8n extends Tool {
           'Content-Type': 'application/json',
           'X-N8N-API-KEY': this.apiKey,
         },
-        body: input,
+        body: JSON.stringify(json),
       });
       if (response.status === 200) {
         return 'workflow saved';
