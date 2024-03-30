@@ -28,6 +28,7 @@ async function loadDefaultModels(req) {
 
   return {
     [EModelEndpoint.openAI]: openAI,
+    [EModelEndpoint.workflow]: openAI,
     [EModelEndpoint.google]: google,
     [EModelEndpoint.anthropic]: anthropic,
     [EModelEndpoint.gptPlugins]: gptPlugins,

@@ -15,6 +15,7 @@ const buildFunction = {
   [EModelEndpoint.azureOpenAI]: openAI.buildOptions,
   [EModelEndpoint.anthropic]: anthropic.buildOptions,
   [EModelEndpoint.gptPlugins]: gptPlugins.buildOptions,
+  [EModelEndpoint.workflow]: gptPlugins.buildOptions,
   [EModelEndpoint.assistants]: assistants.buildOptions,
 };
 

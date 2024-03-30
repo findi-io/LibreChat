@@ -36,6 +36,7 @@ const endpointSchemas: Record<EModelEndpoint, EndpointSchema> = {
   [EModelEndpoint.anthropic]: anthropicSchema,
   [EModelEndpoint.chatGPTBrowser]: chatGPTBrowserSchema,
   [EModelEndpoint.gptPlugins]: gptPluginsSchema,
+  [EModelEndpoint.workflow]: gptPluginsSchema,
   [EModelEndpoint.assistants]: assistantSchema,
 };
 
@@ -47,6 +48,7 @@ const endpointSchemas: Record<EModelEndpoint, EndpointSchema> = {
 export function getEnabledEndpoints() {
   const defaultEndpoints: string[] = [
     EModelEndpoint.openAI,
+    EModelEndpoint.workflow,
     EModelEndpoint.assistants,
     EModelEndpoint.azureOpenAI,
     EModelEndpoint.google,
@@ -278,6 +280,7 @@ const compactEndpointSchemas: Record<string, CompactEndpointSchema> = {
   [EModelEndpoint.anthropic]: compactAnthropicSchema,
   [EModelEndpoint.chatGPTBrowser]: compactChatGPTSchema,
   [EModelEndpoint.gptPlugins]: compactPluginsSchema,
+  [EModelEndpoint.workflow]: compactPluginsSchema,
 };
 
 export const parseCompactConvo = ({
