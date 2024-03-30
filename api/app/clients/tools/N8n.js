@@ -1,5 +1,8 @@
 const { Tool } = require('langchain/tools');
 const { logger } = require('~/config');
+const { customAlphabet } = require('nanoid');
+
+const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 16);
 
 class N8n extends Tool {
   constructor(fields = {}) {
@@ -14,6 +17,21 @@ class N8n extends Tool {
   async _call(input) {
     logger.warn('call tool');
     try {
+      const json = JSON.parse(input);
+      if (!json.settings) {
+        json.settings = {
+          saveExecutionProgress: true,
+          saveManualExecutions: true,
+          saveDataErrorExecution: 'all',
+          saveDataSuccessExecution: 'all',
+          executionTimeout: 3600,
+          errorWorkflow: 'VzqKEW0ShTXA5vPj',
+          timezone: 'America/New_York',
+        };
+      }
+      if (!json.name) {
+        json.name = 'Workflow ' + nanoid();
+      }
       const response = await fetch(`${this.url}/api/v1/workflows`, {
         method: 'POST',
         headers: {
