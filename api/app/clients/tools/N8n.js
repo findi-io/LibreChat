@@ -53,7 +53,7 @@ class N8n extends Tool {
         body: JSON.stringify(json),
       });
       if (response.status === 200) {
-        return 'workflow saved';
+        return await response.json();
       } else {
         return 'failed to save workflow';
       }
