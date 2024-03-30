@@ -17,7 +17,14 @@ class N8n extends Tool {
   async _call(input) {
     logger.warn('call tool');
     try {
-      const json = JSON.parse(input);
+      let json = JSON.parse(input);
+      if (json.workflow) {
+        if (json.name) {
+          const name = json.name;
+          json = json.workflow;
+          json.name = name;
+        }
+      }
       if (!json.settings) {
         json.settings = {
           saveExecutionProgress: true,
