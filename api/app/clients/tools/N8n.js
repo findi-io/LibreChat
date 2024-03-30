@@ -22,7 +22,11 @@ class N8n extends Tool {
         },
         body: input,
       });
-      return await response.text();
+      if (response.status === 200) {
+        return 'workflow saved';
+      } else {
+        return 'failed to save workflow';
+      }
     } catch (error) {
       return 'failed to save workflow';
     }
