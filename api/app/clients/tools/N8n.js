@@ -53,7 +53,12 @@ class N8n extends Tool {
         body: JSON.stringify(json),
       });
       if (response.status === 200) {
-        return await response.json();
+        const body = await response.text();
+        return `
+        \`\`\`n8n
+        ${body}
+        \`\`\`
+        `;
       } else {
         return 'failed to save workflow';
       }
