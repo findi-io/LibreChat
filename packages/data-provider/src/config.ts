@@ -364,6 +364,7 @@ export const EndpointURLs: { [key in EModelEndpoint]: string } = {
 
 export const modularEndpoints = new Set<EModelEndpoint | string>([
   EModelEndpoint.gptPlugins,
+  EModelEndpoint.workflow,
   EModelEndpoint.anthropic,
   EModelEndpoint.google,
   EModelEndpoint.openAI,
