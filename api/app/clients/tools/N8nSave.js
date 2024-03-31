@@ -4,15 +4,15 @@ const { customAlphabet } = require('nanoid');
 
 const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 16);
 
-class N8n extends Tool {
+class N8nSave extends Tool {
   constructor(fields = {}) {
     super();
     this.url = fields.N8N_URL;
     this.apiKey = fields.N8N_API_KEY;
   }
-  name = 'n8n';
-  description = 'Use the \'n8n\' tool to save workflow to server';
-  description_for_model = 'Use the \'n8n\' tool to save the workflow json to remote server';
+  name = 'n8nsave';
+  description = 'save n8n workflow to server';
+  description_for_model = 'save n8n workflow json to server';
 
   async _call(input) {
     logger.warn('call tool');
@@ -68,4 +68,4 @@ class N8n extends Tool {
   }
 }
 
-module.exports = N8n;
+module.exports = N8nSave;

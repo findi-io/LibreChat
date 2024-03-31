@@ -5,7 +5,9 @@ const WolframAlphaAPI = require('./Wolfram');
 const AzureAiSearch = require('./AzureAiSearch');
 const OpenAICreateImage = require('./DALL-E');
 const Database = require('./Database');
-const N8n = require('./N8n');
+const N8nSave = require('./N8nSave');
+const N8nRun = require('./N8nRun');
+const N8nList = require('./N8nList');
 const StableDiffusionAPI = require('./StableDiffusion');
 const SelfReflectionTool = require('./SelfReflection');
 
@@ -31,7 +33,9 @@ module.exports = {
   WolframAlphaAPI,
   OpenAICreateImage,
   Database,
-  N8n,
+  N8nSave,
+  N8nRun,
+  N8nList,
   StableDiffusionAPI,
   SelfReflectionTool,
   // Structured Tools
