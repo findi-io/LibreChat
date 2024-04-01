@@ -12,6 +12,8 @@ const {
   GoogleSearchAPI,
   WolframAlphaAPI,
   OpenAICreateImage,
+  Database,
+  N8nRun,
   StableDiffusionAPI,
   // Structured Tools
   DALLE3,
@@ -161,6 +163,8 @@ const loadTools = async ({
     tavily_search_results_json: TavilySearchResults,
     calculator: Calculator,
     google: GoogleSearchAPI,
+    database: Database,
+    n8nrun: N8nRun,
     wolfram: functions ? StructuredWolfram : WolframAlphaAPI,
     'dall-e': OpenAICreateImage,
     'stable-diffusion': functions ? StructuredSD : StableDiffusionAPI,

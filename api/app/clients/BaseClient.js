@@ -71,6 +71,7 @@ class BaseClient {
     const { isEdited, isContinued } = opts;
     const user = opts.user ?? null;
     this.user = user;
+    const sender = opts.sender;
     const saveOptions = this.getSaveOptions();
     this.abortController = opts.abortController ?? new AbortController();
     const conversationId = opts.conversationId ?? crypto.randomUUID();
@@ -91,6 +92,7 @@ class BaseClient {
       ...opts,
       user,
       head,
+      sender,
       conversationId,
       parentMessageId,
       userMessageId,
@@ -99,12 +101,12 @@ class BaseClient {
     };
   }
 
-  createUserMessage({ messageId, parentMessageId, conversationId, text }) {
+  createUserMessage({ messageId, parentMessageId, conversationId, text, sender }) {
     return {
       messageId,
       parentMessageId,
       conversationId,
-      sender: 'User',
+      sender: sender,
       text,
       isCreatedByUser: true,
     };
@@ -114,6 +116,7 @@ class BaseClient {
     const {
       user,
       head,
+      sender,
       conversationId,
       parentMessageId,
       userMessageId,
@@ -125,6 +128,7 @@ class BaseClient {
       ? this.currentMessages[this.currentMessages.length - 2]
       : this.createUserMessage({
         messageId: userMessageId,
+        sender,
         parentMessageId,
         conversationId,
         text: message,
@@ -146,6 +150,7 @@ class BaseClient {
       ...opts,
       user,
       head,
+      sender,
       conversationId,
       responseMessageId,
       saveOptions,

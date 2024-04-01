@@ -7,6 +7,11 @@ RUN apk --no-cache add curl
 
 RUN mkdir -p /app && chown node:node /app
 WORKDIR /app
+ARG VITE_CLERK_PUBLISHABLE_KEY
+ARG CLERK_PEM_PUBLIC_KEY
+ARG VITE_PUSHER_KEY
+ARG VITE_PUSHER_CLUSTER
+USER node
 
 USER node
 

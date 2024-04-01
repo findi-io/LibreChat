@@ -41,7 +41,7 @@ const formatVisionMessage = ({ message, image_urls, endpoint }) => {
  * @returns {(Object|HumanMessage|AIMessage|SystemMessage)} - The formatted message.
  */
 const formatMessage = ({ message, userName, assistantName, endpoint, langChain = false }) => {
-  let { role: _role, _name, sender, text, content: _content, lc_id } = message;
+  let { role: _role, _name, text, content: _content, lc_id, isCreatedByUser } = message;
   if (lc_id && lc_id[2] && !langChain) {
     const roleMapping = {
       SystemMessage: 'system',
@@ -50,7 +50,7 @@ const formatMessage = ({ message, userName, assistantName, endpoint, langChain =
     };
     _role = roleMapping[lc_id[2]];
   }
-  const role = _role ?? (sender && sender?.toLowerCase() === 'user' ? 'user' : 'assistant');
+  const role = isCreatedByUser ? 'user' : 'assistant';
   const content = text ?? _content ?? '';
   const formattedMessage = {
     role,

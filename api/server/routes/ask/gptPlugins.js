@@ -141,6 +141,7 @@ router.post(
     };
 
     const onChainEnd = () => {
+      userMessage.sender = req.user.sender;
       saveMessage({ ...userMessage, user });
       sendIntermediateMessage(res, { plugins });
     };
@@ -163,6 +164,7 @@ router.post(
 
       let response = await client.sendMessage(text, {
         user,
+        sender: req.user.sender,
         conversationId,
         parentMessageId,
         overrideParentMessageId,
@@ -195,6 +197,7 @@ router.post(
       sendMessage(res, {
         title: await getConvoTitle(user, conversationId),
         final: true,
+        isOrg: req.user.username.startsWith('org_'),
         conversation: await getConvo(user, conversationId),
         requestMessage: userMessage,
         responseMessage: response,

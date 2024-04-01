@@ -19,7 +19,13 @@ import { TAuthConfig, TUserContext, TAuthContext, TResError } from '~/common';
 import { useLogoutUserMutation } from '~/data-provider';
 import useTimeout from './useTimeout';
 import store from '~/store';
+import { ClerkProvider } from '@clerk/clerk-react';
 
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Missing Publishable Key');
+}
 const AuthContext = createContext<TAuthContext | undefined>(undefined);
 
 const AuthContextProvider = ({
@@ -177,7 +183,11 @@ const AuthContextProvider = ({
     [user, error, isAuthenticated, token],
   );
 
-  return <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={memoedValue}>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>{children}</ClerkProvider>
+    </AuthContext.Provider>
+  );
 };
 
 const useAuthContext = () => {
