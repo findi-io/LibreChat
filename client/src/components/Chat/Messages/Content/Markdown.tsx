@@ -33,8 +33,6 @@ export const code = memo(({ inline, className, children }: TCodeProps) => {
   const lang = match && match[1];
   if ('mermaid' === lang) {
     return <div className="mermaid">{children}</div>;
-  } else if ('n8n' === lang) {
-    return <n8n-demo clicktointeract="true" workflow={children}></n8n-demo>;
   }
   if (inline) {
     return <code className={className}>{children}</code>;
