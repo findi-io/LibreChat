@@ -11,18 +11,17 @@ import useAvatar from '~/hooks/Messages/useAvatar';
 import { ExportModal } from './ExportConversation';
 import { LinkIcon, GearIcon } from '~/components';
 import { UserIcon } from '~/components/svg';
-import { LogOutIcon } from '../svg';
 import { useLocalize } from '~/hooks';
 import Settings from './Settings';
 import NavLink from './NavLink';
+import Logout from './Logout';
 import { cn } from '~/utils/';
 import store from '~/store';
-import { OrganizationSwitcher, SignOutButton, SignedIn } from '@clerk/clerk-react';
 
 function NavLinks() {
   const localize = useLocalize();
   const location = useLocation();
-  const { user, isAuthenticated, logout } = useAuthContext();
+  const { user, isAuthenticated } = useAuthContext();
   const { data: startupConfig } = useGetStartupConfig();
   const balanceQuery = useGetUserBalance({
     enabled: !!isAuthenticated && startupConfig?.checkBalance,
@@ -150,27 +149,8 @@ function NavLinks() {
                   />
                 </Menu.Item>
                 <div className="my-1 h-px bg-black/20 bg-white/20" role="none" />
-                <SignedIn>
-                  <Menu.Item as="div">
-                    <OrganizationSwitcher
-                      afterSelectPersonalUrl={(user) => {
-                        logout();
-                        return 'ok';
-                      }}
-                      afterSelectOrganizationUrl={(user) => {
-                        logout();
-                        return 'ok';
-                      }}
-                    />
-                  </Menu.Item>
-                </SignedIn>
                 <Menu.Item as="div">
-                  <SignOutButton signOutCallback={() => logout()}>
-                    <button className="flex w-full cursor-pointer items-center gap-3 rounded-none px-3 py-3 text-sm text-black transition-colors duration-200 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                      <LogOutIcon />
-                      {localize('com_nav_log_out')}
-                    </button>
-                  </SignOutButton>
+                  <Logout />
                 </Menu.Item>
               </Menu.Items>
             </Transition>

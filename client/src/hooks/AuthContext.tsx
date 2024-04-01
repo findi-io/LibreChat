@@ -8,8 +8,7 @@ import {
   useContext,
 } from 'react';
 import { useRecoilState } from 'recoil';
-import { dark, neobrutalism } from '@clerk/themes';
-import { TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
+import { TUser, TLoginResponse, setTokenHeader, TLoginUser } from 'librechat-data-provider';
 import {
   useGetUserQuery,
   useLoginUserMutation,
@@ -95,7 +94,7 @@ const AuthContextProvider = ({
       onError: (error: TResError | unknown) => {
         const resError = error as TResError;
         doSetError(resError.message);
-        navigate('/error', { replace: true });
+        navigate('/login', { replace: true });
       },
     });
   };
@@ -123,7 +122,7 @@ const AuthContextProvider = ({
         if (authConfig?.test) {
           return;
         }
-        navigate('/error');
+        navigate('/login');
       },
     });
   }, []);
@@ -133,7 +132,7 @@ const AuthContextProvider = ({
       setUser(userQuery.data);
     } else if (userQuery.isError) {
       doSetError((userQuery?.error as Error).message);
-      navigate('/error', { replace: true });
+      navigate('/login', { replace: true });
     }
     if (error && isAuthenticated) {
       doSetError(undefined);

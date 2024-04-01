@@ -241,9 +241,11 @@ const loadTools = async ({
   }
 
   const imageGenOptions = {
+    req: options.req,
     fileStrategy: options.fileStrategy,
     processFileURL: options.processFileURL,
     returnMetadata: options.returnMetadata,
+    uploadImageBuffer: options.uploadImageBuffer,
   };
 
   const toolOptions = {

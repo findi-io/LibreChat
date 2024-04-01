@@ -5,7 +5,6 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   // darkMode: 'class',
   darkMode: ['class'],
-  safelist: ['ProseMirror'],
   theme: {
     // colors: {
     //   'gpt-dark-gray': '#171717',
@@ -82,6 +81,6 @@ module.exports = {
   plugins: [
     require('tailwindcss-animate'),
     require('tailwindcss-radix')(),
-    require('@tailwindcss/typography'),
+    // require('@tailwindcss/typography'),
   ],
 };
