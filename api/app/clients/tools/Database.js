@@ -7,7 +7,7 @@ const { PromptTemplate } = require('@langchain/core/prompts');
 const { RunnablePassthrough, RunnableSequence } = require('@langchain/core/runnables');
 const { StringOutputParser } = require('@langchain/core/output_parsers');
 
-class Demo extends Tool {
+class Database extends Tool {
   constructor(fields = {}) {
     super();
     this.type = fields.DATABASE_TYPE;
@@ -17,9 +17,9 @@ class Demo extends Tool {
       synchronize: false,
     });
   }
-  name = 'demo';
-  description = 'Use the \'demo\' tool to search data from sql database';
-  description_for_model = 'Use the \'demo\' tool to search data from sql database';
+  name = 'database';
+  description = 'Use the \'database\' tool to search data from sql database';
+  description_for_model = 'Use the \'database\' tool to search data from sql database';
 
   llm = new ChatOpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo-16k' });
   async _call(input) {
@@ -83,7 +83,7 @@ class Demo extends Tool {
         question: input,
       });
 
-      finalResponse.name = 'demo';
+      finalResponse.name = 'database';
       finalResponse.includes = () => {};
       return finalResponse;
     } catch (error) {
@@ -92,4 +92,4 @@ class Demo extends Tool {
   }
 }
 
-module.exports = Demo;
+module.exports = Database;

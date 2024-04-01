@@ -4,7 +4,8 @@ const CodeBrew = require('./CodeBrew');
 const WolframAlphaAPI = require('./Wolfram');
 const AzureAiSearch = require('./AzureAiSearch');
 const OpenAICreateImage = require('./DALL-E');
-const Demo = require('./Demo');
+const Database = require('./Database');
+const N8nRun = require('./N8nRun');
 const StableDiffusionAPI = require('./StableDiffusion');
 const SelfReflectionTool = require('./SelfReflection');
 
@@ -29,7 +30,8 @@ module.exports = {
   GoogleSearchAPI,
   WolframAlphaAPI,
   OpenAICreateImage,
-  Demo,
+  Database,
+  N8nRun,
   StableDiffusionAPI,
   SelfReflectionTool,
   // Structured Tools

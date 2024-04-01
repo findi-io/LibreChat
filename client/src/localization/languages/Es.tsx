@@ -278,7 +278,6 @@ export default {
   com_nav_welcome_message: '¿Cómo puedo ayudarte hoy?',
   com_nav_auto_scroll: 'Desplazamiento Automático al Más Nuevo al Abrir',
   com_nav_modular_chat: 'Activar el cambio de Endpoints en medio de la conversación',
-  com_nav_writer_mode: 'Enable writer mode for chat',
   com_nav_profile_picture: 'Foto de Perfil',
   com_nav_change_picture: 'Cambiar foto',
   com_nav_plugin_store: 'Tienda de plugins',

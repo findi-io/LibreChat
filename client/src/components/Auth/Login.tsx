@@ -15,6 +15,6 @@ function Login() {
     }
     return null;
   }
-  return <SignIn />;
+  return <SignIn redirectUrl={window.location.href} />;
 }
 export default Login;

@@ -15,7 +15,6 @@ export enum EModelEndpoint {
   anthropic = 'anthropic',
   assistants = 'assistants',
   custom = 'custom',
-  workflow = 'workflow',
 }
 
 export const defaultAssistantFormValues = {

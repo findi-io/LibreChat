@@ -284,7 +284,6 @@ export default {
   com_nav_welcome_message: 'Wie kann ich dir heute helfen?',
   com_nav_auto_scroll: 'Beim Öffnen automatisch zum Neuesten scrollen',
   com_nav_modular_chat: 'Aktiviere das Umschalten von Endpunkten während eines Gesprächs',
-  com_nav_writer_mode: 'Enable writer mode for chat',
   com_nav_latex_parsing: 'Parsen von LaTeX in Nachrichten (kann die Leistung beeinträchtigen)',
   com_nav_profile_picture: 'Profilbild',
   com_nav_change_picture: 'Bild ändern',

@@ -273,7 +273,6 @@ export default {
   com_nav_welcome_message: 'Bagaimana saya bisa membantu Anda hari ini?',
   com_nav_auto_scroll: 'Otomatis gulir ke Baru saat Buka',
   com_nav_modular_chat: 'Aktifkan penggantian Endpoint di tengah percakapan',
-  com_nav_writer_mode: 'Enable writer mode for chat',
   com_nav_latex_parsing: 'Parsing LaTeX dalam pesan (dapat memengaruhi kinerja)',
   com_nav_profile_picture: 'Foto Profil',
   com_nav_change_picture: 'Ubah foto',
