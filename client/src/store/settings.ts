@@ -118,25 +118,6 @@ const modularChat = atom<boolean>({
   ] as const,
 });
 
-const writerMode = atom<boolean>({
-  key: 'writerMode',
-  default: localStorage.getItem('writerMode') === 'true',
-  effects: [
-    ({ setSelf, onSet }) => {
-      const savedValue = localStorage.getItem('writerMode');
-      if (savedValue != null) {
-        setSelf(savedValue === 'true');
-      }
-
-      onSet((newValue: unknown) => {
-        if (typeof newValue === 'boolean') {
-          localStorage.setItem('writerMode', newValue.toString());
-        }
-      });
-    },
-  ] as const,
-});
-
 const LaTeXParsing = atom<boolean>({
   key: 'LaTeXParsing',
   default: true,
@@ -188,7 +169,6 @@ export default {
   showCode,
   hideSidePanel,
   modularChat,
-  writerMode,
   LaTeXParsing,
   UsernameDisplay,
 };

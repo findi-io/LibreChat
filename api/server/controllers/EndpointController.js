@@ -25,7 +25,7 @@ async function endpointController(req, res) {
       capabilities,
     };
   }
-  // mergedConfig[EModelEndpoint.workflow] = {};
+
   const endpointsConfig = orderEndpointsConfig(mergedConfig);
 
   await cache.set(CacheKeys.ENDPOINT_CONFIG, endpointsConfig);
