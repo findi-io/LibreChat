@@ -68,6 +68,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.220.0",
     "mermaid": "^10.9.0",
+    "pusher-js": "^8.4.0-rc2",
     "rc-input-number": "^7.4.2",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
