@@ -12,8 +12,6 @@ import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { useGetMessagesByConvoId } from 'librechat-data-provider/react-query';
 import type {
   TMessage,
-  TConversation,
-  TResPlugin,
   TSubmission,
   TEndpointOption,
   TEndpointsConfig,
@@ -38,7 +36,7 @@ type TResData = {
   conversation: TConversation;
 };
 
-let pusher: any | null = null;
+let pusher: Pusher | null = null;
 // this to be set somewhere else
 export default function useChatHelpers(index = 0, paramId: string | undefined) {
   const setShowStopButton = useSetRecoilState(store.showStopButtonByIndex(index));
@@ -100,8 +98,7 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
 
   const setMessages = useCallback(
     (messages: TMessage[]) => {
-      const filtered = messages.filter((msg) => msg.text != '');
-      queryClient.setQueryData<TMessage[]>([QueryKeys.messages, queryParam], filtered);
+      queryClient.setQueryData<TMessage[]>([QueryKeys.messages, queryParam], messages);
     },
     // [conversationId, queryClient],
     [queryParam, queryClient],

@@ -56,7 +56,7 @@ const DisplayMessage = ({ text, isCreatedByUser, message, showCursor }: TDisplay
       <div
         className={cn(
           showCursor && !!text?.length ? 'result-streaming' : '',
-          'markdown light prose w-full break-words dark:prose-invert',
+          'markdown prose dark:prose-invert light w-full break-words',
           isCreatedByUser ? 'whitespace-pre-wrap dark:text-gray-20' : 'dark:text-gray-100',
         )}
       >

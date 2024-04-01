@@ -10,8 +10,6 @@ const auth = require('./auth');
 const keys = require('./keys');
 const oauth = require('./oauth');
 const endpoints = require('./endpoints');
-const collaboration = require('./collaboration');
-
 const balance = require('./balance');
 const models = require('./models');
 const plugins = require('./plugins');
@@ -34,7 +32,6 @@ module.exports = {
   user,
   tokenizer,
   endpoints,
-  collaboration,
   balance,
   models,
   plugins,

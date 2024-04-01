@@ -2,9 +2,6 @@ import { useOutletContext } from 'react-router-dom';
 import type { ContextType } from '~/common';
 import { EndpointsMenu, PresetsMenu, HeaderNewChat } from './Menus';
 import HeaderOptions from './Input/HeaderOptions';
-import { useRecoilValue } from 'recoil';
-import store from '~/store';
-import WriterButton from './Input/WriterButton';
 
 export default function Header() {
   const { navVisible } = useOutletContext<ContextType>();
@@ -15,7 +12,6 @@ export default function Header() {
         <EndpointsMenu />
         <HeaderOptions />
         <PresetsMenu />
-        <WriterButton />
       </div>
       {/* Empty div for spacing */}
       <div />

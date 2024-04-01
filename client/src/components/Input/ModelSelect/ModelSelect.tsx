@@ -31,6 +31,7 @@ export default function ModelSelect({
   const { endpoint: _endpoint, endpointType } = conversation;
   const models = modelsConfig?.[_endpoint] ?? [];
   const endpoint = endpointType ?? _endpoint;
+
   const OptionComponent = isMultiChat ? multiChatOptions[endpoint] : options[endpoint];
 
   if (!OptionComponent) {
