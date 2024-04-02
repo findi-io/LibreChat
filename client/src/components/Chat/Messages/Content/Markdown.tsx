@@ -160,7 +160,6 @@ const Markdown = memo(({ content, message, showCursor }: TContentProps) => {
     <ReactMarkdown
       remarkPlugins={[supersub, remarkGfm, [remarkMath, { singleDollarTextMath: true }]]}
       rehypePlugins={rehypePlugins}
-      linkTarget="_new"
       components={
         {
           code,
