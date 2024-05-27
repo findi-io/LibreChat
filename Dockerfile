@@ -1,8 +1,8 @@
-# Base node image
-FROM node:18-alpine AS node
+# v0.7.2
 
-RUN apk add g++ make py3-pip
-RUN npm install -g node-gyp
+# Base node image
+FROM node:20-alpine AS node
+
 RUN apk --no-cache add curl
 
 RUN mkdir -p /app && chown node:node /app
@@ -12,15 +12,21 @@ USER node
 
 COPY --chown=node:node . .
 
-# Allow mounting of these files, which have no default
-# values.
-RUN touch .env
-RUN npm config set fetch-retry-maxtimeout 300000
-RUN npm install --no-audit
+RUN \
+    # Allow mounting of these files, which have no default
+    touch .env ; \
+    # Create directories for the volumes to inherit the correct permissions
+    mkdir -p /app/client/public/images /app/api/logs ; \
+    npm config set fetch-retry-maxtimeout 600000 ; \
+    npm config set fetch-retries 5 ; \
+    npm config set fetch-retry-mintimeout 15000 ; \
+    npm install --no-audit; \
+    # React client build
+    NODE_OPTIONS="--max-old-space-size=2048" npm run frontend; \
+    npm prune --production; \
+    npm cache clean --force
 
-# React client build
-ENV NODE_OPTIONS="--max-old-space-size=2048"
-RUN npm run frontend
+RUN mkdir -p /app/client/public/images /app/api/logs
 
 # Node API setup
 EXPOSE 3080

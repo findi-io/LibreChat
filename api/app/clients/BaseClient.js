@@ -23,7 +23,7 @@ class BaseClient {
     throw new Error('Method \'setOptions\' must be implemented.');
   }
 
-  getCompletion() {
+  async getCompletion() {
     throw new Error('Method \'getCompletion\' must be implemented.');
   }
 
@@ -373,6 +373,14 @@ class BaseClient {
     const { user, head, isEdited, conversationId, responseMessageId, saveOptions, userMessage } =
       await this.handleStartMethods(message, opts);
 
+    if (opts.progressCallback) {
+      opts.onProgress = opts.progressCallback.call(null, {
+        ...(opts.progressOptions ?? {}),
+        parentMessageId: userMessage.messageId,
+        messageId: responseMessageId,
+      });
+    }
+
     const { generation = '' } = opts;
 
     // It's not necessary to push to currentMessages
@@ -456,6 +464,8 @@ class BaseClient {
       sender: this.sender,
       text: addSpaceIfNeeded(generation) + completion,
       promptTokens,
+      iconURL: this.options.iconURL,
+      endpoint: this.options.endpoint,
       ...(this.metadata ?? {}),
     };
 
@@ -525,8 +535,19 @@ class BaseClient {
     return _messages;
   }
 
+  /**
+   * Save a message to the database.
+   * @param {TMessage} message
+   * @param {Partial<TConversation>} endpointOptions
+   * @param {string | null} user
+   */
   async saveMessageToDatabase(message, endpointOptions, user = null) {
-    await saveMessage({ ...message, endpoint: this.options.endpoint, user, unfinished: false });
+    await saveMessage({
+      ...message,
+      endpoint: this.options.endpoint,
+      unfinished: false,
+      user,
+    });
     await saveConvo(user, {
       conversationId: message.conversationId,
       endpoint: this.options.endpoint,
@@ -556,11 +577,11 @@ class BaseClient {
    * the message is considered a root message.
    *
    * @param {Object} options - The options for the function.
-   * @param {Array} options.messages - An array of message objects. Each object should have either an 'id' or 'messageId' property, and may have a 'parentMessageId' property.
+   * @param {TMessage[]} options.messages - An array of message objects. Each object should have either an 'id' or 'messageId' property, and may have a 'parentMessageId' property.
    * @param {string} options.parentMessageId - The ID of the parent message to start the traversal from.
    * @param {Function} [options.mapMethod] - An optional function to map over the ordered messages. If provided, it will be applied to each message in the resulting array.
    * @param {boolean} [options.summary=false] - If set to true, the traversal modifies messages with 'summary' and 'summaryTokenCount' properties and stops at the message with a 'summary' property.
-   * @returns {Array} An array containing the messages in the order they should be displayed, starting with the most recent message with a 'summary' property if the 'summary' option is true, and ending with the message identified by 'parentMessageId'.
+   * @returns {TMessage[]} An array containing the messages in the order they should be displayed, starting with the most recent message with a 'summary' property if the 'summary' option is true, and ending with the message identified by 'parentMessageId'.
    */
   static getMessagesForConversation({
     messages,

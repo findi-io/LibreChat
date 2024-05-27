@@ -1,14 +1,13 @@
 const Keyv = require('keyv');
 const uap = require('ua-parser-js');
-const denyRequest = require('./denyRequest');
-const { getLogStores } = require('../../cache');
+const { ViolationTypes } = require('librechat-data-provider');
 const { isEnabled, removePorts } = require('../utils');
-const keyvRedis = require('../../cache/keyvRedis');
-const User = require('../../models/User');
+const keyvMongo = require('~/cache/keyvMongo');
+const denyRequest = require('./denyRequest');
+const { getLogStores } = require('~/cache');
+const User = require('~/models/User');
 
-const banCache = isEnabled(process.env.USE_REDIS)
-  ? new Keyv({ store: keyvRedis })
-  : new Keyv({ namespace: 'bans', ttl: 0 });
+const banCache = new Keyv({ store: keyvMongo, namespace: ViolationTypes.BAN, ttl: 0 });
 const message = 'Your account has been temporarily banned due to violations of our service.';
 
 /**
@@ -28,7 +27,7 @@ const banResponse = async (req, res) => {
   if (!ua.browser.name) {
     return res.status(403).json({ message });
   } else if (baseUrl === '/api/ask' || baseUrl === '/api/edit') {
-    return await denyRequest(req, res, { type: 'ban' });
+    return await denyRequest(req, res, { type: ViolationTypes.BAN });
   }
 
   return res.status(403).json({ message });
@@ -87,7 +86,7 @@ const checkBan = async (req, res, next = () => {}) => {
     return await banResponse(req, res);
   }
 
-  const banLogs = getLogStores('ban');
+  const banLogs = getLogStores(ViolationTypes.BAN);
   const duration = banLogs.opts.ttl;
 
   if (duration <= 0) {

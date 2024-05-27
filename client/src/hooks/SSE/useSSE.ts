@@ -7,14 +7,15 @@ import {
   /* @ts-ignore */
   SSE,
   QueryKeys,
-  EndpointURLs,
   Constants,
+  EndpointURLs,
   createPayload,
   tPresetSchema,
   tMessageSchema,
-  EModelEndpoint,
+  LocalStorageKeys,
   tConvoUpdateSchema,
   removeNullishValues,
+  isAssistantsEndpoint,
 } from 'librechat-data-provider';
 import { useGetUserBalance, useGetStartupConfig } from 'librechat-data-provider/react-query';
 import type {
@@ -34,7 +35,6 @@ import { useGenTitleMutation } from '~/data-provider';
 import useContentHandler from './useContentHandler';
 import { useAuthContext } from '../AuthContext';
 import useChatHelpers from '../useChatHelpers';
-import useSetStorage from '../useSetStorage';
 import store from '~/store';
 
 type TResData = {
@@ -59,9 +59,9 @@ type TSyncData = {
 };
 
 export default function useSSE(submission: TSubmission | null, index = 0) {
-  const setStorage = useSetStorage();
   const queryClient = useQueryClient();
   const genTitle = useGenTitleMutation();
+  const setActiveRunId = useSetRecoilState(store.activeRunFamily(index));
 
   const { conversationId: paramId } = useParams();
   const { token, isAuthenticated } = useAuthContext();
@@ -87,7 +87,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
     (data: string, submission: TSubmission) => {
       const {
         messages,
-        message,
+        userMessage,
         plugin,
         plugins,
         initialResponse,
@@ -100,8 +100,6 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
           {
             ...initialResponse,
             text: data,
-            parentMessageId: message?.overrideParentMessageId ?? null,
-            messageId: message?.overrideParentMessageId + '_',
             plugin: plugin ?? null,
             plugins: plugins ?? [],
             // unfinished: true
@@ -110,12 +108,10 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
       } else {
         setMessages([
           ...messages,
-          message,
+          userMessage,
           {
             ...initialResponse,
             text: data,
-            parentMessageId: message?.messageId,
-            messageId: message?.messageId + '_',
             plugin: plugin ?? null,
             plugins: plugins ?? [],
             // unfinished: true
@@ -165,21 +161,20 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
           ...convoUpdate,
         };
 
-        setStorage(update);
         return update;
       });
 
       setIsSubmitting(false);
     },
-    [setMessages, setConversation, setStorage, genTitle, queryClient, setIsSubmitting],
+    [setMessages, setConversation, genTitle, queryClient, setIsSubmitting],
   );
 
   const syncHandler = useCallback(
     (data: TSyncData, submission: TSubmission) => {
       const { conversationId, thread_id, responseMessage, requestMessage } = data;
-      const { initialResponse, messages: _messages, message } = submission;
+      const { initialResponse, messages: _messages, userMessage } = submission;
 
-      const messages = _messages.filter((msg) => msg.messageId !== message.messageId);
+      const messages = _messages.filter((msg) => msg.messageId !== userMessage.messageId);
 
       setMessages([
         ...messages,
@@ -192,14 +187,22 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
 
       let update = {} as TConversation;
       setConversation((prevState) => {
+        let title = prevState?.title;
+        const parentId = requestMessage.parentMessageId;
+        if (parentId !== Constants.NO_PARENT && title?.toLowerCase()?.includes('new chat')) {
+          const convos = queryClient.getQueryData<ConversationData>([QueryKeys.allConversations]);
+          const cachedConvo = getConversationById(convos, conversationId);
+          title = cachedConvo?.title;
+        }
+
         update = tConvoUpdateSchema.parse({
           ...prevState,
           conversationId,
           thread_id,
+          title,
           messages: [requestMessage.messageId, responseMessage.messageId],
         }) as TConversation;
 
-        setStorage(update);
         return update;
       });
 
@@ -218,40 +221,29 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
 
       resetLatestMessage();
     },
-    [setMessages, setConversation, setStorage, queryClient, setShowStopButton, resetLatestMessage],
+    [setMessages, setConversation, queryClient, setShowStopButton, resetLatestMessage],
   );
 
   const createdHandler = useCallback(
     (data: TResData, submission: TSubmission) => {
-      const { messages, message, initialResponse, isRegenerate = false } = submission;
-
+      const { messages, userMessage, isRegenerate = false } = submission;
+      const initialResponse = {
+        ...submission.initialResponse,
+        parentMessageId: userMessage?.messageId,
+        messageId: userMessage?.messageId + '_',
+      };
       if (isRegenerate) {
-        setMessages([
-          ...messages,
-          {
-            ...initialResponse,
-            parentMessageId: message?.overrideParentMessageId ?? null,
-            messageId: message?.overrideParentMessageId + '_',
-          },
-        ]);
+        setMessages([...messages, initialResponse]);
       } else {
-        setMessages([
-          ...messages,
-          message,
-          {
-            ...initialResponse,
-            parentMessageId: message?.messageId,
-            messageId: message?.messageId + '_',
-          },
-        ]);
+        setMessages([...messages, userMessage, initialResponse]);
       }
 
-      const { conversationId, parentMessageId } = message;
+      const { conversationId, parentMessageId } = userMessage;
 
       let update = {} as TConversation;
       setConversation((prevState) => {
         let title = prevState?.title;
-        const parentId = isRegenerate ? message?.overrideParentMessageId : parentMessageId;
+        const parentId = isRegenerate ? userMessage?.overrideParentMessageId : parentMessageId;
         if (parentId !== Constants.NO_PARENT && title?.toLowerCase()?.includes('new chat')) {
           const convos = queryClient.getQueryData<ConversationData>([QueryKeys.allConversations]);
           const cachedConvo = getConversationById(convos, conversationId);
@@ -264,7 +256,6 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
           title,
         }) as TConversation;
 
-        setStorage(update);
         return update;
       });
 
@@ -280,7 +271,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
       });
       resetLatestMessage();
     },
-    [setMessages, setConversation, setStorage, queryClient, resetLatestMessage],
+    [setMessages, setConversation, queryClient, resetLatestMessage],
   );
 
   const finalHandler = useCallback(
@@ -327,30 +318,21 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
           update.model = prevState.model;
         }
 
-        setStorage(update);
         return update;
       });
 
       setIsSubmitting(false);
     },
-    [
-      setMessages,
-      setConversation,
-      setStorage,
-      genTitle,
-      queryClient,
-      setIsSubmitting,
-      setShowStopButton,
-    ],
+    [genTitle, queryClient, setMessages, setConversation, setIsSubmitting, setShowStopButton],
   );
 
   const errorHandler = useCallback(
     ({ data, submission }: { data?: TResData; submission: TSubmission }) => {
-      const { messages, message, initialResponse } = submission;
+      const { messages, userMessage, initialResponse } = submission;
 
       setCompleted((prev) => new Set(prev.add(initialResponse.messageId)));
 
-      const conversationId = message?.conversationId ?? submission?.conversationId;
+      const conversationId = userMessage?.conversationId ?? submission?.conversationId;
 
       const parseErrorResponse = (data: TResData | Partial<TMessage>) => {
         const metadata = data['responseMessage'] ?? data;
@@ -358,7 +340,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
           ...initialResponse,
           ...metadata,
           error: true,
-          parentMessageId: message?.messageId,
+          parentMessageId: userMessage?.messageId,
         };
 
         if (!errorMessage.messageId) {
@@ -375,7 +357,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
           ...submission,
           conversationId: convoId,
         });
-        setMessages([...messages, message, errorResponse]);
+        setMessages([...messages, userMessage, errorResponse]);
         newConversation({
           template: { conversationId: convoId },
           preset: tPresetSchema.parse(submission?.conversation),
@@ -387,11 +369,16 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
       if (!conversationId && !data.conversationId) {
         const convoId = v4();
         const errorResponse = parseErrorResponse(data);
-        setMessages([...messages, message, errorResponse]);
+        setMessages([...messages, userMessage, errorResponse]);
         newConversation({
           template: { conversationId: convoId },
           preset: tPresetSchema.parse(submission?.conversation),
         });
+        setIsSubmitting(false);
+        return;
+      } else if (!data.conversationId) {
+        const errorResponse = parseErrorResponse(data);
+        setMessages([...messages, userMessage, errorResponse]);
         setIsSubmitting(false);
         return;
       }
@@ -400,10 +387,10 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
       const errorResponse = tMessageSchema.parse({
         ...data,
         error: true,
-        parentMessageId: message?.messageId,
+        parentMessageId: userMessage?.messageId,
       });
 
-      setMessages([...messages, message, errorResponse]);
+      setMessages([...messages, userMessage, errorResponse]);
       if (data.conversationId && paramId === 'new') {
         newConversation({
           template: { conversationId: data.conversationId },
@@ -421,8 +408,9 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
     async (conversationId = '', submission: TSubmission) => {
       let runAbortKey = '';
       try {
-        const conversation = (JSON.parse(localStorage.getItem('lastConversationSetup') ?? '') ??
-          {}) as TConversation;
+        const conversation = (JSON.parse(
+          localStorage.getItem(LocalStorageKeys.LAST_CONVO_SETUP) ?? '',
+        ) ?? {}) as TConversation;
         const { conversationId, messages } = conversation;
         runAbortKey = `${conversationId}:${messages?.[messages.length - 1]}`;
       } catch (error) {
@@ -439,7 +427,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            abortKey: _endpoint === EModelEndpoint.assistants ? runAbortKey : conversationId,
+            abortKey: isAssistantsEndpoint(_endpoint) ? runAbortKey : conversationId,
             endpoint,
           }),
         });
@@ -464,7 +452,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
           };
 
           const data = {
-            requestMessage: submission.message,
+            requestMessage: submission.userMessage,
             responseMessage: responseMessage,
             conversation: submission.conversation,
           };
@@ -491,7 +479,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
           error: true,
         };
         const errorResponse = tMessageSchema.parse(errorMessage);
-        setMessages([...submission.messages, submission.message, errorResponse]);
+        setMessages([...submission.messages, submission.userMessage, errorResponse]);
         newConversation({
           template: { conversationId: convoId },
           preset: tPresetSchema.parse(submission?.conversation),
@@ -507,11 +495,11 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
       return;
     }
 
-    let { message } = submission;
+    let { userMessage } = submission;
 
     const payloadData = createPayload(submission);
     let { payload } = payloadData;
-    if (payload.endpoint === EModelEndpoint.assistants) {
+    if (isAssistantsEndpoint(payload.endpoint)) {
       payload = removeNullishValues(payload);
     }
 
@@ -527,20 +515,25 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
 
       if (data.final) {
         const { plugins } = data;
-        finalHandler(data, { ...submission, plugins, message });
+        finalHandler(data, { ...submission, plugins });
         startupConfig?.checkBalance && balanceQuery.refetch();
         console.log('final', data);
       }
       if (data.created) {
-        message = {
-          ...message,
+        const runId = v4();
+        setActiveRunId(runId);
+        userMessage = {
+          ...userMessage,
           ...data.message,
-          overrideParentMessageId: message?.overrideParentMessageId,
+          overrideParentMessageId: userMessage?.overrideParentMessageId,
         };
-        createdHandler(data, { ...submission, message });
+
+        createdHandler(data, { ...submission, userMessage });
       } else if (data.sync) {
+        const runId = v4();
+        setActiveRunId(runId);
         /* synchronize messages to Assistants API as well as with real DB ID's */
-        syncHandler(data, { ...submission, message });
+        syncHandler(data, { ...submission, userMessage });
       } else if (data.type) {
         const { text, index } = data;
         if (text && index !== textIndex) {
@@ -552,11 +545,27 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
         const text = data.text || data.response;
         const { plugin, plugins } = data;
 
+        const initialResponse = {
+          ...submission.initialResponse,
+          parentMessageId: data.parentMessageId,
+          messageId: data.messageId,
+        };
+
         if (data.message) {
-          messageHandler(text, { ...submission, plugin, plugins, message });
+          messageHandler(text, { ...submission, plugin, plugins, userMessage, initialResponse });
         }
       }
     };
+
+    // events.onaudio = (e: MessageEvent) => {
+    //   const data = JSON.parse(e.data);
+    //   console.log('audio', data);
+    //   if (data.audio) {
+    //     audioSource.addBase64Data(data.audio);
+    //   }
+    // };
+
+    // events.onend = () => audioSource.close();
 
     events.onopen = () => console.log('connection is opened');
 
@@ -573,7 +582,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
 
       setCompleted((prev) => new Set(prev.add(streamKey)));
       return await abortConversation(
-        message?.conversationId ?? submission?.conversationId,
+        userMessage?.conversationId ?? submission?.conversationId,
         submission,
       );
     };
@@ -590,10 +599,9 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
         console.error(error);
         console.log(e);
         setIsSubmitting(false);
-        return;
       }
 
-      errorHandler({ data, submission: { ...submission, message } });
+      errorHandler({ data, submission: { ...submission, userMessage } });
     };
 
     setIsSubmitting(true);
