@@ -67,6 +67,14 @@ services:
       - vectordb
     env_file:
       - .env
+  onlyoffice:
+    container_name: onlyoffice
+    image: jasonhao123/documentserver:latest
+    ports:
+      - "80:80"
+    environment:
+      - JWT_SECRET=DKq6FUyGcqnuvsQoN4uIeXDQvOTtMoEn
+    restart: always
 
 volumes:
   pgdata2:
