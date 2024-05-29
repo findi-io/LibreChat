@@ -1,11 +1,12 @@
 {
-	"name": "Doc2md",
+	"name": "AI Asistant",
 	"nameLocale": {
-		"ru": "Doc2md",
-		"fr": "Doc2md",
-		"es": "Doc2md",
-		"pt-BR": "Doc2md",
-		"de": "Doc2md"
+		"ru": "AI Asistant",
+		"zh-CN": "AI 助手",
+		"fr": "AI Asistant",
+		"es": "AI Asistant",
+		"pt-BR": "AI Asistant",
+		"de": "AI Asistant"
 	},
 	"guid": "asc.{5aff455d-96c4-4bd8-9658-16e5bc143738}",
 	"version": "1.0.2",
@@ -66,7 +67,7 @@
 				}
 			],
 			"isViewer": true,
-			"EditorsSupport": [ "word" ],
+			"EditorsSupport": [ "word", "cell", "slide", "pdf" ],
 			"isVisual": true,
 			"isModal": true,
 			"isInsideMode": true,

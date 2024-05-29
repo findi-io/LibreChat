@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
+import { createHashRouter, Navigate, Outlet } from 'react-router-dom';
 import {
   Login,
   Registration,
@@ -19,7 +19,7 @@ const AuthLayout = () => (
   </AuthContextProvider>
 );
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: 'register',
     element: <Registration />,
@@ -63,8 +63,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-],
-{
-  basename: '/librechat',
-},
-);
+]);
