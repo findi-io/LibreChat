@@ -1,25 +1,34 @@
-## Overview 
+## Overview
 
-Convert your formatted document to Markdown or HTML.
+The ChatGPT API can be applied to virtually any task that involves understanding or generating natural language or code.
 
-The plugin uses [Docs to Markdown](https://github.com/evbacher/gd2md-html) add-on and [marked] (https://github.com/markedjs/marked) library. 
+The plugin uses the [OpenAI](https://openai.com/) engine. 
 
-It is is compatible with [self-hosted](https://github.com/ONLYOFFICE/DocumentServer) and [desktop](https://github.com/ONLYOFFICE/DesktopEditors) versions of ONLYOFFICE editors. It can be added to ONLYOFFICE instances manually. 
+It is called "ChatGPT" and isn't installed by default in cloud, [self-hosted](https://github.com/ONLYOFFICE/DocumentServer) and [desktop version](https://github.com/ONLYOFFICE/DesktopEditors) of ONLYOFFICE editors. 
 
 ## How to use
 
-1. Find the plugin on the Plugins tab and click it or click add to context menu.
-2. Use the Markdown or HTML buttons in the sidebar window to convert your document to either Markdown or HTML.
-3. If you select part of the document, Docs to Markdown will convert only the selection. Otherwise, it will convert the entire document.
+1. Install the plugin.
+2. Use right click in any place in the editor -> ChatGPT to access the plugin settings.
+3. You can insert your request in "custom request" item.
+4. Choose settings that you want (we've already set default settings for example). 
+5. Click "Make request" button.
+6. You also can make other predefined requests, but it is still related to what is highlighted.
 
-## Options
+## Request examples
 
-- Demote headings (H1 → H2, etc.): If you have used multiple Heading 1 headings in your Doc, choose this option to demote all heading levels to conform with the following standard: single H1 as title, H2 as top-level heading in the text body.
-- HTML headings/IDs: Not all Markdown renderers handle Markdown-style IDs. If that is the case for your target platform, choose this option to generate HTML headings and IDs.
-- Create base64 images: Select this option if you want images to be created in base64 format.
-- Render HTML tags: By default, angle brackets (<) will be replaced by the &lt; entity. If you really want to embed HTML tags in your Markdown, select this option to preserve them. Or, if you just want to use an occasional HTML tag, you can escape the opening angle bracket like this: \<tag>text\</tag>.
-- Suppress top comment: Removes the informational comment at the top of the output. Warnings and errors that result from the conversion will still be part of the output.
+1. Create a html table with 3 biggest countrie and highligh headers and also highlight countries.
+2. Who wrote "Hamlet"?
+3. How much is 2 to the 50th power?
+4. Write an excel formula to summorize Revenue by countries which name contains "e". The revenue in column "B" from "B2" to "B11" and countries in column "A" from "A2" to "A11".
+5. Write a tagline for an ice cream shop.
 
-## How to install
+## Warning
+* For request from context menu it has restriction by gpt-4 model: 8k tokens.
+* If you don't have a subscription on "gtp-4" model, plugin will use one of "gpt-3.5" models. In this case restriction could be from 4k to 16k (depends from model).
 
-Detailed instructions can be found in [ONLYOFFICE API documentation](https://api.onlyoffice.com/plugin/installation).
+## Known issues
+
+* Doesn't work in China.
+
+If you need more information about how to use or write your own plugin, please see this https://api.onlyoffice.com/plugin/basic

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { EModelEndpoint } from 'librechat-data-provider';
 import {
   useGetModelsQuery,
@@ -19,7 +19,7 @@ export default function ChatRoute() {
   const { data: startupConfig } = useGetStartupConfig();
   const { isAuthenticated, user } = useAuthRedirect();
   useAppStartup({ startupConfig, user });
-
+  const navigate = useNavigate();
   const index = 0;
   const { conversationId } = useParams();
 
@@ -38,6 +38,15 @@ export default function ChatRoute() {
   const assistantListMap = useAssistantListMap();
 
   useEffect(() => {
+    if(conversationId === 'new') {
+      let docId = window.Asc.plugin.info.documentId;
+      const matcher = docId.match(/\d+$/);
+      if (matcher) {
+        // Extracted number
+        docId = matcher[0];
+      }
+      // navigate('/c/' + docId);
+    }
     if (
       startupConfig &&
       conversationId === 'new' &&

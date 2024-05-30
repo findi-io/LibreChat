@@ -74,6 +74,7 @@
 			"initDataType": "text",
 			"isUpdateOleOnResize": false,
 			"initOnSelectionChanged": true,
+			"events": ["onContextMenuShow", "onContextMenuClick"],
 			"store": {
 				"background": {
 					"light" : "#333333",
