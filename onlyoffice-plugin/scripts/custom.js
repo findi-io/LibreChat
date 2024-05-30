@@ -128,7 +128,7 @@
 				return;
 			};
 			createLoader();
-			let url = `https://api.openai.com/v1${ (settings.isChat ? '/chat' : '') }/completions`;
+			let url = `/v1${ (settings.isChat ? '/chat' : '') }/completions`;
 			delete settings.isChat;
 
 			fetch(url, {
@@ -244,7 +244,7 @@
 	};
 
 	function fetchModels() {
-		fetch('https://api.openai.com/v1/models', {
+		fetch('/v1/models', {
 			method: 'GET',
 			headers: {
 				'Authorization': 'Bearer ' + apiKey
