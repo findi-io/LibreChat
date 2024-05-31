@@ -111,6 +111,11 @@ export default function Message(props: TMessageProps) {
                     conversation={conversation ?? null}
                     regenerate={() => regenerateMessage()}
                     copyToClipboard={copyToClipboard}
+                    insertIntoEditor={() => {
+                      console.log('hello');
+                      const element = document.getElementById(message.messageId);
+                      window.Asc.plugin.executeMethod('PasteHtml', [element?.innerHTML]);
+                    }}
                     handleContinue={handleContinue}
                     latestMessage={latestMessage}
                     isLast={isLast}

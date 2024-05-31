@@ -38,15 +38,6 @@ export default function ChatRoute() {
   const assistantListMap = useAssistantListMap();
 
   useEffect(() => {
-    if(conversationId === 'new') {
-      let docId = window.Asc.plugin.info.documentId;
-      const matcher = docId.match(/\d+$/);
-      if (matcher) {
-        // Extracted number
-        docId = matcher[0];
-      }
-      // navigate('/c/' + docId);
-    }
     if (
       startupConfig &&
       conversationId === 'new' &&
