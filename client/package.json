@@ -28,7 +28,6 @@
   },
   "homepage": "https://librechat.ai",
   "dependencies": {
-    "jquery": "~2.2.4",
     "@ariakit/react": "^0.4.5",
     "@dicebear/collection": "^7.0.4",
     "@dicebear/core": "^7.0.4",
@@ -65,6 +64,7 @@
     "filenamify": "^6.0.0",
     "html-to-image": "^1.11.11",
     "image-blob-reduce": "^4.1.0",
+    "jquery": "~2.2.4",
     "librechat-data-provider": "*",
     "lodash": "^4.17.21",
     "lucide-react": "^0.220.0",
@@ -91,6 +91,7 @@
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
     "remark-supersub": "^1.0.0",
+    "sse.js": "^2.4.1",
     "tailwind-merge": "^1.9.1",
     "tailwindcss-animate": "^1.0.5",
     "tailwindcss-radix": "^2.8.0",

@@ -31,29 +31,8 @@ const App = () => {
       console.log('init');
       console.log(this);
       console.log(this.info);
-      this.executeMethod ('GetSelectionType', [], function(sType) {
-        console.log(sType);
-        if(sType === 'text') {
-          window.Asc.plugin.executeMethod ('GetSelectedText', [{'Numbering': false, 'Math': false, 'TableCellSeparator': '\n', 'ParaSeparator': '\n', 'TabSymbol': String.fromCharCode(9) }], function (data) {
-            console.log(data);
-          });
-        }else if(sType === 'none') {
-          window.Asc.plugin.executeMethod ('GetSelectedText', [{'Numbering': false, 'Math': false, 'TableCellSeparator': '\n', 'ParaSeparator': '\n', 'TabSymbol': String.fromCharCode(9) }], function (data) {
-            console.log(data);
-          });
-        }else if(sType === 'slide') {
-          window.Asc.plugin.executeMethod ('GetSelectedText', [{'Numbering': false, 'Math': false, 'TableCellSeparator': '\n', 'ParaSeparator': '\n', 'TabSymbol': String.fromCharCode(9) }], function (data) {
-            console.log(data);
-          });
-        }
-      });
-    };
 
-    $(document).ready(function () {
-      $('#show-settings').click(function() {
-        console.log(window.Asc.plugin);
-      });
-    });
+    };
 
   }, []);
 

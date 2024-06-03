@@ -11,6 +11,7 @@ import HoverButtons from './HoverButtons';
 import SubRow from './SubRow';
 import { cn } from '~/utils';
 import store from '~/store';
+import { SSE } from 'sse.js';
 
 export default function Message(props: TMessageProps) {
   const UsernameDisplay = useRecoilValue<boolean>(store.UsernameDisplay);
@@ -117,15 +118,59 @@ export default function Message(props: TMessageProps) {
                       if (window.Asc.plugin.info.editorType === 'word') {
                         window.Asc.plugin.executeMethod('PasteHtml', [element?.innerHTML]);
                       }else {
-                        window.Asc.plugin.callCommand(async function() {
+                        console.log('get json');
+                        window.Asc.plugin.callCommand(function() {
                           const oPresentation = Api.GetPresentation();
                           const oSlide = oPresentation.GetCurrentSlide();
-                          var json = oSlide.ToJSON(true, true, true, true);
-                          var oSlideFromJSON = Api.FromJSON(json);
-                          oPresentation.AddSlide(oSlideFromJSON);
+                          const json = oSlide.ToJSON(false, false, false, false);
+                          console.log(json);
+                          return json;
+                        },false,false, function(result) {
+                          fetch('/test', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'MessageId': messageId,
+                            },
+                            body: result,
+                          });
+                        });
 
-                          Api.Save();
-                        }, false);
+                        // Create a new SSE instance
+                        const sse = new SSE('/stream-sse', {
+                          headers: {
+                            // Optional headers
+                            'Authorization': 'Bearer your_token',
+                            'MessageId': messageId,
+                          },
+                          payload: messageId,
+                          method: 'GET', // or 'POST'
+                          withCredentials: true, // If you need to send cookies with the request
+                        });
+
+                        // Add an event listener for the 'message' event
+                        sse.addEventListener('message', (event: MessageEvent) => {
+                          console.log('Message received:', event.data);
+                          if( event.data !== '') {
+                            eval(`window.Asc.plugin.callCommand(function(data) {
+                              console.log('${event.data}');
+                              const oPresentation = Api.GetPresentation();
+                              const oSlide = oPresentation.GetCurrentSlide();
+                              const oSlideFromJSON = Api.FromJSON('${event.data}');
+                              oPresentation.AddSlide(oSlideFromJSON);
+                              Api.Save();
+                            }, false);
+                            `);
+                          }
+                        });
+
+                        // Add an event listener for the 'error' event
+                        sse.addEventListener('error', (event: Event) => {
+                          console.error('Error occurred:', event);
+                        });
+
+                        // Start the SSE stream
+                        sse.stream();
                       }
                     }}
                     handleContinue={handleContinue}
