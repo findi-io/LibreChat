@@ -111,10 +111,22 @@ export default function Message(props: TMessageProps) {
                     conversation={conversation ?? null}
                     regenerate={() => regenerateMessage()}
                     copyToClipboard={copyToClipboard}
-                    insertIntoEditor={() => {
+                    insertIntoEditor={ () =>  {
                       console.log('hello');
                       const element = document.getElementById(message.messageId);
-                      window.Asc.plugin.executeMethod('PasteHtml', [element?.innerHTML]);
+                      if (window.Asc.plugin.info.editorType === 'word') {
+                        window.Asc.plugin.executeMethod('PasteHtml', [element?.innerHTML]);
+                      }else {
+                        window.Asc.plugin.callCommand(async function() {
+                          const oPresentation = Api.GetPresentation();
+                          const oSlide = oPresentation.GetCurrentSlide();
+                          var json = oSlide.ToJSON(true, true, true, true);
+                          var oSlideFromJSON = Api.FromJSON(json);
+                          oPresentation.AddSlide(oSlideFromJSON);
+
+                          Api.Save();
+                        }, false);
+                      }
                     }}
                     handleContinue={handleContinue}
                     latestMessage={latestMessage}
