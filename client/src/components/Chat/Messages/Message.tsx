@@ -122,7 +122,7 @@ export default function Message(props: TMessageProps) {
                         window.Asc.plugin.callCommand(function() {
                           const oPresentation = Api.GetPresentation();
                           const oSlide = oPresentation.GetCurrentSlide();
-                          const json = oSlide.ToJSON(false, false, false, false);
+                          const json = oSlide.ToJSON(false, true, true, false);
                           console.log(json);
                           return json;
                         },false,false, function(result) {
@@ -152,14 +152,17 @@ export default function Message(props: TMessageProps) {
                         sse.addEventListener('message', (event: MessageEvent) => {
                           console.log('Message received:', event.data);
                           if( event.data !== '') {
+                            const json = JSON.parse(event.data);
                             eval(`window.Asc.plugin.callCommand(function(data) {
-                              console.log('${event.data}');
                               const oPresentation = Api.GetPresentation();
                               const oSlide = oPresentation.GetCurrentSlide();
+                              var nCurrentSlideIndex = oPresentation.GetCurSlideIndex();
+                              var oMaster = oPresentation.GetMaster(0);
                               const oSlideFromJSON = Api.FromJSON('${event.data}');
                               oPresentation.AddSlide(oSlideFromJSON);
+                              oSlideFromJSON.ApplyLayout(oMaster.GetLayout(${json.layout}));
                               Api.Save();
-                            }, false);
+                            });
                             `);
                           }
                         });

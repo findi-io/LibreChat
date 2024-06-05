@@ -213,7 +213,15 @@
 						link = options.value;
 						break;
 					}
-
+				case 'None':
+					{
+						settings.items[0].items.push({
+							id : 'onSlideTemplate',
+							text : generateText('Generate template')
+						});
+						link = options.value;
+						break;
+					}
 				default:
 					break;
 			}
@@ -360,6 +368,28 @@
 				createSettings(text, tokens, 8);
 			}
 		});
+	});
+
+	window.Asc.plugin.attachContextMenuClickEvent('onSlideTemplate', function() {
+		const canvas = window.parent.document.getElementById('id_viewer');
+		const dataURL = canvas.toDataURL('image/png');
+		console.log(dataURL);
+		window.Asc.plugin.callCommand(function() {
+
+			const oPresentation = Api.GetPresentation();
+			const oSlide = oPresentation.GetCurrentSlide();
+			const json = oSlide.ToJSON(true, false, false, false);
+			return json;
+		  },false,false, function(result) {
+			console.log(result);
+			fetch('/template', {
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({slide: result, image: dataURL}),
+			  });
+		  });
 	});
 
 	window.Asc.plugin.attachContextMenuClickEvent('onSummarize', function() {
@@ -877,7 +907,7 @@
 	};
 
 	function isEmpyText(text, bDonShowErr) {
-		if (text.trim() === '') {
+		if (text?.trim() === '') {
 			if (!bDonShowErr)
 				console.error('No word in this position or nothing is selected.');
 
