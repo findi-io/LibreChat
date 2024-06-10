@@ -22,18 +22,6 @@ export default function ChatRoute() {
   const navigate = useNavigate();
   const index = 0;
   const { conversationId } = useParams();
-  // if it's running in plugin, get the real conversationId
-  if(window.Asc && window.Asc.plugin && window.Asc.plugin.info  && conversationId === 'new') {
-    fetch(`/conversation?doc=${window.Asc.plugin.info.documentId}&title=${window.Asc.plugin.info.documentTitle}`, {
-      method: 'GET',
-    }).then(response => {
-      if (response.ok) {
-        response.text().then(data => {
-          navigate('/c/'+data);
-        });
-      }
-    });
-  }
 
   const { conversation } = store.useCreateConversationAtom(index);
   const { newConversation } = useNewConvo();
@@ -131,6 +119,27 @@ export default function ChatRoute() {
     }
     /* Creates infinite render if all dependencies included due to newConversation invocations exceeding call stack before hasSetConversation.current becomes truthy */
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // if it's running in plugin, get the real conversationId
+    if(window.Asc && window.Asc.plugin && window.Asc.plugin.info) {
+      if(conversationId === 'new') {
+        fetch(`/conversation?doc=${window.Asc.plugin.info.documentId}`, {
+          method: 'GET',
+        }).then(response => {
+          if (response.ok) {
+            response.text().then(data => {
+              if(data !== 'new') {
+                navigate(`/c/${data}`);
+              }
+            });
+          }
+        });
+      }else {
+        fetch(`/conversation?doc=${window.Asc.plugin.info.documentId}&title=${window.Asc.plugin.info.documentTitle}&conversationId=${conversationId}`, {
+          method: 'POST',
+        });
+      }
+
+    }
   }, [
     startupConfig,
     initialConvoQuery.data,
