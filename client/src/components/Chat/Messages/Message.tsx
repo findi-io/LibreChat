@@ -115,25 +115,41 @@ export default function Message(props: TMessageProps) {
                     insertIntoEditor={ () =>  {
                       console.log('hello');
                       const element = document.getElementById(message.messageId);
-                      if (window.Asc.plugin.info.editorType === 'word') {
+                      if (window.Asc.plugin.info.editorType === 'word' ) {
                         window.Asc.plugin.executeMethod('PasteHtml', [element?.innerHTML]);
+                      }else if(window.Asc.plugin.info.editorType === 'slide2') {
+                        window.Asc.plugin.executeMethod('PasteHtml', [`<h1 style="font-size: 48px;">营销策略</h1>
+                        <ul>
+                        <li style="font-size: 24px;"><strong>产品定位和推荐策略</strong>
+                        <ul>
+                        <li style="font-size: 24px;"><strong>定位明确</strong>
+                        <ul>
+                        <li style="font-size: 24px;">明确产品的定位，确定目标用户群体，从而制定相应的推荐策略</li>
+                        </ul>
+                        </li>
+                        <li style="font-size: 24px;"><strong>突出差异</strong>
+                        <ul>
+                        <li style="font-size: 24px;">在竞争激烈的市场中，通过突出产品的差异化特点，提高产品的市场占有率</li>
+                        </ul>
+                        </li>
+                        <li style="font-size: 24px;"><strong>市场调研</strong>
+                        <ul>
+                        <li style="font-size: 24px;">深入了解市场和用户需求，根据结果制定针对策略，提高产品的市场竞争力</li>
+                        </ul>
+                        </li>
+                        </ul>
+                        </li>
+                        </ul>`]);
                       }else {
                         console.log('get json');
-                        window.Asc.plugin.callCommand(function() {
-                          const oPresentation = Api.GetPresentation();
-                          const oSlide = oPresentation.GetCurrentSlide();
-                          const json = oSlide.ToJSON(false, true, true, false);
-                          console.log(json);
-                          return json;
-                        },false,false, function(result) {
-                          fetch('/test', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'MessageId': messageId,
-                            },
-                            body: result,
-                          });
+
+                        fetch('/test', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'MessageId': messageId,
+                          },
+                          body: message.text,
                         });
 
                         // Create a new SSE instance
@@ -152,7 +168,6 @@ export default function Message(props: TMessageProps) {
                         sse.addEventListener('message', (event: MessageEvent) => {
                           console.log('Message received:', event.data);
                           if( event.data !== '') {
-                            const json = JSON.parse(event.data);
                             eval(`window.Asc.plugin.callCommand(function(data) {
                               const oPresentation = Api.GetPresentation();
                               const oSlide = oPresentation.GetCurrentSlide();
@@ -160,7 +175,6 @@ export default function Message(props: TMessageProps) {
                               var oMaster = oPresentation.GetMaster(0);
                               const oSlideFromJSON = Api.FromJSON('${event.data}');
                               oPresentation.AddSlide(oSlideFromJSON);
-                              oSlideFromJSON.ApplyLayout(oMaster.GetLayout(${json.layout}));
                               Api.Save();
                             });
                             `);
