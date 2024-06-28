@@ -1,5 +1,6 @@
 import { RecoilRoot } from 'recoil';
 import { DndProvider } from 'react-dnd';
+import {  useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import * as RadixToast from '@radix-ui/react-toast';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -9,6 +10,7 @@ import { ScreenshotProvider, ThemeProvider, useApiErrorBoundary } from './hooks'
 import { ToastProvider } from './Providers';
 import Toast from './components/ui/Toast';
 import { router } from './routes';
+import $ from 'jquery';
 
 const App = () => {
   const { setError } = useApiErrorBoundary();
@@ -22,6 +24,17 @@ const App = () => {
       },
     }),
   });
+
+  useEffect(() => {
+
+    window.Asc.plugin.init = function() {
+      console.log('init');
+      console.log(this);
+      console.log(this.info);
+
+    };
+
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

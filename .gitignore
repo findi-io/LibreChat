@@ -4,6 +4,9 @@
 data-node
 meili_data*
 data/
+web-apps/*
+themes/*
+documents/*
 logs
 *.log
 

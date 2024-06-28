@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { EModelEndpoint } from 'librechat-data-provider';
 import {
   useGetModelsQuery,
@@ -19,7 +19,7 @@ export default function ChatRoute() {
   const { data: startupConfig } = useGetStartupConfig();
   const { isAuthenticated, user } = useAuthRedirect();
   useAppStartup({ startupConfig, user });
-
+  const navigate = useNavigate();
   const index = 0;
   const { conversationId } = useParams();
 
@@ -119,6 +119,23 @@ export default function ChatRoute() {
     }
     /* Creates infinite render if all dependencies included due to newConversation invocations exceeding call stack before hasSetConversation.current becomes truthy */
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // if it's running in plugin, get the real conversationId
+    if(window.Asc && window.Asc.plugin && window.Asc.plugin.info) {
+      if(conversationId === 'new') {
+        fetch(`/conversation?doc=${window.Asc.plugin.info.documentId}`, {
+          method: 'GET',
+        }).then(response => {
+          if (response.ok) {
+            response.text().then(data => {
+              if(data !== 'new') {
+                navigate(`/c/${data}`);
+              }
+            });
+          }
+        });
+      }
+
+    }
   }, [
     startupConfig,
     initialConvoQuery.data,

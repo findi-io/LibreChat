@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
+import { createHashRouter, Navigate, Outlet } from 'react-router-dom';
 import {
   Login,
   Registration,
@@ -18,8 +18,7 @@ const AuthLayout = () => (
     <ApiErrorWatcher />
   </AuthContextProvider>
 );
-
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: 'register',
     element: <Registration />,

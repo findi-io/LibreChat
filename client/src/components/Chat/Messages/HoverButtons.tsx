@@ -12,6 +12,7 @@ type THoverButtons = {
   isEditing: boolean;
   enterEdit: (cancel?: boolean) => void;
   copyToClipboard: (setIsCopied: React.Dispatch<React.SetStateAction<boolean>>) => void;
+  insertIntoEditor: () => void;
   conversation: TConversation | null;
   isSubmitting: boolean;
   message: TMessage;
@@ -27,6 +28,7 @@ export default function HoverButtons({
   isEditing,
   enterEdit,
   copyToClipboard,
+  insertIntoEditor,
   conversation,
   isSubmitting,
   message,
@@ -100,6 +102,20 @@ export default function HoverButtons({
         }
       >
         {isCopied ? <CheckMark className="h-[18px] w-[18px]" /> : <Clipboard size="19" />}
+      </button>
+      <button
+        className={cn(
+          'ml-0 flex items-center gap-1.5 rounded-md p-1 text-xs hover:text-gray-900 dark:text-gray-400/70 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:group-hover:visible md:group-[.final-completion]:visible',
+          isSubmitting && isCreatedByUser ? 'md:opacity-0 md:group-hover:opacity-100' : '',
+          !isLast ? 'md:opacity-0 md:group-hover:opacity-100' : '',
+        )}
+        onClick={() => insertIntoEditor()}
+        type="button"
+        title={
+          isCopied ? localize('com_ui_copied_to_clipboard') : localize('com_ui_copy_to_clipboard')
+        }
+      >
+        <CheckMark className="h-[18px] w-[18px]" />
       </button>
       {regenerateEnabled ? (
         <button

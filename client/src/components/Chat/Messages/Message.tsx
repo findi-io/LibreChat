@@ -11,6 +11,7 @@ import HoverButtons from './HoverButtons';
 import SubRow from './SubRow';
 import { cn } from '~/utils';
 import store from '~/store';
+import { SSE } from 'sse.js';
 
 export default function Message(props: TMessageProps) {
   const UsernameDisplay = useRecoilValue<boolean>(store.UsernameDisplay);
@@ -111,6 +112,84 @@ export default function Message(props: TMessageProps) {
                     conversation={conversation ?? null}
                     regenerate={() => regenerateMessage()}
                     copyToClipboard={copyToClipboard}
+                    insertIntoEditor={ () =>  {
+                      console.log('hello');
+                      const element = document.getElementById(message.messageId);
+                      if (window.Asc.plugin.info.editorType === 'word' ) {
+                        window.Asc.plugin.executeMethod('PasteHtml', [element?.innerHTML]);
+                      }else if(window.Asc.plugin.info.editorType === 'slide2') {
+                        window.Asc.plugin.executeMethod('PasteHtml', [`<h1 style="font-size: 48px;">营销策略</h1>
+                        <ul>
+                        <li style="font-size: 24px;"><strong>产品定位和推荐策略</strong>
+                        <ul>
+                        <li style="font-size: 24px;"><strong>定位明确</strong>
+                        <ul>
+                        <li style="font-size: 24px;">明确产品的定位，确定目标用户群体，从而制定相应的推荐策略</li>
+                        </ul>
+                        </li>
+                        <li style="font-size: 24px;"><strong>突出差异</strong>
+                        <ul>
+                        <li style="font-size: 24px;">在竞争激烈的市场中，通过突出产品的差异化特点，提高产品的市场占有率</li>
+                        </ul>
+                        </li>
+                        <li style="font-size: 24px;"><strong>市场调研</strong>
+                        <ul>
+                        <li style="font-size: 24px;">深入了解市场和用户需求，根据结果制定针对策略，提高产品的市场竞争力</li>
+                        </ul>
+                        </li>
+                        </ul>
+                        </li>
+                        </ul>`]);
+                      }else {
+                        console.log('get json');
+
+                        fetch('/test', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'MessageId': messageId,
+                          },
+                          body: message.text,
+                        });
+
+                        // Create a new SSE instance
+                        const sse = new SSE('/stream-sse', {
+                          headers: {
+                            // Optional headers
+                            'Authorization': 'Bearer your_token',
+                            'MessageId': messageId,
+                          },
+                          payload: messageId,
+                          method: 'GET', // or 'POST'
+                          withCredentials: true, // If you need to send cookies with the request
+                        });
+
+                        // Add an event listener for the 'message' event
+                        sse.addEventListener('message', (event: MessageEvent) => {
+                          console.log('Message received:', event.data);
+                          if( event.data !== '') {
+                            eval(`window.Asc.plugin.callCommand(function(data) {
+                              const oPresentation = Api.GetPresentation();
+                              const oSlide = oPresentation.GetCurrentSlide();
+                              var nCurrentSlideIndex = oPresentation.GetCurSlideIndex();
+                              var oMaster = oPresentation.GetMaster(0);
+                              const oSlideFromJSON = Api.FromJSON('${event.data}');
+                              oPresentation.AddSlide(oSlideFromJSON);
+                              Api.Save();
+                            });
+                            `);
+                          }
+                        });
+
+                        // Add an event listener for the 'error' event
+                        sse.addEventListener('error', (event: Event) => {
+                          console.error('Error occurred:', event);
+                        });
+
+                        // Start the SSE stream
+                        sse.stream();
+                      }
+                    }}
                     handleContinue={handleContinue}
                     latestMessage={latestMessage}
                     isLast={isLast}

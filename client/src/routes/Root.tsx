@@ -12,7 +12,7 @@ export default function Root() {
     const savedNavVisible = localStorage.getItem('navVisible');
     return savedNavVisible !== null ? JSON.parse(savedNavVisible) : true;
   });
-
+  const isInFrame = window.self !== window.top;
   const search = useSearch({ isAuthenticated });
   const fileMap = useFileMap({ isAuthenticated });
   const assistantsMap = useAssistantsMap({ isAuthenticated });
@@ -27,9 +27,9 @@ export default function Root() {
         <AssistantsMapContext.Provider value={assistantsMap}>
           <div className="flex h-dvh">
             <div className="relative z-0 flex h-full w-full overflow-hidden">
-              <Nav navVisible={navVisible} setNavVisible={setNavVisible} />
+              {!isInFrame && (<Nav navVisible={navVisible} setNavVisible={setNavVisible} />)}
               <div className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden">
-                <MobileNav setNavVisible={setNavVisible} />
+                {!isInFrame && (<MobileNav setNavVisible={setNavVisible} />)}
                 <Outlet context={{ navVisible, setNavVisible } satisfies ContextType} />
               </div>
             </div>
