@@ -379,19 +379,8 @@
 
       const oPresentation = Api.GetPresentation();
       const oSlide = oPresentation.GetCurrentSlide();
-      var oMaster = oSlide.GetLayout().GetMaster();
-      var nLayouts = oMaster.GetLayoutsCount();
-      let layoutIndex;
-      console.log('Slide id: ' +oSlide.GetLayout().Id());
-      for(var i = 0; i<nLayouts; i ++) {
-        console.log('master id: ' + oMaster.GetLayout(i).Id());
-        if(oMaster.GetLayout(i).Id() === oSlide.GetLayout().Id()) {
-          layoutIndex = i;
-          break;
-        }
-      }
       const json = oSlide.ToJSON(false, false, false, false);
-      return { slide: json, file: Api.GetFullName(), layout: layoutIndex };
+      return { slide: json, file: Api.GetFullName()};
     },false,false, function(result) {
       console.log(result);
       fetch('/template', {
