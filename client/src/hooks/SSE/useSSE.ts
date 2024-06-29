@@ -149,7 +149,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
       }
 
       // refresh title
-      if (isNewConvo && requestMessage?.parentMessageId === Constants.NO_PARENT && !conversation.title) {
+      if (isNewConvo && requestMessage?.parentMessageId === Constants.NO_PARENT && !window.Asc) {
         setTimeout(() => {
           genTitle.mutate({ conversationId: convoUpdate.conversationId as string });
         }, 2500);
@@ -302,7 +302,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
       }
 
       // refresh title
-      if (isNewConvo && requestMessage && requestMessage.parentMessageId === Constants.NO_PARENT) {
+      if (isNewConvo && requestMessage && requestMessage.parentMessageId === Constants.NO_PARENT && !window.Asc) {
         setTimeout(() => {
           genTitle.mutate({ conversationId: conversation.conversationId as string });
         }, 2500);
