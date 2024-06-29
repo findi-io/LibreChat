@@ -215,14 +215,11 @@
         }
         case 'None':
         {
-    		settings.items[0].items.push({
+    		  settings.items[0].items.push({
             	id : 'onSlideTemplate',
             	text : generateText('Generate template'),
         	});
-     		settings.items[0].items.push({
-            	id : 'onSlideTheme',
-            	text : generateText('Save as Theme'),
-        	});
+
         	link = options.value;
         	break;
         }

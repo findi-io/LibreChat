@@ -42,7 +42,7 @@ const Conversations = ({
               >
                 {localize(groupName) || groupName}
               </div>
-              {convos.map((convo, i) => (
+              {convos.filter(c=>!c.title?.startsWith('doc:')).map((convo, i) => (
                 <Convo
                   key={`${groupName}-${convo.conversationId}-${i}`}
                   isLatestConvo={convo.conversationId === firstTodayConvoId}

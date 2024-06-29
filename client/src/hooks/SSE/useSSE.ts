@@ -149,7 +149,7 @@ export default function useSSE(submission: TSubmission | null, index = 0) {
       }
 
       // refresh title
-      if (isNewConvo && requestMessage?.parentMessageId === Constants.NO_PARENT) {
+      if (isNewConvo && requestMessage?.parentMessageId === Constants.NO_PARENT && !conversation.title) {
         setTimeout(() => {
           genTitle.mutate({ conversationId: convoUpdate.conversationId as string });
         }, 2500);
