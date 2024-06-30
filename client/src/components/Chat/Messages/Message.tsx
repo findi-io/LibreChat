@@ -143,6 +143,7 @@ export default function Message(props: TMessageProps) {
                       }else {
                         console.log('get json');
 
+
                         fetch('/test', {
                           method: 'POST',
                           headers: {
@@ -151,6 +152,7 @@ export default function Message(props: TMessageProps) {
                           },
                           body: message.text,
                         });
+
 
                         // Create a new SSE instance
                         const sse = new SSE('/stream-sse', {
@@ -168,16 +170,7 @@ export default function Message(props: TMessageProps) {
                         sse.addEventListener('message', (event: MessageEvent) => {
                           console.log('Message received:', event.data);
                           if( event.data !== '') {
-                            eval(`window.Asc.plugin.callCommand(function(data) {
-                              const oPresentation = Api.GetPresentation();
-                              const oSlide = oPresentation.GetCurrentSlide();
-                              var nCurrentSlideIndex = oPresentation.GetCurSlideIndex();
-                              var oMaster = oPresentation.GetMaster(0);
-                              const oSlideFromJSON = Api.FromJSON('${event.data}');
-                              oPresentation.AddSlide(oSlideFromJSON);
-                              Api.Save();
-                            });
-                            `);
+                            eval(event.data);
                           }
                         });
 

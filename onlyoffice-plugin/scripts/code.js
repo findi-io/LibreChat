@@ -215,11 +215,14 @@
         }
         case 'None':
         {
-    		  settings.items[0].items.push({
+    		settings.items[0].items.push({
             	id : 'onSlideTemplate',
             	text : generateText('Generate template'),
         	});
-
+     		settings.items[0].items.push({
+            	id : 'onSlideTheme',
+            	text : generateText('Save as Theme'),
+        	});
         	link = options.value;
         	break;
         }
@@ -380,7 +383,7 @@
       const oPresentation = Api.GetPresentation();
       const oSlide = oPresentation.GetCurrentSlide();
       const json = oSlide.ToJSON(false, false, false, false);
-      return { slide: json, file: Api.GetFullName()};
+      return { slide: json, file: Api.GetFullName() };
     },false,false, function(result) {
       console.log(result);
       fetch('/template', {
