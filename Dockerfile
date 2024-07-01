@@ -15,3 +15,5 @@ COPY client/dist /var/www/onlyoffice/documentserver/sdkjs-plugins/doc2md/
 COPY onlyoffice-plugin/ds-librechat.conf /etc/onlyoffice/documentserver/nginx/includes/ds-docservice.conf
 COPY sdkjs/deploy/sdkjs/slide/sdk-all.js /var/www/onlyoffice/documentserver/sdkjs/slide/sdk-all.js
 COPY sdkjs/deploy/sdkjs/slide/sdk-all-min.js /var/www/onlyoffice/documentserver/sdkjs/slide/sdk-all-min.js
+COPY web-apps/deploy/web-apps/apps/presentationeditor /var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor
+
