@@ -382,8 +382,10 @@
 
       const oPresentation = Api.GetPresentation();
       const oSlide = oPresentation.GetCurrentSlide();
+      const index = oSlide.GetLayoutIndex();
+      console.log('layout index: ' + index);
       const json = oSlide.ToJSON(false, false, false, false);
-      return { slide: json, file: Api.GetFullName() };
+      return { slide: json, file: Api.GetFullName(), layout: index };
     },false,false, function(result) {
       console.log(result);
       fetch('/template', {

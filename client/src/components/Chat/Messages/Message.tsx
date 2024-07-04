@@ -144,13 +144,17 @@ export default function Message(props: TMessageProps) {
                         console.log('get json');
 
 
-                        fetch('/test', {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'MessageId': messageId,
-                          },
-                          body: message.text,
+                        window.Asc.plugin.callCommand(function() {
+                          return Api.GetFullName();
+                        },false,false, function(result) {
+                          fetch('/test', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'MessageId': messageId,
+                            },
+                            body: JSON.stringify({ markdown: message.text, filename: result }),
+                          });
                         });
 
 
