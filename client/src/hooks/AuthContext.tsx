@@ -108,6 +108,9 @@ const AuthContextProvider = ({
         const { user, token } = data;
         if (token) {
           setUserContext({ token, isAuthenticated: true, user });
+          if (window.parent && window.parent.parent && window.parent.parent.conversationId) {
+            navigate('/c/' + window.parent.parent.conversationId);
+          }
         } else {
           console.log('Token is not present. User is not authenticated.');
           if (authConfig?.test) {
