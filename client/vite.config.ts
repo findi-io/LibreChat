@@ -1,6 +1,5 @@
 import path, { resolve } from 'path';
 import react from '@vitejs/plugin-react';
-import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig, createLogger } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import type { Plugin } from 'vite';
@@ -29,6 +28,7 @@ logger.warn = (msg, options) => {
 // https://vitejs.dev/config/
 export default defineConfig({
   customLogger: logger,
+  base: '/librechat/',
   server: {
     fs: {
       cachedChecks: false,
@@ -50,53 +50,7 @@ export default defineConfig({
   // All other env variables are filtered out
   envDir: '../',
   envPrefix: ['VITE_', 'SCRIPT_', 'DOMAIN_', 'ALLOW_'],
-  plugins: [
-    react(),
-    nodePolyfills(),
-    VitePWA({
-      injectRegister: 'auto', // 'auto' | 'manual' | 'disabled'
-      registerType: 'prompt', // 'prompt' | 'auto' | 'disabled'
-      devOptions: {
-        enabled: false, // enable/disable registering SW in development mode
-      },
-      workbox: {
-        globPatterns: ['assets/**/*.{png,jpg,svg,ico}', '**/*.{js,css,html,ico,woff2}'],
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
-      },
-      manifest: {
-        name: 'LibreChat',
-        short_name: 'LibreChat',
-        start_url: '/',
-        display: 'standalone',
-        background_color: '#000000',
-        theme_color: '#009688',
-        icons: [
-          {
-            src: '/assets/favicon-32x32.png',
-            sizes: '32x32',
-            type: 'image/png',
-          },
-          {
-            src: '/assets/favicon-16x16.png',
-            sizes: '16x16',
-            type: 'image/png',
-          },
-          {
-            src: '/assets/apple-touch-icon-180x180.png',
-            sizes: '180x180',
-            type: 'image/png',
-          },
-          {
-            src: '/assets/maskable-icon.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
-          },
-        ],
-      },
-    }),
-    sourcemapExclude({ excludeNodeModules: true }),
-  ],
+  plugins: [react(), nodePolyfills(), sourcemapExclude({ excludeNodeModules: true })],
   publicDir: './public',
   build: {
     sourcemap: process.env.NODE_ENV === 'development',
