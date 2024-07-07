@@ -191,8 +191,8 @@ function localAIProvider(ttsSchema, input, voice) {
  * @returns {Promise<[string, TProviderSchema]>}
  */
 async function getProviderSchema(customConfig) {
-  const provider = getProvider(customConfig.tts);
-  return [provider, customConfig.tts[provider]];
+  const provider = getProvider(customConfig.speech.tts);
+  return [provider, customConfig.speech.tts[provider]];
 }
 
 /**
@@ -300,7 +300,7 @@ async function textToSpeech(req, res) {
           break;
         }
       } catch (innerError) {
-        logger.error('Error processing update:', chunk, innerError);
+        logger.error('Error processing manual update:', chunk, innerError);
         if (!res.headersSent) {
           res.status(500).end();
         }
@@ -312,7 +312,10 @@ async function textToSpeech(req, res) {
       res.end();
     }
   } catch (error) {
-    logger.error('An error occurred while creating the audio stream:', error);
+    logger.error(
+      'Error creating the audio stream. Suggestion: check your provider quota. Error:',
+      error,
+    );
     res.status(500).send('An error occurred');
   }
 }
